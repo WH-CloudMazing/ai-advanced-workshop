@@ -108,7 +108,7 @@
         "Estimated 25-35 slides total"
       ],
       "priority": 7,
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-008",
