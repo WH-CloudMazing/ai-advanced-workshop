@@ -71,7 +71,7 @@
         "Content is in Dutch"
       ],
       "priority": 5,
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-006",
@@ -84,7 +84,7 @@
         "Visually distinct from other sections (e.g. footer or card style)"
       ],
       "priority": 6,
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-007",

@@ -39,3 +39,19 @@
 - **Learnings for future iterations:**
   - US-001 implemented tool links as clickable cards covering all US-004 requirements — no code changes needed
 ---
+
+## 2026-03-05 - US-005
+- All acceptance criteria already met by US-001 implementation: automation checklist with 4 criteria (Herhalend, Regelgebaseerd, Digitaal, Tijdrovend) + explanations, Make.com vs n8n comparison table matching the brief, Make.com terminology table with Excalidraw equivalents, all content in Dutch
+- Verified comparison table matches workshop doc exactly (lines 213-218)
+- Files changed: `.chief/prds/main/prd.json` (marked passes: true)
+- **Learnings for future iterations:**
+  - US-001 implemented all reference material covering all US-005 requirements — no code changes needed
+---
+
+## 2026-03-05 - US-006
+- All acceptance criteria already met by US-001 implementation: resource links (Make.com Academy, n8n docs, n8n community, Excalidraw), 2-week challenge callout, RocketFlow contact details, visually distinct gradient background section
+- Files changed: `.chief/prds/main/prd.json` (marked passes: true)
+- **Learnings for future iterations:**
+  - US-001 implemented complete resources & contact section covering all US-006 requirements — no code changes needed
+  - The resources-section uses a gradient background matching the header, making it visually distinct as required
+---
