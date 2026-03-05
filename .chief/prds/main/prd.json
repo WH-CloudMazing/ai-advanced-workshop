@@ -124,7 +124,7 @@
         "Documented: screenshot or export of the scenario for reference"
       ],
       "priority": 8,
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-009",

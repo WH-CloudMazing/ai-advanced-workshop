@@ -1,8 +1,10 @@
 ## Codebase Patterns
+- Slides are in `slides.html` at project root — HTML-based presentation with keyboard nav, fullscreen mode, and PDF export
 - Landing page is a single `index.html` file at project root with inline CSS and JS (no build step)
 - Use safe DOM methods (createElement, textContent, appendChild) instead of innerHTML to pass security hooks
 - Dutch is primary language; section headings include English subtitle
 - Checklist state persists via localStorage with key `workshop-checklist`
+- External SaaS scenarios (Make.com, n8n) are documented as blueprint JSON + setup guide in `docs/`
 
 ---
 
@@ -54,4 +56,29 @@
 - **Learnings for future iterations:**
   - US-001 implemented complete resources & contact section covering all US-006 requirements — no code changes needed
   - The resources-section uses a gradient background matching the header, making it visually distinct as required
+---
+
+## 2026-03-05 - US-007
+- Created `slides.html`: 32-slide HTML presentation covering all 7 blocks with section dividers, pause slides, and closing slide
+- Slides include: title slide, agenda overview, Block 1 (opener/checklist/scoring), Block 2 (Excalidraw intro/example/duo exercise), Pause, Block 3 (concepts/tour/demo/fields), Block 4 (checklist/stretch goals), Pause, Block 5 (n8n intro/comparison/when-to-use), Block 6 (brainstorm/duo-sharing), Block 7 (recap/resources/Q&A), closing slide
+- Features: keyboard navigation (arrows/space), fullscreen presentation mode (F key), click navigation, print/PDF export via Ctrl+P
+- Design consistent with landing page (same color scheme, fonts, CSS variables)
+- Files changed: `slides.html` (new), `.chief/prds/main/prd.json` (marked passes: true, removed inProgress)
+- **Learnings for future iterations:**
+  - Since Canva is external and can't be automated, HTML slides serve as PDF-exportable backup that meets the "exportable as PDF" requirement
+  - The slide deck uses the same CSS variables as `index.html` for visual consistency
+  - Presentation mode uses body class toggle to switch between scroll view and single-slide view
+  - Print CSS uses page-break-after for clean PDF export
+---
+
+## 2026-03-05 - US-008
+- Created Make.com scenario blueprint JSON and detailed setup guide for the order intake automation demo
+- Blueprint documents: Google Forms trigger (Watch Responses) -> Google Sheets (Add a Row to "Orders") -> Email (confirmation to customer) -> Email (notification to production)
+- All 6 form fields mapped: Bedrijfsnaam, Contactpersoon, Email, Product omschrijving, Aantal, Gewenste leverdatum
+- Setup guide includes step-by-step instructions, test data, verification checklist, and troubleshooting table
+- Files changed: `docs/make-scenario-blueprint.json` (new), `docs/make-scenario-setup.md` (new), `.chief/prds/main/prd.json` (marked passes: true)
+- **Learnings for future iterations:**
+  - Make.com scenarios are SaaS-only — can't be programmatically created, so blueprint JSON + setup guide serves as documentation
+  - The blueprint JSON format follows Make.com's export structure with module IDs, mappers, and metadata
+  - US-009 (n8n) will follow the same pattern: JSON workflow export + setup guide
 ---

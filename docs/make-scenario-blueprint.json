@@ -1,0 +1,109 @@
+{
+  "name": "Order Intake Automatisering - Faber Electronics Workshop",
+  "flow": [
+    {
+      "id": 1,
+      "module": "google-forms:watchResponses",
+      "version": 2,
+      "parameters": {},
+      "mapper": {},
+      "metadata": {
+        "designer": { "x": 0, "y": 0 },
+        "restore": {},
+        "expect": [
+          { "name": "formId", "type": "text", "label": "Form ID", "required": true }
+        ],
+        "interface": [
+          { "name": "Bedrijfsnaam", "type": "text", "label": "Bedrijfsnaam" },
+          { "name": "Contactpersoon", "type": "text", "label": "Contactpersoon" },
+          { "name": "Email", "type": "text", "label": "Email" },
+          { "name": "Product omschrijving", "type": "text", "label": "Product omschrijving" },
+          { "name": "Aantal", "type": "number", "label": "Aantal" },
+          { "name": "Gewenste leverdatum", "type": "text", "label": "Gewenste leverdatum" }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "module": "google-sheets:addRow",
+      "version": 2,
+      "parameters": {},
+      "mapper": {
+        "spreadsheetId": "{{SPREADSHEET_ID}}",
+        "sheetId": "Orders",
+        "values": {
+          "0": "{{1.Bedrijfsnaam}}",
+          "1": "{{1.Contactpersoon}}",
+          "2": "{{1.Email}}",
+          "3": "{{1.`Product omschrijving`}}",
+          "4": "{{1.Aantal}}",
+          "5": "{{1.`Gewenste leverdatum`}}"
+        }
+      },
+      "metadata": {
+        "designer": { "x": 300, "y": 0 },
+        "restore": {},
+        "expect": [
+          { "name": "spreadsheetId", "type": "text", "label": "Spreadsheet ID", "required": true },
+          { "name": "sheetId", "type": "text", "label": "Sheet Name", "required": true }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "module": "email:sendEmail",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "to": "{{1.Email}}",
+        "subject": "Bevestiging ontvangst aanvraag - {{1.Bedrijfsnaam}}",
+        "content": "Beste {{1.Contactpersoon}},\n\nBedankt voor uw aanvraag. Wij hebben de volgende gegevens ontvangen:\n\nBedrijf: {{1.Bedrijfsnaam}}\nProduct: {{1.`Product omschrijving`}}\nAantal: {{1.Aantal}}\nGewenste leverdatum: {{1.`Gewenste leverdatum`}}\n\nWij nemen zo spoedig mogelijk contact met u op.\n\nMet vriendelijke groet,\nFaber Electronics"
+      },
+      "metadata": {
+        "designer": { "x": 600, "y": 0 },
+        "restore": {},
+        "expect": [
+          { "name": "to", "type": "text", "label": "To", "required": true },
+          { "name": "subject", "type": "text", "label": "Subject", "required": true },
+          { "name": "content", "type": "text", "label": "Content", "required": true }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "module": "email:sendEmail",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "to": "{{PRODUCTION_EMAIL}}",
+        "subject": "Nieuwe bestelling - {{1.Bedrijfsnaam}}",
+        "content": "Nieuwe bestelling ontvangen:\n\nBedrijf: {{1.Bedrijfsnaam}}\nContactpersoon: {{1.Contactpersoon}}\nEmail: {{1.Email}}\nProduct: {{1.`Product omschrijving`}}\nAantal: {{1.Aantal}}\nGewenste leverdatum: {{1.`Gewenste leverdatum`}}\n\nActie vereist: controleer beschikbaarheid en plan productie."
+      },
+      "metadata": {
+        "designer": { "x": 900, "y": 0 },
+        "restore": {},
+        "expect": [
+          { "name": "to", "type": "text", "label": "To", "required": true },
+          { "name": "subject", "type": "text", "label": "Subject", "required": true },
+          { "name": "content", "type": "text", "label": "Content", "required": true }
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "scenario": {
+      "roundtrips": 1,
+      "maxErrors": 3,
+      "autoCommit": true,
+      "autoCommitTriggerLast": true,
+      "sequential": false,
+      "confidential": false,
+      "dataloss": false,
+      "dlq": false
+    },
+    "designer": {
+      "orphans": []
+    }
+  }
+}
