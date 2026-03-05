@@ -5,6 +5,7 @@
 - Dutch is primary language; section headings include English subtitle
 - Checklist state persists via localStorage with key `workshop-checklist`
 - External SaaS scenarios (Make.com, n8n) are documented as blueprint JSON + setup guide in `docs/`
+- Generated assets (QR codes, images) go in `assets/` directory
 
 ---
 
@@ -94,4 +95,17 @@
   - n8n can split output to multiple nodes in parallel after a single node (vs Make.com's sequential chain)
   - n8n expressions use `{{ $json.field }}` or `{{ $('Node Name').item.json.field }}` syntax
   - SMTP credentials are needed for n8n email nodes (unlike Make.com which has a built-in email module)
+---
+
+## 2026-03-05 - US-010
+- Generated QR code pointing to `https://rocketflow.nl/workshop-faber-2026` (placeholder URL, update when deployed)
+- PNG: 900x900px at 300 DPI (3x3 inches, suitable for table cards and slide embedding)
+- PDF: vector-quality output at 300 DPI for print
+- Used ERROR_CORRECT_H for maximum error correction (scannable even if partially obscured)
+- Files changed: `assets/qr-landing-page.png` (new), `assets/qr-landing-page.pdf` (new), `.chief/prds/main/prd.json` (marked passes: true)
+- **Learnings for future iterations:**
+  - Python `qrcode` library with PIL generates both PNG and PDF easily
+  - box_size=20 with border=4 gives good print-quality output at 300 DPI
+  - The slides.html closing slide already references the QR code (line 938)
+  - URL is a placeholder — update `assets/qr-landing-page.*` when final deployment URL is known
 ---
