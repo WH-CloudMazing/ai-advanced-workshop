@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Workshop - Workflow Automation | Faber Electronics</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --clr-bg: #f8f9fa;
+      --clr-surface: #ffffff;
+      --clr-primary: #2563eb;
+      --clr-primary-light: #dbeafe;
+      --clr-text: #1e293b;
+      --clr-text-muted: #64748b;
+      --clr-border: #e2e8f0;
+      --clr-accent: #10b981;
+      --clr-accent-light: #d1fae5;
+      --clr-orange: #f59e0b;
+      --clr-orange-light: #fef3c7;
+      --radius: 12px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--clr-bg);
+      color: var(--clr-text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+      color: #fff;
+      padding: 3rem 1rem 2.5rem;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+    .header .subtitle {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+    .header-meta {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 1.25rem;
+      flex-wrap: wrap;
+      font-size: 0.95rem;
+      opacity: 0.85;
+    }
+    .header-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* Sections */
+    section {
+      padding: 2.5rem 0;
+    }
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .section-subtitle {
+      font-size: 0.9rem;
+      color: var(--clr-text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Agenda / Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0.5rem;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--clr-border);
+      border-radius: 2px;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 1.25rem;
+      padding: 1rem 1.25rem;
+      background: var(--clr-surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border-left: 4px solid var(--clr-primary);
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2.15rem;
+      top: 1.25rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--clr-primary);
+      border: 3px solid var(--clr-bg);
+    }
+    .timeline-item[data-type="hands-on"] { border-left-color: var(--clr-accent); }
+    .timeline-item[data-type="hands-on"]::before { background: var(--clr-accent); }
+    .timeline-item[data-type="demo"] { border-left-color: var(--clr-orange); }
+    .timeline-item[data-type="demo"]::before { background: var(--clr-orange); }
+    .timeline-item[data-type="pauze"] { border-left-color: var(--clr-border); }
+    .timeline-item[data-type="pauze"]::before { background: var(--clr-text-muted); }
+
+    .timeline-time {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--clr-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .timeline-title { font-weight: 600; font-size: 1.05rem; }
+    .timeline-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+    .tag-discussie { background: var(--clr-primary-light); color: var(--clr-primary); }
+    .tag-hands-on { background: var(--clr-accent-light); color: #059669; }
+    .tag-demo { background: var(--clr-orange-light); color: #b45309; }
+    .tag-pauze { background: var(--clr-border); color: var(--clr-text-muted); }
+
+    /* Checklist */
+    .checklist-progress {
+      background: var(--clr-surface);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .progress-bar-track {
+      flex: 1;
+      min-width: 120px;
+      height: 8px;
+      background: var(--clr-border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--clr-accent);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    .progress-text { font-weight: 600; font-size: 0.9rem; white-space: nowrap; }
+    .reset-btn {
+      background: none;
+      border: 1px solid var(--clr-border);
+      border-radius: 6px;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.8rem;
+      color: var(--clr-text-muted);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .reset-btn:hover { background: var(--clr-bg); }
+
+    .checklist-item {
+      background: var(--clr-surface);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .checklist-item:hover { background: #f1f5f9; }
+    .checklist-item.checked { opacity: 0.65; }
+    .checklist-item.checked .check-title { text-decoration: line-through; }
+
+    .check-box {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--clr-border);
+      border-radius: 6px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+      transition: all 0.2s;
+    }
+    .checklist-item.checked .check-box {
+      background: var(--clr-accent);
+      border-color: var(--clr-accent);
+    }
+    .check-box svg { display: none; }
+    .checklist-item.checked .check-box svg { display: block; }
+
+    .check-title { font-weight: 600; font-size: 0.95rem; }
+    .check-desc { font-size: 0.85rem; color: var(--clr-text-muted); margin-top: 0.15rem; }
+
+    .celebration {
+      display: none;
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--clr-accent-light);
+      border-radius: var(--radius);
+      margin-top: 1rem;
+    }
+    .celebration.show { display: block; }
+    .celebration h3 { color: #059669; font-size: 1.2rem; }
+    .celebration p { color: var(--clr-text-muted); margin-top: 0.25rem; }
+
+    /* Tool links / cards */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .tool-card {
+      display: block;
+      background: var(--clr-surface);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      text-decoration: none;
+      color: var(--clr-text);
+      border: 2px solid transparent;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .tool-card:hover {
+      border-color: var(--clr-primary);
+      box-shadow: var(--shadow-md);
+    }
+    .tool-card-name { font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem; }
+    .tool-card-desc { font-size: 0.85rem; color: var(--clr-text-muted); }
+
+    /* Reference tables */
+    .ref-block {
+      background: var(--clr-surface);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+    }
+    .ref-block h3 { font-size: 1.1rem; margin-bottom: 0.75rem; }
+
+    .criteria-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.75rem;
+    }
+    .criteria-card {
+      background: var(--clr-bg);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+    }
+    .criteria-card strong { display: block; margin-bottom: 0.2rem; }
+    .criteria-card span { font-size: 0.85rem; color: var(--clr-text-muted); }
+
+    .criteria-note {
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      color: var(--clr-text-muted);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid var(--clr-border);
+    }
+    th { font-weight: 600; background: var(--clr-bg); }
+    tr:last-child td { border-bottom: none; }
+
+    .table-wrap { overflow-x: auto; }
+
+    /* Resources / Footer */
+    .resources-section {
+      background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+      color: #fff;
+      padding: 2.5rem 1rem;
+    }
+    .resources-section .section-title { color: #fff; }
+    .resources-section .section-subtitle { color: rgba(255,255,255,0.7); }
+
+    .challenge-box {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .challenge-box h3 { font-size: 1.1rem; margin-bottom: 0.25rem; }
+    .challenge-box p { opacity: 0.85; font-size: 0.9rem; }
+
+    .resource-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .resource-link {
+      display: block;
+      color: #fff;
+      text-decoration: none;
+      padding: 0.75rem 1rem;
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+    .resource-link:hover { background: rgba(255,255,255,0.2); }
+    .resource-link strong { display: block; margin-bottom: 0.1rem; }
+    .resource-link span { opacity: 0.75; font-size: 0.8rem; }
+
+    .contact-block {
+      border-top: 1px solid rgba(255,255,255,0.15);
+      padding-top: 1.5rem;
+      text-align: center;
+    }
+    .contact-block h3 { margin-bottom: 0.5rem; }
+    .contact-block p { opacity: 0.85; font-size: 0.9rem; }
+    .contact-block a { color: #93c5fd; }
+
+    /* Confetti */
+    .confetti-piece {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 9999;
+      animation: confetti-fall 2s ease-out forwards;
+    }
+    @keyframes confetti-fall {
+      0% { opacity: 1; transform: translateY(0) rotate(0deg); }
+      100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+    }
+
+    @media (max-width: 640px) {
+      .header h1 { font-size: 1.5rem; }
+      .header { padding: 2rem 1rem 1.75rem; }
+      section { padding: 2rem 0; }
+      .section-title { font-size: 1.25rem; }
+      .card-grid { grid-template-columns: 1fr; }
+      .criteria-grid { grid-template-columns: 1fr 1fr; }
+      .resource-links { grid-template-columns: 1fr; }
+      .timeline { padding-left: 1.75rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <h1>AI Workshop: Workflow Automation</h1>
+      <p class="subtitle">Processen herkennen, tekenen en automatiseren</p>
+      <div class="header-meta">
+        <span>5 maart 2026</span>
+        <span>Faber Electronics, Heerenveen</span>
+        <span>4 uur | 10 deelnemers</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Agenda -->
+  <section id="agenda">
+    <div class="container">
+      <h2 class="section-title">Agenda</h2>
+      <p class="section-subtitle">Programme overview</p>
+      <div class="timeline">
+        <div class="timeline-item" data-type="discussie">
+          <div class="timeline-time">0:00 - 0:30</div>
+          <div class="timeline-title">1. Wat zijn processen &amp; wanneer automatiseren? <span class="timeline-tag tag-discussie">Discussie</span></div>
+        </div>
+        <div class="timeline-item" data-type="hands-on">
+          <div class="timeline-time">0:30 - 1:00</div>
+          <div class="timeline-title">2. Proces uittekenen in Excalidraw <span class="timeline-tag tag-hands-on">Hands-on</span></div>
+        </div>
+        <div class="timeline-item" data-type="pauze">
+          <div class="timeline-time">1:00 - 1:15</div>
+          <div class="timeline-title">Pauze <span class="timeline-tag tag-pauze">Pauze</span></div>
+        </div>
+        <div class="timeline-item" data-type="demo">
+          <div class="timeline-time">1:15 - 1:45</div>
+          <div class="timeline-title">3. Introductie Make.com <span class="timeline-tag tag-demo">Demo</span></div>
+        </div>
+        <div class="timeline-item" data-type="hands-on">
+          <div class="timeline-time">1:45 - 2:45</div>
+          <div class="timeline-title">4. Bouw de order intake automatisering <span class="timeline-tag tag-hands-on">Hands-on</span></div>
+        </div>
+        <div class="timeline-item" data-type="pauze">
+          <div class="timeline-time">2:45 - 3:00</div>
+          <div class="timeline-title">Pauze <span class="timeline-tag tag-pauze">Pauze</span></div>
+        </div>
+        <div class="timeline-item" data-type="demo">
+          <div class="timeline-time">3:00 - 3:20</div>
+          <div class="timeline-title">5. Blik op n8n <span class="timeline-tag tag-demo">Demo</span></div>
+        </div>
+        <div class="timeline-item" data-type="hands-on">
+          <div class="timeline-time">3:20 - 3:45</div>
+          <div class="timeline-title">6. Eigen automatiseringskans identificeren <span class="timeline-tag tag-hands-on">Oefening</span></div>
+        </div>
+        <div class="timeline-item" data-type="discussie">
+          <div class="timeline-time">3:45 - 4:00</div>
+          <div class="timeline-title">7. Afsluiting, bronnen &amp; Q&amp;A <span class="timeline-tag tag-discussie">Discussie</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Checklist -->
+  <section id="checklist">
+    <div class="container">
+      <h2 class="section-title">Checklist</h2>
+      <p class="section-subtitle">Build progress tracker</p>
+      <div class="checklist-progress">
+        <span class="progress-text" id="progressText">0/7 stappen voltooid</span>
+        <div class="progress-bar-track"><div class="progress-bar-fill" id="progressBar" style="width:0%"></div></div>
+        <button class="reset-btn" id="resetBtn">Reset</button>
+      </div>
+      <div id="checklistItems"></div>
+      <div class="celebration" id="celebration">
+        <h3>Gefeliciteerd!</h3>
+        <p>Je hebt alle stappen voltooid. Je eerste automatisering werkt!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tool Links -->
+  <section id="tools">
+    <div class="container">
+      <h2 class="section-title">Tools</h2>
+      <p class="section-subtitle">Quick access links</p>
+      <div class="card-grid">
+        <a href="https://www.make.com/en/register" target="_blank" rel="noopener" class="tool-card">
+          <div class="tool-card-name">Make.com</div>
+          <div class="tool-card-desc">Maak een gratis account aan om automatiseringen te bouwen</div>
+        </a>
+        <a href="https://excalidraw.com" target="_blank" rel="noopener" class="tool-card">
+          <div class="tool-card-name">Excalidraw</div>
+          <div class="tool-card-desc">Teken processen visueel uit in je browser</div>
+        </a>
+        <a href="https://docs.google.com/forms" target="_blank" rel="noopener" class="tool-card">
+          <div class="tool-card-name">Google Forms</div>
+          <div class="tool-card-desc">Maak het order intake formulier voor de oefening</div>
+        </a>
+        <a href="https://docs.google.com/spreadsheets" target="_blank" rel="noopener" class="tool-card">
+          <div class="tool-card-name">Google Sheets</div>
+          <div class="tool-card-desc">Maak de spreadsheet aan voor je orders</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reference Material -->
+  <section id="reference">
+    <div class="container">
+      <h2 class="section-title">Referentiemateriaal</h2>
+      <p class="section-subtitle">Reference material</p>
+
+      <div class="ref-block">
+        <h3>Automatiserings-checklist</h3>
+        <div class="criteria-grid">
+          <div class="criteria-card">
+            <strong>1. Herhalend</strong>
+            <span>Gebeurt het regelmatig? Dagelijks, wekelijks of bij elke order?</span>
+          </div>
+          <div class="criteria-card">
+            <strong>2. Regelgebaseerd</strong>
+            <span>Kun je de stappen beschrijven als duidelijke regels of beslissingen?</span>
+          </div>
+          <div class="criteria-card">
+            <strong>3. Digitaal</strong>
+            <span>Gaat het om digitale tools, data of systemen?</span>
+          </div>
+          <div class="criteria-card">
+            <strong>4. Tijdrovend</strong>
+            <span>Kost het merkbare tijd die je beter kunt besteden?</span>
+          </div>
+        </div>
+        <p class="criteria-note">Score 3 of 4 = sterke automatiseringskandidaat</p>
+      </div>
+
+      <div class="ref-block">
+        <h3>Make.com vs n8n</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th></th><th>Make.com</th><th>n8n</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Ideaal voor</strong></td><td>Quick wins, eenvoudige flows</td><td>Complexe logica, privacy-eisen</td></tr>
+              <tr><td><strong>Gebruiker</strong></td><td>Niet-technisch</td><td>Technisch team beschikbaar</td></tr>
+              <tr><td><strong>Data</strong></td><td>SaaS (cloud)</td><td>Self-hosted optie</td></tr>
+              <tr><td><strong>Kosten</strong></td><td>Abonnement per operatie</td><td>Gratis (self-hosted) of betaald cloud</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="ref-block">
+        <h3>Make.com terminologie</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Make.com term</th><th>Wat het is</th><th>Excalidraw equivalent</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Scenario</strong></td><td>Je automatisering</td><td>Het hele plaatje</td></tr>
+              <tr><td><strong>Module</strong></td><td>Een stap</td><td>Een rechthoek</td></tr>
+              <tr><td><strong>Connection</strong></td><td>Link naar een tool</td><td>De pijl naar buiten</td></tr>
+              <tr><td><strong>Trigger</strong></td><td>Wat het aftrapt</td><td>Het eerste blok</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Resources & Contact -->
+  <section class="resources-section" id="resources">
+    <div class="container">
+      <h2 class="section-title">Bronnen &amp; Contact</h2>
+      <p class="section-subtitle">Resources &amp; contact</p>
+
+      <div class="challenge-box">
+        <h3>2-weken challenge</h3>
+        <p>Automatiseer iets op je werk binnen 2 weken en deel het resultaat!</p>
+      </div>
+
+      <div class="resource-links">
+        <a href="https://academy.make.com" target="_blank" rel="noopener" class="resource-link">
+          <strong>Make.com Academy</strong>
+          <span>Gratis cursussen en tutorials</span>
+        </a>
+        <a href="https://docs.n8n.io" target="_blank" rel="noopener" class="resource-link">
+          <strong>n8n Documentatie</strong>
+          <span>Officiële docs en guides</span>
+        </a>
+        <a href="https://community.n8n.io" target="_blank" rel="noopener" class="resource-link">
+          <strong>n8n Community</strong>
+          <span>Forum, templates en hulp</span>
+        </a>
+        <a href="https://excalidraw.com" target="_blank" rel="noopener" class="resource-link">
+          <strong>Excalidraw</strong>
+          <span>Bookmark voor procesdiagrammen</span>
+        </a>
+      </div>
+
+      <div class="contact-block">
+        <h3>Vragen na de workshop?</h3>
+        <p>Neem contact op met RocketFlow voor follow-up vragen en begeleiding.</p>
+        <p style="margin-top:0.5rem"><a href="https://rocketflow.nl" target="_blank" rel="noopener">rocketflow.nl</a></p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function() {
+      var steps = [
+        { title: 'Stap 1: Google Form aanmaken', desc: 'Maak een formulier met velden: Bedrijfsnaam, Contactpersoon, Email, Product omschrijving, Aantal, Gewenste leverdatum.' },
+        { title: 'Stap 2: Google Sheet aanmaken', desc: 'Maak een spreadsheet "Orders" met kolommen die matchen met het formulier.' },
+        { title: 'Stap 3: Make.com \u2014 Trigger instellen', desc: 'Nieuw scenario aanmaken, Google Forms > Watch Responses module toevoegen en connectie maken.' },
+        { title: 'Stap 4: Rij toevoegen in Sheet', desc: 'Google Sheets > Add a Row module toevoegen en formuliervelden mappen naar kolommen.' },
+        { title: 'Stap 5: Bevestigingsmail', desc: 'Email > Send an Email module: bevestiging naar het emailadres uit het formulier.' },
+        { title: 'Stap 6: Productie notificatie', desc: 'Email > Send an Email module: samenvatting met besteldetails naar het productieteam.' },
+        { title: 'Stap 7: Testen', desc: 'Vul het Google Form in, klik "Run once" en controleer Sheet, bevestigingsmail en notificatie.' }
+      ];
+
+      var STORAGE_KEY = 'workshop-checklist';
+
+      function getChecked() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+        catch(e) { return []; }
+      }
+
+      function saveChecked(arr) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+      }
+
+      function createCheckIcon() {
+        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('width', '14');
+        svg.setAttribute('height', '14');
+        svg.setAttribute('viewBox', '0 0 14 14');
+        svg.setAttribute('fill', 'none');
+        var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', 'M2.5 7.5L5.5 10.5L11.5 3.5');
+        path.setAttribute('stroke', 'white');
+        path.setAttribute('stroke-width', '2');
+        path.setAttribute('stroke-linecap', 'round');
+        path.setAttribute('stroke-linejoin', 'round');
+        svg.appendChild(path);
+        return svg;
+      }
+
+      function renderChecklist() {
+        var checked = getChecked();
+        var container = document.getElementById('checklistItems');
+        container.textContent = '';
+
+        for (var i = 0; i < steps.length; i++) {
+          (function(index) {
+            var step = steps[index];
+            var isChecked = checked.indexOf(index) !== -1;
+
+            var item = document.createElement('div');
+            item.className = 'checklist-item' + (isChecked ? ' checked' : '');
+            item.addEventListener('click', function() { toggleStep(index); });
+
+            var box = document.createElement('div');
+            box.className = 'check-box';
+            box.appendChild(createCheckIcon());
+
+            var content = document.createElement('div');
+            var title = document.createElement('div');
+            title.className = 'check-title';
+            title.textContent = step.title;
+            var desc = document.createElement('div');
+            desc.className = 'check-desc';
+            desc.textContent = step.desc;
+            content.appendChild(title);
+            content.appendChild(desc);
+
+            item.appendChild(box);
+            item.appendChild(content);
+            container.appendChild(item);
+          })(i);
+        }
+
+        updateProgress(checked.length);
+      }
+
+      function toggleStep(i) {
+        var checked = getChecked();
+        var idx = checked.indexOf(i);
+        if (idx !== -1) { checked.splice(idx, 1); }
+        else { checked.push(i); }
+        saveChecked(checked);
+        renderChecklist();
+        if (checked.length === steps.length) { celebrate(); }
+      }
+
+      function updateProgress(count) {
+        document.getElementById('progressText').textContent = count + '/7 stappen voltooid';
+        document.getElementById('progressBar').style.width = (count / steps.length * 100) + '%';
+        var cel = document.getElementById('celebration');
+        if (count === steps.length) { cel.classList.add('show'); }
+        else { cel.classList.remove('show'); }
+      }
+
+      function celebrate() {
+        var colors = ['#10b981', '#2563eb', '#f59e0b', '#ef4444', '#8b5cf6'];
+        for (var i = 0; i < 40; i++) {
+          var piece = document.createElement('div');
+          piece.className = 'confetti-piece';
+          piece.style.left = Math.random() * 100 + 'vw';
+          piece.style.top = '-10px';
+          piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+          piece.style.animationDelay = Math.random() * 0.5 + 's';
+          piece.style.animationDuration = (1.5 + Math.random()) + 's';
+          document.body.appendChild(piece);
+          (function(el) {
+            setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 3000);
+          })(piece);
+        }
+      }
+
+      document.getElementById('resetBtn').addEventListener('click', function() {
+        localStorage.removeItem(STORAGE_KEY);
+        renderChecklist();
+      });
+
+      renderChecklist();
+    })();
+  </script>
+</body>
+</html>
