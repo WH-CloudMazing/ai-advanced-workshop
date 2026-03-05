@@ -1,0 +1,169 @@
+{
+  "project": "AI Workshop — Workflow Automation (Faber Electronics)",
+  "description": "Complete workshop package for a 4-hour hands-on session at Faber Electronics, Heerenveen. 10 participants with mixed technical levels learn to identify, map, and automate business processes. The package consists of four deliverables: a presentation slide deck (Canva) for the trainer, a landing page (central hub with agenda, checklist, and resources), a pre-built Make.com demo scenario, and a pre-built n8n demo scenario. The workshop language is Dutch with English fallback where needed.",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Landing page — Static structure and responsive layout",
+      "description": "As a workshop participant, I want to open the landing page on my laptop or phone so that I can follow along during the session.",
+      "acceptanceCriteria": [
+        "Single HTML file with inline CSS and JS (no build step)",
+        "Responsive layout works on desktop (1024px+) and mobile (360px+)",
+        "Clean, neutral design — no specific branding required",
+        "Header shows workshop title, date (2026-03-05), and location",
+        "Sections: Header, Agenda, Checklist, Tool Links, Reference Material, Resources, Contact",
+        "Page loads in under 2 seconds on a standard connection",
+        "Dutch is the primary language; section headings have English subtitle where helpful"
+      ],
+      "priority": 1,
+      "passes": true
+    },
+    {
+      "id": "US-002",
+      "title": "Landing page — Visual agenda / timeline",
+      "description": "As a participant, I want to see the day's schedule at a glance so I know what's coming and when.",
+      "acceptanceCriteria": [
+        "Displays all 7 blocks with time slots (0:00–4:00)",
+        "Visual timeline format (not just a table)",
+        "Distinguishes block types: discussion, hands-on, demo, exercise",
+        "Current/active block is visually highlighted (optional: based on time, or manual toggle)",
+        "Responsive — readable on mobile without horizontal scroll"
+      ],
+      "priority": 2,
+      "passes": true
+    },
+    {
+      "id": "US-003",
+      "title": "Landing page — Interactive checklist with progress",
+      "description": "As a participant, I want to check off each step of the hands-on build (Block 4) so I can track my own progress.",
+      "acceptanceCriteria": [
+        "7 checkable steps matching the build instructions from Block 4",
+        "Each step has a title and short description",
+        "Checkbox state persists via localStorage (survives page refresh)",
+        "Progress indicator shows \"X/7 steps complete\" and a visual progress bar",
+        "When all 7 steps are checked, a celebratory state is shown (e.g. confetti animation, congratulations message)",
+        "Reset button to clear all checkboxes"
+      ],
+      "priority": 3,
+      "passes": true
+    },
+    {
+      "id": "US-004",
+      "title": "Landing page — Tool links section",
+      "description": "As a participant, I want quick access to all tools used in the workshop so I don't waste time searching.",
+      "acceptanceCriteria": [
+        "Links to: Make.com signup, Excalidraw, Google Forms, Google Sheets",
+        "Each link opens in a new tab",
+        "Brief one-line description per tool (in Dutch)",
+        "Links are displayed as clickable cards or buttons (not a plain list)"
+      ],
+      "priority": 4,
+      "passes": false
+    },
+    {
+      "id": "US-005",
+      "title": "Landing page — Reference material section",
+      "description": "As a participant, I want to revisit the automation checklist framework and Make.com vs n8n comparison after the workshop.",
+      "acceptanceCriteria": [
+        "Automation checklist: displays the 4 criteria (Herhalend, Regelgebaseerd, Digitaal, Tijdrovend) with explanations",
+        "Make.com vs n8n comparison table (matching the brief's table)",
+        "Make.com terminology table (Scenario, Module, Connection, Trigger) with Excalidraw equivalents",
+        "Content is in Dutch"
+      ],
+      "priority": 5,
+      "passes": false
+    },
+    {
+      "id": "US-006",
+      "title": "Landing page — Resources and contact section",
+      "description": "As a participant, I want post-workshop learning resources and a way to contact the trainer for follow-up.",
+      "acceptanceCriteria": [
+        "Links to: Make.com Academy, n8n documentation \u0026 community, Excalidraw bookmark",
+        "2-week challenge callout: \"Automatiseer iets op je werk binnen 2 weken\"",
+        "RocketFlow contact details for follow-up questions",
+        "Visually distinct from other sections (e.g. footer or card style)"
+      ],
+      "priority": 6,
+      "passes": false
+    },
+    {
+      "id": "US-007",
+      "title": "Presentation slide deck — Full workshop slides in Canva",
+      "description": "As a trainer, I need a complete slide deck covering all 7 blocks so I can guide the workshop professionally and participants have visual support throughout.",
+      "acceptanceCriteria": [
+        "Created in Canva with clean, neutral, professional design (consistent with landing page assets)",
+        "Covers all 7 blocks with clear section dividers between blocks",
+        "Block 1 — Wat zijn processen \u0026 wanneer automatiseren? (3-4 slides): opener prompt, automation checklist framework (4 criteria), group scoring exercise instructions",
+        "Block 2 — Proces uittekenen in Excalidraw (3-4 slides): Excalidraw intro, guided order intake process diagram example, duo exercise instructions with color coding rules",
+        "Block 3 — Introductie Make.com (4-5 slides): core concepts table (Scenario/Module/Connection/Trigger mapped to Excalidraw), interface tour highlights, pre-built demo flow overview",
+        "Block 4 — Bouw de order intake automatisering (2-3 slides): setup checklist reference, stretch goal for fast finishers, troubleshooting tips",
+        "Block 5 — Blik op n8n (3-4 slides): what is n8n, side-by-side comparison with Make.com, \"wanneer wat gebruiken\" table",
+        "Block 6 — Eigen automatiseringskans identificeren (2-3 slides): individual brainstorm prompt, duo-sharing instructions with the two feedback questions",
+        "Block 7 — Afsluiting (2-3 slides): recap of the day's arc (denken -\u003e tekenen -\u003e zien -\u003e bouwen), resources overview, 2-week challenge, QR code to landing page",
+        "Title slide with workshop name, date, location",
+        "Closing slide with contact details and QR code",
+        "Pause slides between Block 2-3 and Block 4-5",
+        "Primary language is Dutch; English subtitles where helpful",
+        "Exportable as PDF for backup (in case of internet issues)",
+        "Estimated 25-35 slides total"
+      ],
+      "priority": 7,
+      "passes": false
+    },
+    {
+      "id": "US-008",
+      "title": "Make.com demo scenario — Order intake automation",
+      "description": "As a trainer, I need a pre-built Make.com scenario that demonstrates the full order intake flow live during Block 3.",
+      "acceptanceCriteria": [
+        "Scenario triggers on Google Form submission (Watch Responses)",
+        "Adds a row to a Google Sheet (\"Orders\") with mapped form fields",
+        "Sends a confirmation email to the form submitter with order summary",
+        "Sends a notification email to a \"production team\" address with order details",
+        "Form fields: Bedrijfsnaam, Contactpersoon, Email, Product omschrijving, Aantal, Gewenste leverdatum",
+        "Scenario runs successfully end-to-end with \"Run once\"",
+        "Documented: screenshot or export of the scenario for reference"
+      ],
+      "priority": 8,
+      "passes": false
+    },
+    {
+      "id": "US-009",
+      "title": "n8n demo scenario — Order intake automation",
+      "description": "As a trainer, I need the same order intake flow built in n8n for the side-by-side comparison in Block 5.",
+      "acceptanceCriteria": [
+        "Workflow mirrors the Make.com scenario: Form trigger -\u003e Sheet row -\u003e Confirmation email -\u003e Notification email",
+        "Uses equivalent n8n nodes (Google Forms Trigger, Google Sheets, Send Email)",
+        "Workflow runs successfully end-to-end",
+        "Documented: screenshot or JSON export of the workflow"
+      ],
+      "priority": 9,
+      "passes": false
+    },
+    {
+      "id": "US-010",
+      "title": "QR code generation",
+      "description": "As a trainer, I need a QR code pointing to the landing page URL so participants can quickly access it.",
+      "acceptanceCriteria": [
+        "QR code resolves to the public landing page URL",
+        "High enough resolution for print (300 DPI minimum)",
+        "Available as PNG and PDF for printing on table cards or embedding in slides",
+        "Tested: scanning with phone camera opens the correct page"
+      ],
+      "priority": 10,
+      "passes": false
+    },
+    {
+      "id": "US-011",
+      "title": "Landing page — Canva design assets",
+      "description": "As a trainer, I want polished visual assets (header image, section dividers, or social card) created in Canva to give the landing page a professional look.",
+      "acceptanceCriteria": [
+        "At least one header/banner image for the landing page (workshop title + visual)",
+        "Consistent visual style across assets (clean, neutral, professional)",
+        "Assets exported in web-optimized formats (PNG/SVG)",
+        "Assets embedded or referenced in the landing page HTML"
+      ],
+      "priority": 11,
+      "passes": false
+    }
+  ]
+}
