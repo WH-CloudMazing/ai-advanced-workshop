@@ -163,7 +163,7 @@
         "Assets embedded or referenced in the landing page HTML"
       ],
       "priority": 11,
-      "passes": false
+      "passes": true
     }
   ]
 }
