@@ -58,7 +58,7 @@
         "Links are displayed as clickable cards or buttons (not a plain list)"
       ],
       "priority": 4,
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-005",

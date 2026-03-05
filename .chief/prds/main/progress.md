@@ -32,3 +32,10 @@
   - US-001 implemented comprehensive checklist covering all US-003 requirements — no code changes needed
   - When prior stories implement future story features, just verify and mark as passing
 ---
+
+## 2026-03-05 - US-004
+- All acceptance criteria already met by US-001 implementation: 4 tool cards (Make.com, Excalidraw, Google Forms, Google Sheets) with target="_blank", Dutch descriptions, card-style layout with hover effects
+- Files changed: `.chief/prds/main/prd.json` (marked passes: true)
+- **Learnings for future iterations:**
+  - US-001 implemented tool links as clickable cards covering all US-004 requirements — no code changes needed
+---
