@@ -82,3 +82,16 @@
   - The blueprint JSON format follows Make.com's export structure with module IDs, mappers, and metadata
   - US-009 (n8n) will follow the same pattern: JSON workflow export + setup guide
 ---
+
+## 2026-03-05 - US-009
+- Created n8n workflow JSON export and detailed setup guide mirroring the Make.com scenario
+- Workflow: Google Forms Trigger -> Google Sheets (append row) -> Bevestigingsmail + Notificatiemail (parallel split)
+- All 6 form fields mapped using n8n expression syntax (`{{ $json.field }}`)
+- Setup guide includes: import instructions, credential configuration (Google API + SMTP), test steps, Make.com vs n8n comparison table, troubleshooting
+- Files changed: `docs/n8n-workflow.json` (new), `docs/n8n-workflow-setup.md` (new), `.chief/prds/main/prd.json` (marked passes: true)
+- **Learnings for future iterations:**
+  - n8n workflow JSON uses `connections` object with node names as keys (not IDs like Make.com)
+  - n8n can split output to multiple nodes in parallel after a single node (vs Make.com's sequential chain)
+  - n8n expressions use `{{ $json.field }}` or `{{ $('Node Name').item.json.field }}` syntax
+  - SMTP credentials are needed for n8n email nodes (unlike Make.com which has a built-in email module)
+---
