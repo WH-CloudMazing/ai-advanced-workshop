@@ -127,6 +127,49 @@
     .timeline-item[data-type="demo"]::before { background: var(--clr-orange); }
     .timeline-item[data-type="pauze"] { border-left-color: var(--clr-border); }
     .timeline-item[data-type="pauze"]::before { background: var(--clr-text-muted); }
+    .timeline-item.active {
+      background: var(--clr-primary-light);
+      box-shadow: var(--shadow-md), 0 0 0 2px var(--clr-primary);
+      transform: scale(1.02);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .timeline-item.active[data-type="hands-on"] {
+      background: var(--clr-accent-light);
+      box-shadow: var(--shadow-md), 0 0 0 2px var(--clr-accent);
+    }
+    .timeline-item.active[data-type="demo"] {
+      background: var(--clr-orange-light);
+      box-shadow: var(--shadow-md), 0 0 0 2px var(--clr-orange);
+    }
+    .timeline-item.active[data-type="pauze"] {
+      background: #f1f5f9;
+      box-shadow: var(--shadow-md), 0 0 0 2px var(--clr-text-muted);
+    }
+    .timeline-item { cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+    .timeline-active-hint {
+      font-size: 0.8rem;
+      color: var(--clr-text-muted);
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+    .timeline-legend {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+      font-size: 0.8rem;
+    }
+    .timeline-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .timeline-legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
 
     .timeline-time {
       font-size: 0.8rem;
@@ -407,6 +450,13 @@
     <div class="container">
       <h2 class="section-title">Agenda</h2>
       <p class="section-subtitle">Programme overview</p>
+      <div class="timeline-legend">
+        <div class="timeline-legend-item"><span class="timeline-legend-dot" style="background:var(--clr-primary)"></span> Discussie</div>
+        <div class="timeline-legend-item"><span class="timeline-legend-dot" style="background:var(--clr-accent)"></span> Hands-on / Oefening</div>
+        <div class="timeline-legend-item"><span class="timeline-legend-dot" style="background:var(--clr-orange)"></span> Demo</div>
+        <div class="timeline-legend-item"><span class="timeline-legend-dot" style="background:var(--clr-text-muted)"></span> Pauze</div>
+      </div>
+      <p class="timeline-active-hint">Klik op een blok om het als actief te markeren</p>
       <div class="timeline">
         <div class="timeline-item" data-type="discussie">
           <div class="timeline-time">0:00 - 0:30</div>
@@ -712,6 +762,21 @@
       });
 
       renderChecklist();
+    })();
+
+    (function() {
+      var items = document.querySelectorAll('.timeline-item');
+      for (var i = 0; i < items.length; i++) {
+        items[i].addEventListener('click', function() {
+          var wasActive = this.classList.contains('active');
+          for (var j = 0; j < items.length; j++) {
+            items[j].classList.remove('active');
+          }
+          if (!wasActive) {
+            this.classList.add('active');
+          }
+        });
+      }
     })();
   </script>
 </body>
