@@ -2,7 +2,7 @@
 
 **Duur:** 4 uur (halve dag, incl. pauzes)
 **Groep:** 10 personen, gemengd technisch niveau (Faber Electronics)
-**Locatie:** Faber Electronics, Heerenveen
+**Locatie:** Faber Electronics, Velp
 **Benodigdheden deelnemers:** Laptop, Microsoft 365 account
 
 ## Doel

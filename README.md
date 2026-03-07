@@ -2,7 +2,7 @@
 
 Complete workshop package for a 4-hour hands-on session on process automation. Participants learn to identify, map, and automate business processes using Excalidraw, Make.com, and n8n.
 
-**Client:** Faber Electronics, Heerenveen
+**Client:** Faber Electronics, Velp
 **Date:** 5 maart 2026
 **Participants:** 10 (mixed technical levels)
 **Language:** Dutch
