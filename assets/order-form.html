@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Intake - Test Formulier</title>
+    <style>
+        :root {
+            --clr-primary: #2563eb;
+            --clr-accent: #10b981;
+            --clr-bg: #f8f9fa;
+            --clr-surface: #ffffff;
+            --clr-text: #1e293b;
+            --clr-text-muted: #64748b;
+            --clr-border: #e2e8f0;
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--clr-bg);
+            color: var(--clr-text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 560px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .intro {
+            color: var(--clr-text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .card {
+            background: var(--clr-surface);
+            border: 1px solid var(--clr-border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--clr-text-muted);
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            color: var(--clr-text);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="date"],
+        input[type="url"],
+        textarea {
+            width: 100%;
+            padding: 0.6rem 0.75rem;
+            border: 1px solid var(--clr-border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            color: var(--clr-text);
+            background: var(--clr-surface);
+            transition: border-color 0.15s;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--clr-primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .field {
+            margin-bottom: 1rem;
+        }
+
+        .field:last-child {
+            margin-bottom: 0;
+        }
+
+        .row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .row .field {
+            flex: 1;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--clr-primary);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .message {
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .message.success {
+            display: block;
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .message.error {
+            display: block;
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Order Intake - Test Formulier</h1>
+        <p class="intro">Plak je Make.com Webhook URL hieronder en verstuur een testbestelling.</p>
+
+        <form id="orderForm" onsubmit="return submitOrder(event)">
+            <div class="card">
+                <div class="card-title">Webhook</div>
+                <div class="field">
+                    <label for="webhookUrl">Make.com Webhook URL</label>
+                    <input type="url" id="webhookUrl" placeholder="https://hook.eu2.make.com/..." required>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Bestelgegevens</div>
+
+                <div class="field">
+                    <label for="bedrijfsnaam">Bedrijfsnaam</label>
+                    <input type="text" id="bedrijfsnaam" value="Test BV" required>
+                </div>
+
+                <div class="field">
+                    <label for="contactpersoon">Contactpersoon</label>
+                    <input type="text" id="contactpersoon" value="Jan de Tester" required>
+                </div>
+
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" value="jan@testbv.nl" required>
+                </div>
+
+                <div class="field">
+                    <label for="productOmschrijving">Product omschrijving</label>
+                    <textarea id="productOmschrijving" required>10x Sensor Module SM-200, inclusief montagebeugels</textarea>
+                </div>
+
+                <div class="row">
+                    <div class="field">
+                        <label for="aantal">Aantal</label>
+                        <input type="number" id="aantal" value="10" min="1" required>
+                    </div>
+                    <div class="field">
+                        <label for="leverdatum">Gewenste leverdatum</label>
+                        <input type="date" id="leverdatum" required>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn">Bestelling versturen</button>
+            <div id="message" class="message"></div>
+        </form>
+    </div>
+
+    <script>
+        // Set default delivery date to 14 days from now
+        const defaultDate = new Date();
+        defaultDate.setDate(defaultDate.getDate() + 14);
+        document.getElementById('leverdatum').value = defaultDate.toISOString().split('T')[0];
+
+        async function submitOrder(e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('submitBtn');
+            const msg = document.getElementById('message');
+            const webhookUrl = document.getElementById('webhookUrl').value.trim();
+
+            const payload = {
+                bedrijfsnaam: document.getElementById('bedrijfsnaam').value.trim(),
+                contactpersoon: document.getElementById('contactpersoon').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                product_omschrijving: document.getElementById('productOmschrijving').value.trim(),
+                aantal: parseInt(document.getElementById('aantal').value, 10),
+                gewenste_leverdatum: document.getElementById('leverdatum').value
+            };
+
+            btn.disabled = true;
+            btn.textContent = 'Verzenden...';
+            msg.className = 'message';
+            msg.style.display = 'none';
+
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    msg.textContent = 'Bestelling succesvol verzonden! Controleer je Make.com scenario.';
+                    msg.className = 'message success';
+                } else {
+                    msg.textContent = 'Fout bij verzenden: ' + response.status + ' ' + response.statusText;
+                    msg.className = 'message error';
+                }
+            } catch (err) {
+                msg.textContent = 'Kon geen verbinding maken met de webhook. Controleer de URL en probeer opnieuw.';
+                msg.className = 'message error';
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Bestelling versturen';
+        }
+    </script>
+</body>
+</html>

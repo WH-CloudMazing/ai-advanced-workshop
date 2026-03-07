@@ -7,57 +7,43 @@ Setup-handleiding voor de pre-built demo in Blok 3 van de workshop.
 Het scenario automatiseert het order intake proces:
 
 ```
-Microsoft Form (trigger) --> Excel Online (rij toevoegen) --> Bevestigingsmail (naar klant) --> Notificatiemail (naar productie)
+Custom Webhook (trigger) --> Bevestigingsmail (naar klant) --> Notificatiemail (naar productie)
 ```
 
-## Stap 1: Microsoft Form aanmaken
+## Stap 1: Make.com Scenario opbouwen
 
-Maak een Microsoft Form met de titel **"Order Intake - Faber Electronics"** en de volgende velden:
-
-| Veld | Type | Verplicht |
-|------|------|-----------|
-| Bedrijfsnaam | Kort antwoord | Ja |
-| Contactpersoon | Kort antwoord | Ja |
-| Email | Kort antwoord | Ja |
-| Product omschrijving | Lang antwoord | Ja |
-| Aantal | Kort antwoord (nummer) | Ja |
-| Gewenste leverdatum | Datum | Ja |
-
-## Stap 2: Excel Online werkmap aanmaken
-
-Maak een Excel Online werkmap met de naam **"Orders"** en de volgende kolommen in rij 1:
-
-| A | B | C | D | E | F |
-|---|---|---|---|---|---|
-| Bedrijfsnaam | Contactpersoon | Email | Product omschrijving | Aantal | Gewenste leverdatum |
-
-## Stap 3: Make.com Scenario opbouwen
-
-### Module 1: Microsoft 365 - Watch Form Responses (Trigger)
+### Module 1: Custom Webhook (Trigger)
 
 1. Maak een nieuw scenario in Make.com
-2. Kies module: **Microsoft 365 > Watch Form Responses**
-3. Maak een connectie met je Microsoft 365 account
-4. Selecteer het formulier "Order Intake - Faber Electronics"
-5. Klik **OK** en kies "From now on" als startpunt
+2. Kies module: **Webhooks > Custom Webhook**
+3. Klik op **Add** om een nieuwe webhook aan te maken
+4. Geef de webhook een naam, bijv. "Order Intake Webhook"
+5. Klik **Save** en kopieer de gegenereerde **Webhook URL**
+6. Klik op **Re-determine data structure** en stuur een test-POST met de volgende JSON-body (of gebruik het HTML-formulier, zie Stap 2):
 
-### Module 2: Microsoft 365 Excel - Add a Row
+```json
+{
+  "Bedrijfsnaam": "Test BV",
+  "Contactpersoon": "Jan de Tester",
+  "Email": "test@voorbeeld.nl",
+  "Product omschrijving": "Printplaten PCB-2024",
+  "Aantal": 50,
+  "Gewenste leverdatum": "2026-03-14"
+}
+```
 
-1. Voeg module toe: **Microsoft 365 Excel > Add a Row**
-2. Gebruik dezelfde Microsoft 365 connectie
-3. Selecteer werkmap: "Orders"
-4. Map de velden:
+De webhook herkent nu automatisch de volgende velden:
 
-| Sheet kolom | Formulier veld |
-|-------------|---------------|
-| Bedrijfsnaam | `{{1.Bedrijfsnaam}}` |
-| Contactpersoon | `{{1.Contactpersoon}}` |
-| Email | `{{1.Email}}` |
-| Product omschrijving | `{{1.Product omschrijving}}` |
-| Aantal | `{{1.Aantal}}` |
-| Gewenste leverdatum | `{{1.Gewenste leverdatum}}` |
+| Veld | Type |
+|------|------|
+| Bedrijfsnaam | Text |
+| Contactpersoon | Text |
+| Email | Text |
+| Product omschrijving | Text |
+| Aantal | Number |
+| Gewenste leverdatum | Text |
 
-### Module 3: Email - Send an Email (Bevestiging naar klant)
+### Module 2: Email - Send an Email (Bevestiging naar klant)
 
 1. Voeg module toe: **Email > Send an Email**
 2. Configureer:
@@ -77,11 +63,10 @@ Gewenste leverdatum: {{1.Gewenste leverdatum}}
 
 Wij nemen zo spoedig mogelijk contact met u op.
 
-Met vriendelijke groet,
-Faber Electronics
+Met vriendelijke groet
 ```
 
-### Module 4: Email - Send an Email (Notificatie naar productie)
+### Module 3: Email - Send an Email (Notificatie naar productie)
 
 1. Voeg module toe: **Email > Send an Email**
 2. Configureer:
@@ -102,31 +87,35 @@ Gewenste leverdatum: {{1.Gewenste leverdatum}}
 Actie vereist: controleer beschikbaarheid en plan productie.
 ```
 
-## Stap 4: Testen
+## Stap 2: Testen
 
 1. Klik **Run once** in Make.com
-2. Vul het Microsoft Form in met testdata:
+2. Open het HTML-bestelformulier (`assets/order-form.html`) in je browser
+3. Plak de **Webhook URL** uit Stap 1 in het URL-veld van het formulier
+4. Vul het formulier in met testdata:
    - Bedrijfsnaam: "Test BV"
    - Contactpersoon: "Jan de Tester"
    - Email: je eigen e-mailadres
    - Product omschrijving: "Printplaten PCB-2024"
    - Aantal: 50
    - Gewenste leverdatum: volgende week
-3. Verifieer:
-   - [ ] Nieuwe rij in Excel Online werkmap "Orders"
+5. Klik op **Verstuur bestelling**
+6. Verifieer:
    - [ ] Bevestigingsmail ontvangen op het ingevulde e-mailadres
    - [ ] Notificatiemail ontvangen op het productie e-mailadres
 
-## Stap 5: Scenario activeren (optioneel)
+> **Tip:** Je kunt ook handmatig een POST-request sturen met een tool als cURL of Postman naar de Webhook URL met de JSON-body uit Stap 1.
 
-Voor de live demo kun je het scenario op "On" zetten zodat het automatisch triggert bij nieuwe form submissions, of gebruik "Run once" voor gecontroleerde demo's.
+## Stap 3: Scenario activeren (optioneel)
+
+Voor de live demo kun je het scenario op "On" zetten zodat het automatisch triggert bij nieuwe webhook requests, of gebruik "Run once" voor gecontroleerde demo's.
 
 ## Scenario structuur (visueel)
 
 ```
-[Microsoft Forms]  [Excel Online]     [Email]           [Email]
- Watch Responses --> Add a Row -----> Send Email -----> Send Email
- (Trigger)          (Orders)         (Bevestiging)     (Notificatie)
+[Webhooks]            [Email]              [Email]
+ Custom Webhook -----> Send Email -------> Send Email
+ (Trigger)            (Bevestiging)        (Notificatie)
 ```
 
 ## Blueprint
@@ -137,8 +126,28 @@ Een referentie-blueprint is beschikbaar in `make-scenario-blueprint.json`. Dit b
 
 | Probleem | Oplossing |
 |----------|----------|
-| Form responses komen niet binnen | Controleer of de Microsoft 365 connectie actief is en het juiste formulier geselecteerd |
-| Microsoft OAuth fout | Controleer of de juiste permissions (Forms.Read, Files.ReadWrite) zijn toegekend in de Microsoft 365 connectie |
-| Sheet kolommen matchen niet | Zorg dat de kolomnamen exact overeenkomen met de formuliervelden |
+| Webhook URL werkt niet | Controleer of je de volledige URL hebt gekopieerd inclusief het pad na `hook.make.com` |
+| Velden worden niet herkend | Klik op **Re-determine data structure** en stuur opnieuw een test-POST met alle velden |
 | Email komt niet aan | Check de spam folder; gebruik een echt e-mailadres voor de test |
-| "Run once" toont geen data | Vul eerst het formulier in, wacht 10 seconden, dan "Run once" |
+| "Run once" toont geen data | Zorg dat je eerst "Run once" klikt en daarna het formulier verstuurt (binnen 5 minuten) |
+| Formulier geeft CORS-fout | Open het HTML-bestand lokaal in de browser, niet vanaf een andere server |
+
+## Bonus: Spreadsheet koppeling
+
+Wil je de bestellingen ook opslaan in een spreadsheet? Voeg dan een 4e module toe aan het scenario:
+
+### Optie A: Google Sheets
+
+1. Voeg module toe: **Google Sheets > Add a Row**
+2. Maak een connectie met je Google account
+3. Selecteer of maak een spreadsheet met kolommen: Bedrijfsnaam, Contactpersoon, Email, Product omschrijving, Aantal, Gewenste leverdatum
+4. Map de velden van de webhook (Module 1) naar de kolommen
+
+### Optie B: Microsoft 365 Excel
+
+1. Voeg module toe: **Microsoft 365 Excel > Add a Row**
+2. Maak een connectie met je Microsoft 365 account
+3. Selecteer of maak een werkmap met dezelfde kolommen
+4. Map de velden van de webhook (Module 1) naar de kolommen
+
+Plaats de spreadsheet-module direct na de webhook (tussen Module 1 en Module 2), zodat de data eerst wordt opgeslagen voordat de e-mails worden verstuurd.

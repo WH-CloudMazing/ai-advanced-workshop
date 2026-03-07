@@ -30,8 +30,9 @@ Complete workshop package for a 4-hour hands-on session on process automation. P
 ├── slides.html                         Presentation slides (32 slides, press F to present)
 ├── slides.pdf                          PDF export of the slides
 ├── assets/
-│   ├── header-banner.png               Landing page header banner
-│   ├── social-card.png                 Open Graph social sharing image
+│   ├── order-form.html                 HTML test form for Make.com webhook
+│   ├── orders-template.xlsx            Excel template with order column headers
+│   ├── order-intake-template.excalidraw  Excalidraw process diagram template
 │   ├── qr-landing-page.png             QR code to landing page (300 DPI)
 │   └── qr-landing-page.pdf             QR code vector PDF for print
 ├── docs/
@@ -53,8 +54,8 @@ Complete workshop package for a 4-hour hands-on session on process automation. P
 Single-file HTML page — no build step, no dependencies. Serves as the central hub during the workshop.
 
 - **Agenda** — Visual timeline with color-coded block types
-- **Checklist** — Interactive 7-step build tracker with localStorage persistence
-- **Tool Links** — Quick access cards to Make.com, Excalidraw, Microsoft Forms, Microsoft Excel
+- **Checklist** — Interactive 5-step build tracker with localStorage persistence
+- **Tool Links** — Quick access cards to Make.com, Excalidraw
 - **Reference Material** — Automation checklist (4 criteria), Make.com vs n8n comparison, terminology table
 - **Resources** — Post-workshop learning links and 2-week challenge
 
@@ -75,14 +76,14 @@ The PDF export (`slides.pdf`) works as a standalone backup.
 Order intake automation demo for Block 3:
 
 ```
-Microsoft Form → Excel → Bevestigingsmail klant → Notificatie productie
+Custom Webhook → Bevestigingsmail klant → Notificatie productie
 ```
 
-Blueprint JSON + setup guide with all 6 form fields mapped (Bedrijfsnaam, Contactpersoon, Email, Product omschrijving, Aantal, Gewenste leverdatum).
+Blueprint JSON + setup guide. No external tools needed — uses Make.com's built-in webhook. Optional bonus: add Google Sheets or Excel for data logging.
 
 ### n8n Workflow (`docs/n8n-workflow-*`)
 
-Same order intake flow in n8n for the side-by-side comparison in Block 5. JSON export + setup guide including credential configuration.
+Same order intake flow in n8n using the built-in Form Trigger node. No external form or spreadsheet tools needed. JSON export + setup guide.
 
 ### QR Code (`assets/qr-landing-page.*`)
 
@@ -91,5 +92,4 @@ Points to the landing page URL. Available as PNG (900x900, 300 DPI) and vector P
 ## Prerequisites for Participants
 
 - Laptop with modern browser
-- Microsoft 365 account (for Forms & Excel — participants already have this)
 - Free Make.com account (signup link on landing page)

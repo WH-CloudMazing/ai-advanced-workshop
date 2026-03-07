@@ -512,14 +512,6 @@
           <div class="tool-card-name">Excalidraw</div>
           <div class="tool-card-desc">Teken processen visueel uit in je browser</div>
         </a>
-        <a href="https://forms.office.com" target="_blank" rel="noopener" class="tool-card">
-          <div class="tool-card-name">Microsoft Forms</div>
-          <div class="tool-card-desc">Maak het order intake formulier voor de oefening</div>
-        </a>
-        <a href="https://www.office.com/launch/excel" target="_blank" rel="noopener" class="tool-card">
-          <div class="tool-card-name">Microsoft Excel</div>
-          <div class="tool-card-desc">Maak de spreadsheet aan voor je orders</div>
-        </a>
       </div>
     </div>
   </section>
@@ -531,8 +523,12 @@
       <p class="section-subtitle">Startbestanden om tijd te besparen</p>
       <div class="card-grid">
         <a href="assets/orders-template.xlsx" download class="tool-card">
-          <div class="tool-card-name">Excel template</div>
-          <div class="tool-card-desc">Orders spreadsheet met kolommen voor Make.com / n8n koppeling. Open in Excel Online.</div>
+          <div class="tool-card-name">Orders spreadsheet template</div>
+          <div class="tool-card-desc">Orders spreadsheet met kolommen voor de automatisering. Open in Excel Online of Google Sheets.</div>
+        </a>
+        <a href="assets/order-form.html" target="_blank" rel="noopener" class="tool-card">
+          <div class="tool-card-name">Order test formulier</div>
+          <div class="tool-card-desc">HTML formulier om testbestellingen te versturen naar je Make.com webhook.</div>
         </a>
         <a href="assets/order-intake-template.excalidraw" download class="tool-card">
           <div class="tool-card-name">Excalidraw template</div>
@@ -548,7 +544,7 @@
       <h2 class="section-title">Checklist</h2>
       <p class="section-subtitle">Build progress tracker</p>
       <div class="checklist-progress">
-        <span class="progress-text" id="progressText">0/7 stappen voltooid</span>
+        <span class="progress-text" id="progressText">0/5 stappen voltooid</span>
         <div class="progress-bar-track"><div class="progress-bar-fill" id="progressBar" style="width:0%"></div></div>
         <button class="reset-btn" id="resetBtn">Reset</button>
       </div>
@@ -666,13 +662,11 @@
   <script>
     (function() {
       var steps = [
-        { title: 'Stap 1: Formulier aanmaken', desc: 'Maak een Microsoft Forms formulier met velden: Bedrijfsnaam, Contactpersoon, Email, Product omschrijving, Aantal, Gewenste leverdatum.' },
-        { title: 'Stap 2: Excel spreadsheet aanmaken', desc: 'Maak een Microsoft Excel spreadsheet "Orders" met kolommen die matchen met het formulier.' },
-        { title: 'Stap 3: Make.com \u2014 Trigger instellen', desc: 'Nieuw scenario aanmaken, Microsoft Forms > Watch Responses module toevoegen en connectie maken.' },
-        { title: 'Stap 4: Rij toevoegen in Excel', desc: 'Microsoft Excel > Add a Row module toevoegen en formuliervelden mappen naar kolommen.' },
-        { title: 'Stap 5: Bevestigingsmail', desc: 'Email > Send an Email module: bevestiging naar het emailadres uit het formulier.' },
-        { title: 'Stap 6: Productie notificatie', desc: 'Email > Send an Email module: samenvatting met besteldetails naar het productieteam.' },
-        { title: 'Stap 7: Testen', desc: 'Vul het Microsoft Forms formulier in, klik "Run once" en controleer Excel, bevestigingsmail en notificatie.' }
+        { title: 'Stap 1: Make.com account aanmaken', desc: 'Maak een gratis account aan op make.com en log in.' },
+        { title: 'Stap 2: Webhook trigger instellen', desc: 'Nieuw scenario aanmaken, Custom Webhook module toevoegen en webhook URL kopieren.' },
+        { title: 'Stap 3: Bevestigingsmail module', desc: 'Email > Send an Email module: bevestiging naar het emailadres uit de webhook data.' },
+        { title: 'Stap 4: Productie notificatie module', desc: 'Email > Send an Email module: samenvatting met besteldetails naar het productieteam.' },
+        { title: 'Stap 5: Testen', desc: 'Open het testformulier, plak je webhook URL, verstuur een testbestelling en controleer de emails.' }
       ];
 
       var STORAGE_KEY = 'workshop-checklist';
@@ -750,7 +744,7 @@
       }
 
       function updateProgress(count) {
-        document.getElementById('progressText').textContent = count + '/7 stappen voltooid';
+        document.getElementById('progressText').textContent = count + '/5 stappen voltooid';
         document.getElementById('progressBar').style.width = (count / steps.length * 100) + '%';
         var cel = document.getElementById('celebration');
         if (count === steps.length) { cel.classList.add('show'); }
