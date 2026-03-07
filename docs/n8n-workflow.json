@@ -1,0 +1,130 @@
+{
+  "name": "Order Intake Automatisering - Faber Electronics Workshop",
+  "nodes": [
+    {
+      "parameters": {
+        "formId": "{{GOOGLE_FORM_ID}}",
+        "pollTimes": {
+          "item": [
+            { "mode": "everyMinute" }
+          ]
+        }
+      },
+      "id": "trigger-node",
+      "name": "Google Forms Trigger",
+      "type": "n8n-nodes-base.googleFormsTrigger",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "credentials": {
+        "googleApi": {
+          "id": "1",
+          "name": "Google Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": "{{SPREADSHEET_ID}}",
+        "sheetName": "Orders",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Bedrijfsnaam": "={{ $json.Bedrijfsnaam }}",
+            "Contactpersoon": "={{ $json.Contactpersoon }}",
+            "Email": "={{ $json.Email }}",
+            "Product omschrijving": "={{ $json['Product omschrijving'] }}",
+            "Aantal": "={{ $json.Aantal }}",
+            "Gewenste leverdatum": "={{ $json['Gewenste leverdatum'] }}"
+          }
+        }
+      },
+      "id": "sheets-node",
+      "name": "Google Sheets - Rij toevoegen",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [500, 300],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Google Forms Trigger').item.json.Email }}",
+        "subject": "=Bevestiging ontvangst aanvraag - {{ $('Google Forms Trigger').item.json.Bedrijfsnaam }}",
+        "message": "=Beste {{ $('Google Forms Trigger').item.json.Contactpersoon }},\n\nBedankt voor uw aanvraag. Wij hebben de volgende gegevens ontvangen:\n\nBedrijf: {{ $('Google Forms Trigger').item.json.Bedrijfsnaam }}\nProduct: {{ $('Google Forms Trigger').item.json['Product omschrijving'] }}\nAantal: {{ $('Google Forms Trigger').item.json.Aantal }}\nGewenste leverdatum: {{ $('Google Forms Trigger').item.json['Gewenste leverdatum'] }}\n\nWij nemen zo spoedig mogelijk contact met u op.\n\nMet vriendelijke groet,\nFaber Electronics"
+      },
+      "id": "email-confirm-node",
+      "name": "Bevestigingsmail",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [750, 200],
+      "credentials": {
+        "smtp": {
+          "id": "3",
+          "name": "SMTP Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{PRODUCTION_EMAIL}}",
+        "subject": "=Nieuwe bestelling - {{ $('Google Forms Trigger').item.json.Bedrijfsnaam }}",
+        "message": "=Nieuwe bestelling ontvangen:\n\nBedrijf: {{ $('Google Forms Trigger').item.json.Bedrijfsnaam }}\nContactpersoon: {{ $('Google Forms Trigger').item.json.Contactpersoon }}\nEmail: {{ $('Google Forms Trigger').item.json.Email }}\nProduct: {{ $('Google Forms Trigger').item.json['Product omschrijving'] }}\nAantal: {{ $('Google Forms Trigger').item.json.Aantal }}\nGewenste leverdatum: {{ $('Google Forms Trigger').item.json['Gewenste leverdatum'] }}\n\nActie vereist: controleer beschikbaarheid en plan productie."
+      },
+      "id": "email-notify-node",
+      "name": "Notificatiemail",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [750, 400],
+      "credentials": {
+        "smtp": {
+          "id": "3",
+          "name": "SMTP Account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Google Forms Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets - Rij toevoegen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets - Rij toevoegen": {
+      "main": [
+        [
+          {
+            "node": "Bevestigingsmail",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notificatiemail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "instanceId": "workshop-demo"
+  },
+  "tags": [
+    { "name": "workshop" },
+    { "name": "demo" }
+  ]
+}
