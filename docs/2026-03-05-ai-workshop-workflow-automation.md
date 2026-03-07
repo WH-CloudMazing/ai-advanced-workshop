@@ -3,7 +3,7 @@
 **Duur:** 4 uur (halve dag, incl. pauzes)
 **Groep:** 10 personen, gemengd technisch niveau (Faber Electronics)
 **Locatie:** Faber Electronics, Heerenveen
-**Benodigdheden deelnemers:** Laptop, Google account
+**Benodigdheden deelnemers:** Laptop, Microsoft 365 account
 
 ## Doel
 
@@ -15,6 +15,8 @@ Deelnemers leren processen herkennen, tekenen en automatiseren. Ze vertrekken me
 |------|------|
 | Excalidraw | Processen visueel uittekenen |
 | Make.com | Hands-on automatisering bouwen (gratis account) |
+| Microsoft Forms | Formulieren aanmaken (deelnemers hebben al M365) |
+| Microsoft Excel | Spreadsheet voor orderdata |
 | n8n | Demo — krachtigere alternative |
 | Landing page | Centrale plek met agenda, checklist, links (QR code) |
 
@@ -126,8 +128,8 @@ Toon hun Excalidraw-tekening naast een leeg Make.com scenario: *"Zie je? Hetzelf
 
 Laat de afgebouwde order intake automatisering live draaien:
 
-1. Google Form wordt ingevuld
-2. Nieuwe rij verschijnt in Google Sheet
+1. Microsoft Form wordt ingevuld
+2. Nieuwe rij verschijnt in Excel
 3. Bevestigingsmail wordt verstuurd naar de "klant"
 4. Notificatie-email gaat naar "productie"
 
@@ -140,14 +142,14 @@ Run het live zodat ze data door de modules zien stromen. Sluit af met: *"Dit gaa
 ### Setup (5 min)
 
 - Open de landingspagina checklist — elke stap die ze afronden, vinken ze af
-- Controleer dat iedereen Make.com open heeft en een Google account klaar
+- Controleer dat iedereen Make.com open heeft en een Microsoft 365 account klaar
 
 ### Stap-voor-stap begeleide bouw (45 min)
 
 De checklist op de landingspagina loopt hen door elke stap:
 
-**Stap 1: Google Form aanmaken (10 min)**
-Maak een formulier met velden:
+**Stap 1: Microsoft Form aanmaken (10 min)**
+Maak een formulier op forms.office.com met velden:
 - Bedrijfsnaam
 - Contactpersoon
 - Email
@@ -155,16 +157,16 @@ Maak een formulier met velden:
 - Aantal
 - Gewenste leverdatum
 
-**Stap 2: Google Sheet aanmaken (2 min)**
-Maak een spreadsheet "Orders" met kolommen die matchen met het formulier.
+**Stap 2: Excel spreadsheet aanmaken (2 min)**
+Maak een Excel Online spreadsheet "Orders" met kolommen die matchen met het formulier.
 
 **Stap 3: Make.com — Trigger instellen (5 min)**
 - Nieuw scenario aanmaken
-- Module: Google Forms -> Watch Responses
-- Connectie maken met Google account
+- Module: Microsoft 365 -> Watch Form Responses
+- Connectie maken met Microsoft 365 account
 
 **Stap 4: Module 2 — Rij toevoegen in Sheet (8 min)**
-- Module: Google Sheets -> Add a Row
+- Module: Microsoft 365 Excel -> Add a Row
 - Map de formuliervelden naar de juiste kolommen
 
 **Stap 5: Module 3 — Bevestigingsmail (10 min)**
@@ -179,7 +181,7 @@ Maak een spreadsheet "Orders" met kolommen die matchen met het formulier.
 - Samenvatting met bestelling details
 
 **Stap 7: Testen (5 min)**
-- Vul het Google Form in
+- Vul het Microsoft Form in
 - Klik "Run once" in Make.com
 - Controleer: rij in Sheet? Bevestigingsmail ontvangen? Notificatie ontvangen?
 
@@ -279,7 +281,7 @@ Eenpagina HTML site, toegankelijk via QR code die op tafel/slides staat.
 1. **Header** — Workshop titel, datum, logo's Faber Electronics + RocketFlow
 2. **Agenda** — Visuele tijdlijn van de dag
 3. **Checklist** — Interactieve checkboxen voor de hands-on bouw (7 stappen uit Blok 4)
-4. **Tool links** — Make.com signup, Excalidraw, Google Forms, Google Sheets
+4. **Tool links** — Make.com signup, Excalidraw, Microsoft Forms, Microsoft Excel
 5. **Referentiemateriaal** — Automatiserings-checklist framework, Make.com vs n8n vergelijking
 6. **Bronnen** — Post-workshop leermateriaal en tutorials
 7. **Contact** — RocketFlow contactgegevens voor follow-up
@@ -299,11 +301,12 @@ Eenpagina HTML site, toegankelijk via QR code die op tafel/slides staat.
 
 - [ ] Make.com scenario pre-builden voor de demo in Blok 3
 - [ ] n8n scenario pre-builden voor de demo in Blok 5
-- [ ] Google Form + Sheet template klaar hebben als voorbeeld
+- [ ] Microsoft Form + Excel template klaar hebben als voorbeeld
 - [ ] Landing page bouwen en hosten
 - [ ] QR code genereren en printen (tafelkaarten of eerste slide)
 - [ ] Excalidraw testen op het netwerk van Faber
 - [ ] Controleren dat Make.com signup niet geblokkeerd is op hun netwerk
+- [ ] Controleren dat deelnemers toegang hebben tot Microsoft Forms en Excel Online
 
 ### Mee te nemen
 

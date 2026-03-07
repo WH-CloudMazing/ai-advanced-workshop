@@ -7,12 +7,12 @@ Setup-handleiding voor de pre-built demo in Blok 3 van de workshop.
 Het scenario automatiseert het order intake proces:
 
 ```
-Google Form (trigger) --> Google Sheet (rij toevoegen) --> Bevestigingsmail (naar klant) --> Notificatiemail (naar productie)
+Microsoft Form (trigger) --> Excel Online (rij toevoegen) --> Bevestigingsmail (naar klant) --> Notificatiemail (naar productie)
 ```
 
-## Stap 1: Google Form aanmaken
+## Stap 1: Microsoft Form aanmaken
 
-Maak een Google Form met de titel **"Order Intake - Faber Electronics"** en de volgende velden:
+Maak een Microsoft Form met de titel **"Order Intake - Faber Electronics"** en de volgende velden:
 
 | Veld | Type | Verplicht |
 |------|------|-----------|
@@ -23,9 +23,9 @@ Maak een Google Form met de titel **"Order Intake - Faber Electronics"** en de v
 | Aantal | Kort antwoord (nummer) | Ja |
 | Gewenste leverdatum | Datum | Ja |
 
-## Stap 2: Google Sheet aanmaken
+## Stap 2: Excel Online werkmap aanmaken
 
-Maak een Google Sheet met de naam **"Orders"** en de volgende kolommen in rij 1:
+Maak een Excel Online werkmap met de naam **"Orders"** en de volgende kolommen in rij 1:
 
 | A | B | C | D | E | F |
 |---|---|---|---|---|---|
@@ -33,19 +33,19 @@ Maak een Google Sheet met de naam **"Orders"** en de volgende kolommen in rij 1:
 
 ## Stap 3: Make.com Scenario opbouwen
 
-### Module 1: Google Forms - Watch Responses (Trigger)
+### Module 1: Microsoft 365 - Watch Form Responses (Trigger)
 
 1. Maak een nieuw scenario in Make.com
-2. Kies module: **Google Forms > Watch Responses**
-3. Maak een connectie met je Google account
+2. Kies module: **Microsoft 365 > Watch Form Responses**
+3. Maak een connectie met je Microsoft 365 account
 4. Selecteer het formulier "Order Intake - Faber Electronics"
 5. Klik **OK** en kies "From now on" als startpunt
 
-### Module 2: Google Sheets - Add a Row
+### Module 2: Microsoft 365 Excel - Add a Row
 
-1. Voeg module toe: **Google Sheets > Add a Row**
-2. Gebruik dezelfde Google connectie
-3. Selecteer spreadsheet: "Orders"
+1. Voeg module toe: **Microsoft 365 Excel > Add a Row**
+2. Gebruik dezelfde Microsoft 365 connectie
+3. Selecteer werkmap: "Orders"
 4. Map de velden:
 
 | Sheet kolom | Formulier veld |
@@ -105,7 +105,7 @@ Actie vereist: controleer beschikbaarheid en plan productie.
 ## Stap 4: Testen
 
 1. Klik **Run once** in Make.com
-2. Vul het Google Form in met testdata:
+2. Vul het Microsoft Form in met testdata:
    - Bedrijfsnaam: "Test BV"
    - Contactpersoon: "Jan de Tester"
    - Email: je eigen e-mailadres
@@ -113,7 +113,7 @@ Actie vereist: controleer beschikbaarheid en plan productie.
    - Aantal: 50
    - Gewenste leverdatum: volgende week
 3. Verifieer:
-   - [ ] Nieuwe rij in Google Sheet "Orders"
+   - [ ] Nieuwe rij in Excel Online werkmap "Orders"
    - [ ] Bevestigingsmail ontvangen op het ingevulde e-mailadres
    - [ ] Notificatiemail ontvangen op het productie e-mailadres
 
@@ -124,7 +124,7 @@ Voor de live demo kun je het scenario op "On" zetten zodat het automatisch trigg
 ## Scenario structuur (visueel)
 
 ```
-[Google Forms]    [Google Sheets]    [Email]           [Email]
+[Microsoft Forms]  [Excel Online]     [Email]           [Email]
  Watch Responses --> Add a Row -----> Send Email -----> Send Email
  (Trigger)          (Orders)         (Bevestiging)     (Notificatie)
 ```
@@ -137,7 +137,8 @@ Een referentie-blueprint is beschikbaar in `make-scenario-blueprint.json`. Dit b
 
 | Probleem | Oplossing |
 |----------|----------|
-| Form responses komen niet binnen | Controleer of de Google Forms connectie actief is en het juiste formulier geselecteerd |
+| Form responses komen niet binnen | Controleer of de Microsoft 365 connectie actief is en het juiste formulier geselecteerd |
+| Microsoft OAuth fout | Controleer of de juiste permissions (Forms.Read, Files.ReadWrite) zijn toegekend in de Microsoft 365 connectie |
 | Sheet kolommen matchen niet | Zorg dat de kolomnamen exact overeenkomen met de formuliervelden |
 | Email komt niet aan | Check de spam folder; gebruik een echt e-mailadres voor de test |
 | "Run once" toont geen data | Vul eerst het formulier in, wacht 10 seconden, dan "Run once" |

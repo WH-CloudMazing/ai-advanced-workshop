@@ -3,7 +3,7 @@
   "flow": [
     {
       "id": 1,
-      "module": "google-forms:watchResponses",
+      "module": "microsoft365:watchFormResponses",
       "version": 2,
       "parameters": {},
       "mapper": {},
@@ -11,7 +11,7 @@
         "designer": { "x": 0, "y": 0 },
         "restore": {},
         "expect": [
-          { "name": "formId", "type": "text", "label": "Form ID", "required": true }
+          { "name": "formId", "type": "text", "label": "Microsoft Form ID", "required": true }
         ],
         "interface": [
           { "name": "Bedrijfsnaam", "type": "text", "label": "Bedrijfsnaam" },
@@ -25,11 +25,11 @@
     },
     {
       "id": 2,
-      "module": "google-sheets:addRow",
+      "module": "microsoft365Excel:addRow",
       "version": 2,
       "parameters": {},
       "mapper": {
-        "spreadsheetId": "{{SPREADSHEET_ID}}",
+        "workbookId": "{{WORKBOOK_ID}}",
         "sheetId": "Orders",
         "values": {
           "0": "{{1.Bedrijfsnaam}}",
@@ -44,7 +44,7 @@
         "designer": { "x": 300, "y": 0 },
         "restore": {},
         "expect": [
-          { "name": "spreadsheetId", "type": "text", "label": "Spreadsheet ID", "required": true },
+          { "name": "workbookId", "type": "text", "label": "Workbook ID", "required": true },
           { "name": "sheetId", "type": "text", "label": "Sheet Name", "required": true }
         ]
       }

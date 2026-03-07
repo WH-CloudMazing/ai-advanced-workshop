@@ -3,7 +3,7 @@
   "nodes": [
     {
       "parameters": {
-        "formId": "{{GOOGLE_FORM_ID}}",
+        "formId": "{{MICROSOFT_FORM_ID}}",
         "pollTimes": {
           "item": [
             { "mode": "everyMinute" }
@@ -11,21 +11,21 @@
         }
       },
       "id": "trigger-node",
-      "name": "Google Forms Trigger",
-      "type": "n8n-nodes-base.googleFormsTrigger",
+      "name": "Microsoft Forms Trigger",
+      "type": "n8n-nodes-base.microsoftFormsTrigger",
       "typeVersion": 1,
       "position": [250, 300],
       "credentials": {
-        "googleApi": {
+        "microsoftOAuth2Api": {
           "id": "1",
-          "name": "Google Account"
+          "name": "Microsoft 365 Account"
         }
       }
     },
     {
       "parameters": {
         "operation": "append",
-        "documentId": "{{SPREADSHEET_ID}}",
+        "workbookId": "={{WORKBOOK_ID}}",
         "sheetName": "Orders",
         "columns": {
           "mappingMode": "defineBelow",
@@ -40,22 +40,22 @@
         }
       },
       "id": "sheets-node",
-      "name": "Google Sheets - Rij toevoegen",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4,
+      "name": "Microsoft Excel 365 - Rij toevoegen",
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 2,
       "position": [500, 300],
       "credentials": {
-        "googleSheetsOAuth2Api": {
+        "microsoftOAuth2Api": {
           "id": "2",
-          "name": "Google Sheets Account"
+          "name": "Microsoft 365 Account"
         }
       }
     },
     {
       "parameters": {
-        "sendTo": "={{ $('Google Forms Trigger').item.json.Email }}",
-        "subject": "=Bevestiging ontvangst aanvraag - {{ $('Google Forms Trigger').item.json.Bedrijfsnaam }}",
-        "message": "=Beste {{ $('Google Forms Trigger').item.json.Contactpersoon }},\n\nBedankt voor uw aanvraag. Wij hebben de volgende gegevens ontvangen:\n\nBedrijf: {{ $('Google Forms Trigger').item.json.Bedrijfsnaam }}\nProduct: {{ $('Google Forms Trigger').item.json['Product omschrijving'] }}\nAantal: {{ $('Google Forms Trigger').item.json.Aantal }}\nGewenste leverdatum: {{ $('Google Forms Trigger').item.json['Gewenste leverdatum'] }}\n\nWij nemen zo spoedig mogelijk contact met u op.\n\nMet vriendelijke groet,\nFaber Electronics"
+        "sendTo": "={{ $('Microsoft Forms Trigger').item.json.Email }}",
+        "subject": "=Bevestiging ontvangst aanvraag - {{ $('Microsoft Forms Trigger').item.json.Bedrijfsnaam }}",
+        "message": "=Beste {{ $('Microsoft Forms Trigger').item.json.Contactpersoon }},\n\nBedankt voor uw aanvraag. Wij hebben de volgende gegevens ontvangen:\n\nBedrijf: {{ $('Microsoft Forms Trigger').item.json.Bedrijfsnaam }}\nProduct: {{ $('Microsoft Forms Trigger').item.json['Product omschrijving'] }}\nAantal: {{ $('Microsoft Forms Trigger').item.json.Aantal }}\nGewenste leverdatum: {{ $('Microsoft Forms Trigger').item.json['Gewenste leverdatum'] }}\n\nWij nemen zo spoedig mogelijk contact met u op.\n\nMet vriendelijke groet,\nFaber Electronics"
       },
       "id": "email-confirm-node",
       "name": "Bevestigingsmail",
@@ -72,8 +72,8 @@
     {
       "parameters": {
         "sendTo": "={{PRODUCTION_EMAIL}}",
-        "subject": "=Nieuwe bestelling - {{ $('Google Forms Trigger').item.json.Bedrijfsnaam }}",
-        "message": "=Nieuwe bestelling ontvangen:\n\nBedrijf: {{ $('Google Forms Trigger').item.json.Bedrijfsnaam }}\nContactpersoon: {{ $('Google Forms Trigger').item.json.Contactpersoon }}\nEmail: {{ $('Google Forms Trigger').item.json.Email }}\nProduct: {{ $('Google Forms Trigger').item.json['Product omschrijving'] }}\nAantal: {{ $('Google Forms Trigger').item.json.Aantal }}\nGewenste leverdatum: {{ $('Google Forms Trigger').item.json['Gewenste leverdatum'] }}\n\nActie vereist: controleer beschikbaarheid en plan productie."
+        "subject": "=Nieuwe bestelling - {{ $('Microsoft Forms Trigger').item.json.Bedrijfsnaam }}",
+        "message": "=Nieuwe bestelling ontvangen:\n\nBedrijf: {{ $('Microsoft Forms Trigger').item.json.Bedrijfsnaam }}\nContactpersoon: {{ $('Microsoft Forms Trigger').item.json.Contactpersoon }}\nEmail: {{ $('Microsoft Forms Trigger').item.json.Email }}\nProduct: {{ $('Microsoft Forms Trigger').item.json['Product omschrijving'] }}\nAantal: {{ $('Microsoft Forms Trigger').item.json.Aantal }}\nGewenste leverdatum: {{ $('Microsoft Forms Trigger').item.json['Gewenste leverdatum'] }}\n\nActie vereist: controleer beschikbaarheid en plan productie."
       },
       "id": "email-notify-node",
       "name": "Notificatiemail",
@@ -89,18 +89,18 @@
     }
   ],
   "connections": {
-    "Google Forms Trigger": {
+    "Microsoft Forms Trigger": {
       "main": [
         [
           {
-            "node": "Google Sheets - Rij toevoegen",
+            "node": "Microsoft Excel 365 - Rij toevoegen",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Google Sheets - Rij toevoegen": {
+    "Microsoft Excel 365 - Rij toevoegen": {
       "main": [
         [
           {

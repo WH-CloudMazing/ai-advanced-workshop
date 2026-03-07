@@ -54,7 +54,7 @@ Single-file HTML page — no build step, no dependencies. Serves as the central 
 
 - **Agenda** — Visual timeline with color-coded block types
 - **Checklist** — Interactive 7-step build tracker with localStorage persistence
-- **Tool Links** — Quick access cards to Make.com, Excalidraw, Google Forms, Google Sheets
+- **Tool Links** — Quick access cards to Make.com, Excalidraw, Microsoft Forms, Microsoft Excel
 - **Reference Material** — Automation checklist (4 criteria), Make.com vs n8n comparison, terminology table
 - **Resources** — Post-workshop learning links and 2-week challenge
 
@@ -75,7 +75,7 @@ The PDF export (`slides.pdf`) works as a standalone backup.
 Order intake automation demo for Block 3:
 
 ```
-Google Form → Google Sheet → Bevestigingsmail klant → Notificatie productie
+Microsoft Form → Excel → Bevestigingsmail klant → Notificatie productie
 ```
 
 Blueprint JSON + setup guide with all 6 form fields mapped (Bedrijfsnaam, Contactpersoon, Email, Product omschrijving, Aantal, Gewenste leverdatum).
@@ -91,5 +91,5 @@ Points to the landing page URL. Available as PNG (900x900, 300 DPI) and vector P
 ## Prerequisites for Participants
 
 - Laptop with modern browser
-- Google account (for Forms & Sheets)
+- Microsoft 365 account (for Forms & Excel — participants already have this)
 - Free Make.com account (signup link on landing page)

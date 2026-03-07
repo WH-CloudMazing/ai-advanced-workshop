@@ -7,19 +7,20 @@ Setup-handleiding voor de pre-built demo in Blok 5 van de workshop.
 De workflow spiegelt het Make.com scenario en automatiseert hetzelfde order intake proces:
 
 ```
-Google Forms Trigger --> Google Sheets (rij toevoegen) --> Bevestigingsmail (naar klant)
-                                                      --> Notificatiemail (naar productie)
+Microsoft Forms Trigger --> Excel Online (rij toevoegen) --> Bevestigingsmail (naar klant)
+                                                          --> Notificatiemail (naar productie)
 ```
 
-Na de Google Sheets node splitst de workflow in twee parallelle e-mail nodes (in tegenstelling tot Make.com waar ze sequentieel zijn). Dit is een goed voorbeeld van een verschil om te bespreken in de vergelijking.
+Na de Excel Online node splitst de workflow in twee parallelle e-mail nodes (in tegenstelling tot Make.com waar ze sequentieel zijn). Dit is een goed voorbeeld van een verschil om te bespreken in de vergelijking.
 
 ## Stap 1: Voorbereidingen
 
-Gebruik dezelfde Google Form en Google Sheet als bij het Make.com scenario (zie `make-scenario-setup.md` Stap 1 en 2).
+Gebruik dezelfde Microsoft Form en Excel Online werkmap als bij het Make.com scenario (zie `make-scenario-setup.md` Stap 1 en 2).
 
 Daarnaast heb je nodig:
 - Een draaiende n8n instance (cloud of self-hosted)
 - SMTP-instellingen voor het verzenden van e-mails (bijv. Gmail App Password, Mailgun, of een ander SMTP-account)
+- Microsoft 365 account met toegang tot Forms en Excel Online
 
 ## Stap 2: Workflow importeren
 
@@ -30,16 +31,16 @@ Daarnaast heb je nodig:
 
 ## Stap 3: Credentials configureren
 
-### Google Forms Trigger
-1. Klik op de node **Google Forms Trigger**
-2. Maak een nieuwe credential aan: **Google API** (OAuth2)
-3. Volg de autorisatiestappen
+### Microsoft Forms Trigger
+1. Klik op de node **Microsoft Forms Trigger**
+2. Maak een nieuwe credential aan: **Microsoft OAuth2 API**
+3. Volg de autorisatiestappen en geef toegang tot Microsoft Forms
 4. Selecteer het formulier "Order Intake - Faber Electronics"
 
-### Google Sheets - Rij toevoegen
-1. Klik op de node **Google Sheets - Rij toevoegen**
-2. Maak een nieuwe credential aan: **Google Sheets OAuth2 API**
-3. Selecteer de spreadsheet "Orders"
+### Microsoft Excel 365 - Rij toevoegen
+1. Klik op de node **Microsoft Excel 365 - Rij toevoegen**
+2. Maak een nieuwe credential aan: **Microsoft OAuth2 API** (gebruik dezelfde als bij Forms)
+3. Selecteer de werkmap "Orders"
 4. Controleer dat de kolomnamen overeenkomen
 
 ### Bevestigingsmail & Notificatiemail
@@ -64,7 +65,7 @@ Daarnaast heb je nodig:
 ## Stap 4: Testen
 
 1. Klik op **Test Workflow** (of "Execute Workflow")
-2. Vul het Google Form in met testdata:
+2. Vul het Microsoft Form in met testdata:
    - Bedrijfsnaam: "Test BV"
    - Contactpersoon: "Jan de Tester"
    - Email: je eigen e-mailadres
@@ -72,7 +73,7 @@ Daarnaast heb je nodig:
    - Aantal: 50
    - Gewenste leverdatum: volgende week
 3. Verifieer:
-   - [ ] Nieuwe rij in Google Sheet "Orders"
+   - [ ] Nieuwe rij in Excel Online werkmap "Orders"
    - [ ] Bevestigingsmail ontvangen op het ingevulde e-mailadres
    - [ ] Notificatiemail ontvangen op het productie e-mailadres
 
@@ -83,17 +84,17 @@ Klik op de **Active** toggle rechtsboven om de workflow automatisch te laten tri
 ## Workflow structuur (visueel)
 
 ```
-[Google Forms Trigger] --> [Google Sheets] --+--> [Bevestigingsmail]
-                                             |
-                                             +--> [Notificatiemail]
+[Microsoft Forms Trigger] --> [Excel Online] --+--> [Bevestigingsmail]
+                                                |
+                                                +--> [Notificatiemail]
 ```
 
 ## Vergelijking met Make.com
 
 | Aspect | Make.com | n8n |
 |--------|----------|-----|
-| Trigger | Google Forms > Watch Responses | Google Forms Trigger node |
-| Sheet | Google Sheets > Add a Row | Google Sheets node (append) |
+| Trigger | Microsoft 365 > Watch Form Responses | Microsoft Forms Trigger node |
+| Sheet | Microsoft 365 Excel > Add a Row | Microsoft Excel 365 node (append) |
 | Email | Email > Send an Email (2x sequentieel) | Email Send node (2x parallel na split) |
 | Credentials | Per-module connecties | Centraal credential management |
 | Expressies | `{{1.Bedrijfsnaam}}` | `{{ $json.Bedrijfsnaam }}` |
@@ -107,8 +108,8 @@ Een referentie-workflow is beschikbaar in `n8n-workflow.json`. Dit bestand kan d
 
 | Probleem | Oplossing |
 |----------|----------|
-| Google Forms Trigger werkt niet | Controleer of de Google API credential correct is en het formulier geselecteerd |
+| Microsoft Forms Trigger werkt niet | Controleer of de Microsoft OAuth2 credential correct is en het formulier geselecteerd |
+| Microsoft OAuth fout | Controleer of de juiste permissions (Forms.Read, Files.ReadWrite) zijn toegekend; herconnecteer indien nodig |
 | Sheet kolommen matchen niet | Zorg dat de kolomnamen in de node exact overeenkomen met de sheet headers |
 | E-mail komt niet aan | Check SMTP-instellingen; bij Gmail: gebruik een App Password (niet je gewone wachtwoord) |
-| "Less secure app access" fout | Gmail vereist een App Password als 2FA aan staat; ga naar myaccount.google.com/apppasswords |
 | Workflow test toont geen data | Vul eerst het formulier in, wacht even, voer dan de test opnieuw uit |
