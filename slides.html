@@ -291,6 +291,11 @@
     /* Presentation mode */
     body.presentation-mode {
       background: #000;
+      cursor: none;
+      overflow: hidden;
+    }
+    body.presentation-mode.cursor-visible {
+      cursor: default;
     }
     body.presentation-mode .slide {
       display: none;
@@ -299,18 +304,155 @@
       width: 100vw;
       height: 100vh;
       box-shadow: none;
+      opacity: 0;
+      transition: opacity 0.35s ease;
     }
     body.presentation-mode .slide.active {
       display: flex;
+      opacity: 1;
     }
     body.presentation-mode .nav-hint {
       display: none;
     }
+
+    /* Progress bar */
+    .pres-progress {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.15);
+      z-index: 200;
+    }
+    .pres-progress-fill {
+      height: 100%;
+      background: var(--clr-primary);
+      transition: width 0.35s ease;
+    }
+    body.presentation-mode .pres-progress { display: block; }
+
+    /* Slide counter */
+    .pres-counter {
+      display: none;
+      position: fixed;
+      bottom: 12px;
+      right: 20px;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.5);
+      z-index: 200;
+      font-variant-numeric: tabular-nums;
+    }
+    body.presentation-mode .pres-counter { display: block; }
+    body.presentation-mode.cursor-visible .pres-counter { color: rgba(255,255,255,0.7); }
+
+    /* Overview mode */
+    body.overview-mode {
+      background: #1a1a2e;
+      overflow: auto;
+    }
+    body.overview-mode .slide {
+      display: flex !important;
+      opacity: 1 !important;
+      width: 280px;
+      height: 157px;
+      margin: 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-size: 0.29rem;
+      transform-origin: top left;
+    }
+    body.overview-mode .slide:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    }
+    body.overview-mode .slide.active {
+      box-shadow: 0 0 0 3px var(--clr-primary), 0 4px 20px rgba(0,0,0,0.6);
+    }
+    body.overview-mode .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+      padding: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    body.overview-mode .nav-hint,
+    body.overview-mode .pres-progress,
+    body.overview-mode .pres-counter { display: none; }
+
+    /* Start screen overlay */
+    .pres-start-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 300;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: #fff;
+      gap: 1.5rem;
+      font-family: inherit;
+    }
+    .pres-start-overlay.show { display: flex; }
+    .pres-start-overlay h2 { font-size: 1.5rem; font-weight: 600; }
+    .pres-start-overlay .keys-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.5rem 1.25rem;
+      font-size: 0.95rem;
+    }
+    .pres-start-overlay kbd {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 5px;
+      padding: 0.2rem 0.6rem;
+      font-family: inherit;
+      font-size: 0.85rem;
+      text-align: center;
+      min-width: 2rem;
+    }
+    .pres-start-overlay .start-btn {
+      margin-top: 1rem;
+      background: var(--clr-primary);
+      color: #fff;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .pres-start-overlay .start-btn:hover { background: #1d4ed8; }
   </style>
 </head>
 <body>
 
-<div class="nav-hint">Pijltjestoetsen of spatiebalk om te navigeren | F = volledig scherm | Ctrl+P = PDF export</div>
+<div class="nav-hint">F = presentatie starten | Pijltjestoetsen of spatiebalk = navigeren | Ctrl+P = PDF export</div>
+
+<!-- Presentation UI -->
+<div class="pres-progress"><div class="pres-progress-fill" id="presProgress"></div></div>
+<div class="pres-counter" id="presCounter"></div>
+
+<!-- Start overlay -->
+<div class="pres-start-overlay" id="startOverlay">
+  <h2>Presentatie bediening</h2>
+  <div class="keys-grid">
+    <kbd>&rarr;</kbd> <span>Volgende slide</span>
+    <kbd>&larr;</kbd> <span>Vorige slide</span>
+    <kbd>Spatie</kbd> <span>Volgende slide</span>
+    <kbd>Home</kbd> <span>Eerste slide</span>
+    <kbd>End</kbd> <span>Laatste slide</span>
+    <kbd>O</kbd> <span>Overzicht alle slides</span>
+    <kbd>Esc</kbd> <span>Presentatie sluiten</span>
+  </div>
+  <button class="start-btn" id="startBtn">Start presentatie</button>
+</div>
 
 <!-- SLIDE 1: Title -->
 <div class="slide slide--title">
@@ -327,28 +469,28 @@
 </div>
 
 <!-- SLIDE 2: Agenda overview -->
-<div class="slide slide--content">
-  <div class="slide-header">
+<div class="slide slide--content" style="padding:1.75rem 3rem 1.5rem">
+  <div class="slide-header" style="margin-bottom:0.75rem;padding-bottom:0.5rem">
     <h3>Agenda overzicht</h3>
   </div>
   <div class="slide-body">
-    <table class="slide-table">
+    <table class="slide-table" style="font-size:0.85rem">
       <thead>
-        <tr><th>Tijd</th><th>Blok</th><th>Stijl</th></tr>
+        <tr><th style="padding:0.35rem 0.75rem">Tijd</th><th style="padding:0.35rem 0.75rem">Blok</th><th style="padding:0.35rem 0.75rem">Stijl</th></tr>
       </thead>
       <tbody>
-        <tr><td>0:00 - 0:30</td><td>1. Wat zijn processen &amp; wanneer automatiseren?</td><td>Discussie</td></tr>
-        <tr><td>0:30 - 1:00</td><td>2. Proces uittekenen in Excalidraw</td><td>Hands-on</td></tr>
-        <tr><td>1:00 - 1:15</td><td>Pauze</td><td></td></tr>
-        <tr><td>1:15 - 1:45</td><td>3. Introductie Make.com</td><td>Demo</td></tr>
-        <tr><td>1:45 - 2:45</td><td>4. Bouw de order intake automatisering</td><td>Hands-on</td></tr>
-        <tr><td>2:45 - 3:00</td><td>Pauze</td><td></td></tr>
-        <tr><td>3:00 - 3:20</td><td>5. Blik op n8n</td><td>Demo</td></tr>
-        <tr><td>3:20 - 3:45</td><td>6. Eigen automatiseringskans identificeren</td><td>Oefening</td></tr>
-        <tr><td>3:45 - 4:00</td><td>7. Afsluiting, bronnen &amp; Q&amp;A</td><td>Discussie</td></tr>
+        <tr><td style="padding:0.35rem 0.75rem">0:00 - 0:30</td><td style="padding:0.35rem 0.75rem">1. Wat zijn processen &amp; wanneer automatiseren?</td><td style="padding:0.35rem 0.75rem">Discussie</td></tr>
+        <tr><td style="padding:0.35rem 0.75rem">0:30 - 1:00</td><td style="padding:0.35rem 0.75rem">2. Proces uittekenen in Excalidraw</td><td style="padding:0.35rem 0.75rem">Hands-on</td></tr>
+        <tr><td style="padding:0.35rem 0.75rem">1:00 - 1:15</td><td style="padding:0.35rem 0.75rem">Pauze</td><td style="padding:0.35rem 0.75rem"></td></tr>
+        <tr><td style="padding:0.35rem 0.75rem">1:15 - 1:45</td><td style="padding:0.35rem 0.75rem">3. Introductie Make.com</td><td style="padding:0.35rem 0.75rem">Demo</td></tr>
+        <tr><td style="padding:0.35rem 0.75rem">1:45 - 2:45</td><td style="padding:0.35rem 0.75rem">4. Bouw de order intake automatisering</td><td style="padding:0.35rem 0.75rem">Hands-on</td></tr>
+        <tr><td style="padding:0.35rem 0.75rem">2:45 - 3:00</td><td style="padding:0.35rem 0.75rem">Pauze</td><td style="padding:0.35rem 0.75rem"></td></tr>
+        <tr><td style="padding:0.35rem 0.75rem">3:00 - 3:20</td><td style="padding:0.35rem 0.75rem">5. Blik op n8n</td><td style="padding:0.35rem 0.75rem">Demo</td></tr>
+        <tr><td style="padding:0.35rem 0.75rem">3:20 - 3:45</td><td style="padding:0.35rem 0.75rem">6. Eigen automatiseringskans identificeren</td><td style="padding:0.35rem 0.75rem">Oefening</td></tr>
+        <tr><td style="padding:0.35rem 0.75rem">3:45 - 4:00</td><td style="padding:0.35rem 0.75rem">7. Afsluiting, bronnen &amp; Q&amp;A</td><td style="padding:0.35rem 0.75rem">Discussie</td></tr>
       </tbody>
     </table>
-    <div class="highlight-box" style="margin-top:auto">
+    <div class="highlight-box" style="margin-top:0.75rem;padding:0.65rem 1rem;font-size:0.9rem">
       <strong>Rode draad:</strong> denken &rarr; tekenen &rarr; zien &rarr; bouwen &rarr; volgende stappen
     </div>
   </div>
@@ -945,61 +1087,251 @@
   var slides = document.querySelectorAll('.slide');
   var currentSlide = 0;
   var presentationMode = false;
+  var overviewMode = false;
+  var cursorTimer = null;
+  var overviewGrid = null;
+
+  var progressBar = document.getElementById('presProgress');
+  var counter = document.getElementById('presCounter');
+  var startOverlay = document.getElementById('startOverlay');
+  var startBtn = document.getElementById('startBtn');
+
+  function updateUI() {
+    var pct = slides.length > 1 ? (currentSlide / (slides.length - 1)) * 100 : 100;
+    progressBar.style.width = pct + '%';
+    counter.textContent = (currentSlide + 1) + ' / ' + slides.length;
+  }
 
   function showSlide(index) {
     if (index < 0 || index >= slides.length) return;
-    currentSlide = index;
-    for (var i = 0; i < slides.length; i++) {
-      slides[i].classList.remove('active');
+    // Fade transition: hide current, show next
+    if (presentationMode && currentSlide !== index) {
+      slides[currentSlide].style.opacity = '0';
+      setTimeout(function() {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = index;
+        slides[currentSlide].classList.add('active');
+        // Force reflow then fade in
+        void slides[currentSlide].offsetWidth;
+        slides[currentSlide].style.opacity = '1';
+        updateUI();
+      }, 150);
+    } else {
+      for (var i = 0; i < slides.length; i++) slides[i].classList.remove('active');
+      currentSlide = index;
+      slides[currentSlide].classList.add('active');
+      slides[currentSlide].style.opacity = '1';
+      updateUI();
     }
-    slides[currentSlide].classList.add('active');
-    if (!presentationMode) {
+    if (!presentationMode && !overviewMode) {
       slides[currentSlide].scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }
 
-  function togglePresentationMode() {
-    presentationMode = !presentationMode;
-    document.body.classList.toggle('presentation-mode', presentationMode);
-    if (presentationMode) {
-      showSlide(currentSlide);
+  function enterPresentation() {
+    overviewMode = false;
+    document.body.classList.remove('overview-mode');
+    unwrapOverviewGrid();
+    presentationMode = true;
+    document.body.classList.add('presentation-mode');
+    // Request true fullscreen
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch(function(){});
+    }
+    showSlide(currentSlide);
+    resetCursorTimer();
+  }
+
+  function exitPresentation() {
+    presentationMode = false;
+    document.body.classList.remove('presentation-mode');
+    document.body.classList.remove('cursor-visible');
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function(){});
+    }
+    clearTimeout(cursorTimer);
+    // Scroll to current slide in overview
+    setTimeout(function() {
+      slides[currentSlide].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  }
+
+  function togglePresentation() {
+    if (overviewMode) {
+      exitOverview(currentSlide);
+      return;
+    }
+    if (presentationMode) exitPresentation();
+    else showStartOverlay();
+  }
+
+  function showStartOverlay() {
+    startOverlay.classList.add('show');
+  }
+
+  function hideStartOverlay() {
+    startOverlay.classList.remove('show');
+  }
+
+  startBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    hideStartOverlay();
+    enterPresentation();
+  });
+
+  startOverlay.addEventListener('click', function(e) {
+    if (e.target === startOverlay) hideStartOverlay();
+  });
+
+  // Cursor auto-hide in presentation
+  function resetCursorTimer() {
+    document.body.classList.add('cursor-visible');
+    clearTimeout(cursorTimer);
+    cursorTimer = setTimeout(function() {
+      if (presentationMode) document.body.classList.remove('cursor-visible');
+    }, 2500);
+  }
+
+  document.addEventListener('mousemove', function() {
+    if (presentationMode) resetCursorTimer();
+  });
+
+  // Overview mode
+  function enterOverview() {
+    if (!presentationMode) return;
+    presentationMode = false;
+    document.body.classList.remove('presentation-mode');
+    document.body.classList.remove('cursor-visible');
+    overviewMode = true;
+    document.body.classList.add('overview-mode');
+    wrapOverviewGrid();
+    // Scroll active slide into view
+    setTimeout(function() {
+      var active = document.querySelector('.overview-grid .slide.active');
+      if (active) active.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 50);
+  }
+
+  function exitOverview(index) {
+    overviewMode = false;
+    document.body.classList.remove('overview-mode');
+    unwrapOverviewGrid();
+    currentSlide = index;
+    enterPresentation();
+  }
+
+  function wrapOverviewGrid() {
+    if (overviewGrid) return;
+    overviewGrid = document.createElement('div');
+    overviewGrid.className = 'overview-grid';
+    var parent = slides[0].parentNode;
+    for (var i = 0; i < slides.length; i++) {
+      overviewGrid.appendChild(slides[i]);
+    }
+    parent.appendChild(overviewGrid);
+    // Add click handlers
+    for (var j = 0; j < slides.length; j++) {
+      (function(idx) {
+        slides[idx]._overviewClick = function(e) {
+          e.stopPropagation();
+          exitOverview(idx);
+        };
+        slides[idx].addEventListener('click', slides[idx]._overviewClick);
+      })(j);
     }
   }
 
+  function unwrapOverviewGrid() {
+    if (!overviewGrid) return;
+    var parent = overviewGrid.parentNode;
+    for (var i = 0; i < slides.length; i++) {
+      if (slides[i]._overviewClick) {
+        slides[i].removeEventListener('click', slides[i]._overviewClick);
+        delete slides[i]._overviewClick;
+      }
+      parent.insertBefore(slides[i], overviewGrid);
+    }
+    parent.removeChild(overviewGrid);
+    overviewGrid = null;
+  }
+
+  // Fullscreen change listener
+  document.addEventListener('fullscreenchange', function() {
+    if (!document.fullscreenElement && presentationMode) {
+      exitPresentation();
+    }
+  });
+
+  // Keyboard
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'f' || e.key === 'F') {
-      e.preventDefault();
-      togglePresentationMode();
+    // Close start overlay on Escape
+    if (startOverlay.classList.contains('show')) {
+      if (e.key === 'Escape') { hideStartOverlay(); return; }
+      if (e.key === 'Enter') { e.preventDefault(); hideStartOverlay(); enterPresentation(); return; }
       return;
     }
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+
+    if (e.key === 'f' || e.key === 'F') {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
       e.preventDefault();
-      showSlide(currentSlide + 1);
+      togglePresentation();
+      return;
+    }
+
+    if ((e.key === 'o' || e.key === 'O') && presentationMode) {
+      e.preventDefault();
+      enterOverview();
+      return;
+    }
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      if (!overviewMode) { e.preventDefault(); showSlide(currentSlide + 1); }
     }
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-      e.preventDefault();
-      showSlide(currentSlide - 1);
+      if (!overviewMode) { e.preventDefault(); showSlide(currentSlide - 1); }
     }
-    if (e.key === 'Escape' && presentationMode) {
-      togglePresentationMode();
+    if (e.key === 'Escape') {
+      if (overviewMode) { exitOverview(currentSlide); return; }
+      if (presentationMode) { exitPresentation(); }
     }
-    if (e.key === 'Home') {
-      e.preventDefault();
-      showSlide(0);
-    }
-    if (e.key === 'End') {
-      e.preventDefault();
-      showSlide(slides.length - 1);
+    if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
+    if (e.key === 'End') { e.preventDefault(); showSlide(slides.length - 1); }
+
+    // Number keys: jump to slide (1-9 for slides 1-9, 0 for 10)
+    if (presentationMode && !overviewMode && e.key >= '0' && e.key <= '9') {
+      var num = e.key === '0' ? 9 : parseInt(e.key) - 1;
+      if (num < slides.length) showSlide(num);
     }
   });
 
   // Click navigation in presentation mode
   document.addEventListener('click', function(e) {
-    if (!presentationMode) return;
+    if (!presentationMode || overviewMode) return;
+    if (e.target.closest('.pres-start-overlay')) return;
     var x = e.clientX / window.innerWidth;
-    if (x > 0.5) { showSlide(currentSlide + 1); }
-    else { showSlide(currentSlide - 1); }
+    if (x > 0.5) showSlide(currentSlide + 1);
+    else showSlide(currentSlide - 1);
   });
+
+  // Touch/swipe support
+  var touchStartX = 0;
+  var touchStartY = 0;
+  document.addEventListener('touchstart', function(e) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    if (!presentationMode || overviewMode) return;
+    var dx = e.changedTouches[0].clientX - touchStartX;
+    var dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) < 50 || Math.abs(dy) > Math.abs(dx)) return;
+    if (dx < 0) showSlide(currentSlide + 1);
+    else showSlide(currentSlide - 1);
+  }, { passive: true });
+
+  // Init
+  updateUI();
 })();
 </script>
 </body>
