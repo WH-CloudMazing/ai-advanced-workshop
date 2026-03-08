@@ -50,15 +50,47 @@
     },
     {
       "parameters": {
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Je bent een professionele klantenservice medewerker. Je ontvangt ordergegevens en genereert twee outputs in JSON formaat: 1) Een beleefde, persoonlijke bevestigingsmail in het Nederlands, 2) Een korte analyse van de bestelling voor het productieteam (urgentie, productcategorie, geschatte complexiteit). Antwoord ALLEEN met valid JSON."
+            },
+            {
+              "role": "user",
+              "content": "=Nieuwe bestelling ontvangen:\n\nBedrijfsnaam: {{ $json.Bedrijfsnaam }}\nContactpersoon: {{ $json.Contactpersoon }}\nEmail: {{ $json.Email }}\nProduct omschrijving: {{ $json['Product omschrijving'] }}\nAantal: {{ $json.Aantal }}\nGewenste leverdatum: {{ $json['Gewenste leverdatum'] }}"
+            }
+          ]
+        },
+        "options": {
+          "responseFormat": "json_object",
+          "temperature": 0.3
+        }
+      },
+      "id": "openai-node",
+      "name": "OpenAI - Bestelling analyseren",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1,
+      "position": [500, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "2",
+          "name": "OpenAI API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
         "sendTo": "={{ $json.Email }}",
-        "subject": "=Bevestiging ontvangst aanvraag - {{ $json.Bedrijfsnaam }}",
-        "message": "=Beste {{ $json.Contactpersoon }},\n\nBedankt voor uw aanvraag. Wij hebben de volgende gegevens ontvangen:\n\nBedrijf: {{ $json.Bedrijfsnaam }}\nProduct: {{ $json['Product omschrijving'] }}\nAantal: {{ $json.Aantal }}\nGewenste leverdatum: {{ $json['Gewenste leverdatum'] }}\n\nWij nemen zo spoedig mogelijk contact met u op.\n\nMet vriendelijke groet,\nHet team"
+        "subject": "=Bevestiging ontvangst aanvraag - {{ JSON.parse($json.message.content).bevestigingsmail.onderwerp }}",
+        "message": "={{ JSON.parse($json.message.content).bevestigingsmail.bericht }}"
       },
       "id": "email-confirm-node",
       "name": "Bevestigingsmail",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2,
-      "position": [550, 200],
+      "position": [800, 200],
       "credentials": {
         "smtp": {
           "id": "1",
@@ -69,14 +101,14 @@
     {
       "parameters": {
         "sendTo": "={{PRODUCTION_EMAIL}}",
-        "subject": "=Nieuwe bestelling - {{ $json.Bedrijfsnaam }}",
-        "message": "=Nieuwe bestelling ontvangen:\n\nBedrijf: {{ $json.Bedrijfsnaam }}\nContactpersoon: {{ $json.Contactpersoon }}\nEmail: {{ $json.Email }}\nProduct: {{ $json['Product omschrijving'] }}\nAantal: {{ $json.Aantal }}\nGewenste leverdatum: {{ $json['Gewenste leverdatum'] }}\n\nActie vereist: controleer beschikbaarheid en plan productie."
+        "subject": "=Nieuwe bestelling - AI Analyse",
+        "message": "=Nieuwe bestelling ontvangen en geanalyseerd door AI:\n\n{{ JSON.parse($json.message.content).productie_analyse.samenvatting }}\n\nUrgentie: {{ JSON.parse($json.message.content).productie_analyse.urgentie }}\nProductcategorie: {{ JSON.parse($json.message.content).productie_analyse.productcategorie }}\nGeschatte complexiteit: {{ JSON.parse($json.message.content).productie_analyse.geschatte_complexiteit }}\n\nActie vereist: controleer beschikbaarheid en plan productie."
       },
       "id": "email-notify-node",
       "name": "Notificatiemail",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2,
-      "position": [550, 400],
+      "position": [800, 400],
       "credentials": {
         "smtp": {
           "id": "1",
@@ -87,6 +119,17 @@
   ],
   "connections": {
     "Form Trigger": {
+      "main": [
+        [
+          {
+            "node": "OpenAI - Bestelling analyseren",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI - Bestelling analyseren": {
       "main": [
         [
           {

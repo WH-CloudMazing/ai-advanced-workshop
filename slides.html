@@ -755,13 +755,15 @@
     <div class="flow" style="flex-wrap:wrap;gap:0.25rem;margin-bottom:1.5rem">
       <div class="flow-step" style="background:#e0e7ff;border-color:#4f46e5">Webhook data ontvangen</div>
       <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="background:#fef3c7;border-color:#f59e0b">AI analyseert bestelling</div>
+      <div class="flow-arrow">&rarr;</div>
       <div class="flow-step" style="background:#dbeafe;border-color:#2563eb">Bevestigingsmail klant</div>
       <div class="flow-arrow">&rarr;</div>
       <div class="flow-step" style="background:#fef3c7;border-color:#d97706">Notificatie productie</div>
     </div>
     <ul class="content-list">
       <li>Live data door de modules zien stromen</li>
-      <li>Van aanvraag tot email in <strong>seconden</strong></li>
+      <li>Van aanvraag tot AI-gegenereerde email in <strong>seconden</strong></li>
     </ul>
     <div class="highlight-box" style="margin-top:auto">
       <strong>Volgende stap:</strong> &ldquo;Dit gaan jullie nu zelf bouwen.&rdquo;
@@ -810,15 +812,16 @@
 <div class="slide slide--content">
   <div class="slide-header">
     <span class="block-badge">Blok 4</span>
-    <h3>Checklist: 7 stappen</h3>
+    <h3>Checklist: 5 stappen</h3>
   </div>
   <div class="slide-body">
     <p style="margin-bottom:0.75rem;color:var(--clr-text-muted)">Open de checklist op de landingspagina en vink elke stap af:</p>
     <ul class="check-list">
       <li><strong>Stap 1:</strong> Webhook trigger instellen (5 min)</li>
-      <li><strong>Stap 2:</strong> Bevestigingsmail instellen (10 min)</li>
-      <li><strong>Stap 3:</strong> Productie notificatie (5 min)</li>
-      <li><strong>Stap 4:</strong> Testen! (5 min)</li>
+      <li><strong>Stap 2:</strong> AI module toevoegen (5 min)</li>
+      <li><strong>Stap 3:</strong> Bevestigingsmail instellen (10 min)</li>
+      <li><strong>Stap 4:</strong> Productie notificatie (5 min)</li>
+      <li><strong>Stap 5:</strong> Testen! (10 min)</li>
     </ul>
     <div class="highlight-box green" style="margin-top:auto">
       <strong>Controleer:</strong> Make.com open en ingelogd? Dan gaan we beginnen!
@@ -909,9 +912,11 @@
     <div class="flow" style="flex-wrap:wrap;gap:0.25rem;margin-bottom:1.5rem">
       <div class="flow-step" style="background:#e0e7ff;border-color:#4f46e5">Form Trigger</div>
       <div class="flow-arrow">&rarr;</div>
-      <div class="flow-step" style="background:#dbeafe;border-color:#2563eb">Send Email (bevestiging)</div>
+      <div class="flow-step" style="background:#fef3c7;border-color:#f59e0b">OpenAI Chat</div>
       <div class="flow-arrow">&rarr;</div>
-      <div class="flow-step" style="background:#fef3c7;border-color:#d97706">Send Email (notificatie)</div>
+      <div class="flow-step" style="background:#dbeafe;border-color:#2563eb">Send Email bevestiging</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="background:#fef3c7;border-color:#d97706">Send Email notificatie</div>
     </div>
     <ul class="content-list">
       <li>Meer technische interface, maar <strong>meer flexibiliteit</strong></li>

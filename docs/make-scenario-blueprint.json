@@ -25,21 +25,21 @@
     },
     {
       "id": 2,
-      "module": "email:sendEmail",
+      "module": "openai:createChatCompletion",
       "version": 1,
       "parameters": {},
       "mapper": {
-        "to": "{{1.Email}}",
-        "subject": "Bevestiging ontvangst aanvraag - {{1.Bedrijfsnaam}}",
-        "content": "Beste {{1.Contactpersoon}},\n\nBedankt voor uw aanvraag. Wij hebben de volgende gegevens ontvangen:\n\nBedrijf: {{1.Bedrijfsnaam}}\nProduct: {{1.`Product omschrijving`}}\nAantal: {{1.Aantal}}\nGewenste leverdatum: {{1.`Gewenste leverdatum`}}\n\nWij nemen zo spoedig mogelijk contact met u op.\n\nMet vriendelijke groet"
+        "model": "gpt-4o-mini",
+        "system_prompt": "Je bent een professionele klantenservice medewerker. Je ontvangt ordergegevens en genereert twee outputs in JSON formaat: 1) Een beleefde, persoonlijke bevestigingsmail in het Nederlands, 2) Een korte analyse van de bestelling voor het productieteam (urgentie, productcategorie, geschatte complexiteit). Antwoord ALLEEN met valid JSON.",
+        "user_message": "Nieuwe bestelling ontvangen:\nBedrijfsnaam: {{1.Bedrijfsnaam}}\nContactpersoon: {{1.Contactpersoon}}\nEmail: {{1.Email}}\nProduct: {{1.`Product omschrijving`}}\nAantal: {{1.Aantal}}\nGewenste leverdatum: {{1.`Gewenste leverdatum`}}"
       },
       "metadata": {
         "designer": { "x": 300, "y": 0 },
         "restore": {},
         "expect": [
-          { "name": "to", "type": "text", "label": "To", "required": true },
-          { "name": "subject", "type": "text", "label": "Subject", "required": true },
-          { "name": "content", "type": "text", "label": "Content", "required": true }
+          { "name": "model", "type": "text", "label": "Model", "required": true },
+          { "name": "system_prompt", "type": "text", "label": "System Prompt", "required": true },
+          { "name": "user_message", "type": "text", "label": "User Message", "required": true }
         ]
       }
     },
@@ -49,12 +49,32 @@
       "version": 1,
       "parameters": {},
       "mapper": {
-        "to": "{{PRODUCTION_EMAIL}}",
-        "subject": "Nieuwe bestelling - {{1.Bedrijfsnaam}}",
-        "content": "Nieuwe bestelling ontvangen:\n\nBedrijf: {{1.Bedrijfsnaam}}\nContactpersoon: {{1.Contactpersoon}}\nEmail: {{1.Email}}\nProduct: {{1.`Product omschrijving`}}\nAantal: {{1.Aantal}}\nGewenste leverdatum: {{1.`Gewenste leverdatum`}}\n\nActie vereist: controleer beschikbaarheid en plan productie."
+        "to": "{{1.Email}}",
+        "subject": "Bevestiging ontvangst aanvraag - {{1.Bedrijfsnaam}}",
+        "content": "{{parseJSON(2.result).bevestigingsmail}}"
       },
       "metadata": {
         "designer": { "x": 600, "y": 0 },
+        "restore": {},
+        "expect": [
+          { "name": "to", "type": "text", "label": "To", "required": true },
+          { "name": "subject", "type": "text", "label": "Subject", "required": true },
+          { "name": "content", "type": "text", "label": "Content", "required": true }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "module": "email:sendEmail",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "to": "{{PRODUCTION_EMAIL}}",
+        "subject": "Nieuwe bestelling - {{1.Bedrijfsnaam}}",
+        "content": "Nieuwe bestelling ontvangen:\n\nBedrijf: {{1.Bedrijfsnaam}}\nContactpersoon: {{1.Contactpersoon}}\nEmail: {{1.Email}}\nProduct: {{1.`Product omschrijving`}}\nAantal: {{1.Aantal}}\nGewenste leverdatum: {{1.`Gewenste leverdatum`}}\n\n--- AI Analyse ---\nUrgentie: {{parseJSON(2.result).analyse.urgentie}}\nProductcategorie: {{parseJSON(2.result).analyse.productcategorie}}\nComplexiteit: {{parseJSON(2.result).analyse.complexiteit}}\n\nActie vereist: controleer beschikbaarheid en plan productie."
+      },
+      "metadata": {
+        "designer": { "x": 900, "y": 0 },
         "restore": {},
         "expect": [
           { "name": "to", "type": "text", "label": "To", "required": true },

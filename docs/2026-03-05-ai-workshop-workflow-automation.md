@@ -16,6 +16,7 @@ Deelnemers leren processen herkennen, tekenen en automatiseren. Ze vertrekken me
 | Excalidraw | Processen visueel uittekenen |
 | Make.com | Hands-on automatisering bouwen (gratis account) |
 | Order test formulier | Testbestellingen versturen naar webhook |
+| OpenAI API | AI-module voor slimme orderverwerking (API key van trainer) |
 | n8n | Demo — krachtigere alternative |
 | Landing page | Centrale plek met agenda, checklist, links (QR code) |
 
@@ -128,8 +129,9 @@ Toon hun Excalidraw-tekening naast een leeg Make.com scenario: *"Zie je? Hetzelf
 Laat de afgebouwde order intake automatisering live draaien:
 
 1. Order formulier wordt ingevuld
-2. Bevestigingsmail wordt verstuurd naar de "klant"
-3. Notificatie-email gaat naar "productie"
+2. AI analyseert de bestelling en genereert respons
+3. Bevestigingsmail wordt verstuurd (AI-geschreven)
+4. Notificatie-email gaat naar "productie" (met AI-analyse)
 
 Run het live zodat ze data door de modules zien stromen. Sluit af met: *"Dit gaan jullie nu zelf bouwen."*
 
@@ -155,22 +157,27 @@ De checklist op de landingspagina loopt hen door elke stap:
 - Module: Custom Webhook
 - Webhook URL kopiëren
 
-**Stap 3: Bevestigingsmail module (10 min)**
+**Stap 3: AI module toevoegen (5 min)**
+- Module: OpenAI -> Create a Completion
+- API key invoeren (van trainer)
+- Prompt instellen: analyseer de bestelling en genereer een bevestigingstekst
+
+**Stap 4: Bevestigingsmail module (10 min)**
 - Module: Email -> Send an Email
 - Aan: het email-veld uit de webhook data
 - Onderwerp: "Bevestiging ontvangst aanvraag"
-- Body: samenvatting van de aanvraag met gemapte velden
+- Body: AI-gegenereerde bevestigingstekst met bestelling details
 
-**Stap 4: Productie notificatie (5 min)**
+**Stap 5: Productie notificatie (5 min)**
 - Module: Email -> Send an Email
 - Aan: eigen e-mailadres (simuleert "productie team")
-- Samenvatting met bestelling details
+- Samenvatting met bestelling details en AI-analyse
 
-**Stap 5: Testen (10 min)**
+**Stap 6: Testen (10 min)**
 - Open het testformulier (assets/order-form.html)
 - Plak de webhook URL in het formulier
 - Verstuur een testbestelling
-- Controleer: bevestigingsmail ontvangen? Notificatie ontvangen?
+- Controleer: bevestigingsmail ontvangen met AI-gegenereerde tekst? Notificatie ontvangen met AI-analyse?
 
 ### Troubleshooting buffer (10 min)
 
@@ -196,6 +203,7 @@ Laat hetzelfde order intake scenario zien, opgebouwd in n8n met een Form Trigger
 - Code nodes — je kunt JavaScript/Python schrijven als dat nodig is
 - Self-hosted = geen data verlaat je gebouw (relevant voor elektronica/IP)
 - Community nodes voor niche-integraties
+- n8n heeft ook een OpenAI node — dezelfde AI-functionaliteit is beschikbaar
 
 ### Wanneer wat gebruiken (5 min)
 
@@ -205,6 +213,7 @@ Laat hetzelfde order intake scenario zien, opgebouwd in n8n met een Form Trigger
 | **Trigger** | Webhook / app-integraties | Form Trigger / Webhook / app-integraties |
 | **Gebruiker** | Niet-technisch | Technisch team beschikbaar |
 | **Data** | SaaS (cloud) | Self-hosted optie |
+| **AI** | OpenAI module | OpenAI node |
 | **Kosten** | Abonnement per operatie | Gratis (self-hosted) of betaald cloud |
 
 Geen hands-on — alleen bewustwording. *"Als je straks meer wilt, is dit de volgende stap."*
@@ -293,6 +302,7 @@ Eenpagina HTML site, toegankelijk via QR code die op tafel/slides staat.
 - [ ] Landing page bouwen en hosten
 - [ ] QR code genereren en printen (tafelkaarten of eerste slide)
 - [ ] Excalidraw testen op het netwerk van Faber
+- [ ] OpenAI API key klaarzetten en testen
 - [ ] Controleren dat Make.com signup niet geblokkeerd is op hun netwerk
 
 ### Mee te nemen

@@ -508,6 +508,10 @@
           <div class="tool-card-name">Make.com</div>
           <div class="tool-card-desc">Maak een gratis account aan om automatiseringen te bouwen</div>
         </a>
+        <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener" class="tool-card">
+          <div class="tool-card-name">OpenAI API</div>
+          <div class="tool-card-desc">API key voor de AI module (wordt verstrekt door trainer)</div>
+        </a>
         <a href="https://excalidraw.com" target="_blank" rel="noopener" class="tool-card">
           <div class="tool-card-name">Excalidraw</div>
           <div class="tool-card-desc">Teken processen visueel uit in je browser</div>
@@ -548,7 +552,7 @@
       <h2 class="section-title">Checklist</h2>
       <p class="section-subtitle">Build progress tracker</p>
       <div class="checklist-progress">
-        <span class="progress-text" id="progressText">0/5 stappen voltooid</span>
+        <span class="progress-text" id="progressText">0/6 stappen voltooid</span>
         <div class="progress-bar-track"><div class="progress-bar-fill" id="progressBar" style="width:0%"></div></div>
         <button class="reset-btn" id="resetBtn">Reset</button>
       </div>
@@ -668,9 +672,10 @@
       var steps = [
         { title: 'Stap 1: Make.com account aanmaken', desc: 'Maak een gratis account aan op make.com en log in.' },
         { title: 'Stap 2: Webhook trigger instellen', desc: 'Nieuw scenario aanmaken, Custom Webhook module toevoegen en webhook URL kopieren.' },
-        { title: 'Stap 3: Bevestigingsmail module', desc: 'Email > Send an Email module: bevestiging naar het emailadres uit de webhook data.' },
-        { title: 'Stap 4: Productie notificatie module', desc: 'Email > Send an Email module: samenvatting met besteldetails naar het productieteam.' },
-        { title: 'Stap 5: Testen', desc: 'Open het testformulier, plak je webhook URL, verstuur een testbestelling en controleer de emails.' }
+        { title: 'Stap 3: AI module toevoegen', desc: 'OpenAI module toevoegen, API key invoeren (van trainer) en prompt instellen voor orderanalyse.' },
+        { title: 'Stap 4: Bevestigingsmail module', desc: 'Email > Send an Email module: AI-gegenereerde bevestiging naar de klant.' },
+        { title: 'Stap 5: Productie notificatie module', desc: 'Email > Send an Email module: besteldetails met AI-analyse naar het productieteam.' },
+        { title: 'Stap 6: Testen', desc: 'Open het testformulier, plak je webhook URL, verstuur een testbestelling en controleer de AI-gegenereerde emails.' }
       ];
 
       var STORAGE_KEY = 'workshop-checklist';
@@ -748,7 +753,7 @@
       }
 
       function updateProgress(count) {
-        document.getElementById('progressText').textContent = count + '/5 stappen voltooid';
+        document.getElementById('progressText').textContent = count + '/6 stappen voltooid';
         document.getElementById('progressBar').style.width = (count / steps.length * 100) + '%';
         var cel = document.getElementById('celebration');
         if (count === steps.length) { cel.classList.add('show'); }
