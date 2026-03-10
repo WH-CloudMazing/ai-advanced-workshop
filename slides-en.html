@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Workshop: Workflow Automation — Slides (EN)</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --clr-bg: #f8f9fa;
+      --clr-surface: #ffffff;
+      --clr-primary: #2563eb;
+      --clr-primary-dark: #1e3a5f;
+      --clr-primary-light: #dbeafe;
+      --clr-text: #1e293b;
+      --clr-text-muted: #64748b;
+      --clr-border: #e2e8f0;
+      --clr-accent: #10b981;
+      --clr-accent-light: #d1fae5;
+      --clr-orange: #f59e0b;
+      --clr-orange-light: #fef3c7;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #1a1a2e;
+      color: var(--clr-text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Slide container */
+    .slide {
+      width: 960px;
+      height: 540px;
+      margin: 2rem auto;
+      background: var(--clr-surface);
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      page-break-after: always;
+      page-break-inside: avoid;
+    }
+
+    /* Slide types */
+    .slide--title {
+      background: linear-gradient(135deg, var(--clr-primary-dark) 0%, var(--clr-primary) 100%);
+      color: #fff;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 3rem;
+    }
+    .slide--title h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .slide--title .subtitle { font-size: 1.3rem; opacity: 0.9; margin-bottom: 1.5rem; }
+    .slide--title .meta { font-size: 1rem; opacity: 0.7; }
+    .slide--title .meta span { margin: 0 0.75rem; }
+
+    .slide--section {
+      background: linear-gradient(135deg, var(--clr-primary-dark) 0%, var(--clr-primary) 100%);
+      color: #fff;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 3rem;
+    }
+    .slide--section .block-num { font-size: 1rem; text-transform: uppercase; letter-spacing: 0.15em; opacity: 0.7; margin-bottom: 0.5rem; }
+    .slide--section h2 { font-size: 2.2rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .slide--section .time { font-size: 1.1rem; opacity: 0.7; }
+    .slide--section .style-tag {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.3rem 1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: rgba(255,255,255,0.15);
+    }
+
+    .slide--pause {
+      background: var(--clr-bg);
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .slide--pause h2 { font-size: 2.5rem; color: var(--clr-text-muted); font-weight: 300; }
+    .slide--pause p { font-size: 1.1rem; color: var(--clr-text-muted); margin-top: 0.5rem; }
+
+    .slide--content {
+      padding: 2.5rem 3rem;
+    }
+
+    .slide--end {
+      background: linear-gradient(135deg, var(--clr-primary-dark) 0%, var(--clr-primary) 100%);
+      color: #fff;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 3rem;
+    }
+    .slide--end h2 { font-size: 2rem; margin-bottom: 1rem; }
+    .slide--end p { font-size: 1.1rem; opacity: 0.85; margin-bottom: 0.25rem; }
+    .slide--end a { color: #93c5fd; }
+
+    /* Content slide elements */
+    .slide-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--clr-border);
+    }
+    .slide-header .block-badge {
+      background: var(--clr-primary);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+    .slide-header h3 { font-size: 1.4rem; font-weight: 700; }
+
+    .slide-body { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+    ul.content-list { list-style: none; padding: 0; }
+    ul.content-list li {
+      position: relative;
+      padding: 0.5rem 0 0.5rem 1.75rem;
+      font-size: 1.05rem;
+    }
+    ul.content-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.85rem;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--clr-primary);
+    }
+    ul.content-list li strong { color: var(--clr-primary-dark); }
+    ul.content-list.green li::before { background: var(--clr-accent); }
+    ul.content-list.orange li::before { background: var(--clr-orange); }
+
+    .highlight-box {
+      background: var(--clr-primary-light);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-top: 1rem;
+      font-size: 1rem;
+      border-left: 4px solid var(--clr-primary);
+    }
+    .highlight-box.green {
+      background: var(--clr-accent-light);
+      border-left-color: var(--clr-accent);
+    }
+    .highlight-box.orange {
+      background: var(--clr-orange-light);
+      border-left-color: var(--clr-orange);
+    }
+
+    /* Tables */
+    .slide-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    .slide-table th, .slide-table td {
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid var(--clr-border);
+    }
+    .slide-table th { font-weight: 700; background: var(--clr-bg); }
+    .slide-table tr:last-child td { border-bottom: none; }
+
+    /* Flow diagram */
+    .flow {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-wrap: nowrap;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+    .flow-step {
+      background: var(--clr-primary-light);
+      border: 2px solid var(--clr-primary);
+      border-radius: 8px;
+      padding: 0.5rem 0.8rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-align: center;
+      min-width: 100px;
+    }
+    .flow-arrow {
+      font-size: 1.2rem;
+      color: var(--clr-text-muted);
+      padding: 0 0.25rem;
+      flex-shrink: 0;
+    }
+
+    /* Criteria cards */
+    .criteria-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+    .criteria-card {
+      background: var(--clr-bg);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      border-left: 4px solid var(--clr-primary);
+    }
+    .criteria-card strong { display: block; font-size: 1rem; margin-bottom: 0.15rem; }
+    .criteria-card span { font-size: 0.85rem; color: var(--clr-text-muted); }
+
+    /* Checklist visual */
+    .check-list { list-style: none; padding: 0; }
+    .check-list li {
+      padding: 0.4rem 0 0.4rem 2rem;
+      position: relative;
+      font-size: 0.95rem;
+    }
+    .check-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.5rem;
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--clr-border);
+      border-radius: 4px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .slide-number {
+      position: absolute;
+      bottom: 0.75rem;
+      right: 1.25rem;
+      font-size: 0.75rem;
+      color: var(--clr-text-muted);
+      opacity: 0.5;
+    }
+    .slide--title .slide-number,
+    .slide--section .slide-number,
+    .slide--end .slide-number,
+    .slide--pause .slide-number { color: rgba(255,255,255,0.4); }
+
+    /* Keyboard nav */
+    .nav-hint {
+      position: fixed;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    /* Print / PDF */
+    @media print {
+      body { background: #fff; }
+      .slide {
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+        width: 100%;
+        height: 100vh;
+        page-break-after: always;
+      }
+      .nav-hint { display: none; }
+    }
+
+    /* Presentation mode */
+    body.presentation-mode {
+      background: #000;
+      cursor: none;
+      overflow: hidden;
+    }
+    body.presentation-mode.cursor-visible {
+      cursor: default;
+    }
+    body.presentation-mode .slide {
+      display: none;
+      margin: 0;
+      border-radius: 0;
+      /* Keep native 960x540 dimensions, scale via transform */
+      width: 960px;
+      height: 540px;
+      box-shadow: none;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform-origin: center center;
+    }
+    body.presentation-mode .slide.active {
+      display: flex;
+      opacity: 1;
+    }
+    body.presentation-mode .nav-hint {
+      display: none;
+    }
+
+    /* Progress bar */
+    .pres-progress {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.15);
+      z-index: 200;
+    }
+    .pres-progress-fill {
+      height: 100%;
+      background: var(--clr-primary);
+      transition: width 0.35s ease;
+    }
+    body.presentation-mode .pres-progress { display: block; }
+
+    /* Slide counter */
+    .pres-counter {
+      display: none;
+      position: fixed;
+      bottom: 12px;
+      right: 20px;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.5);
+      z-index: 200;
+      font-variant-numeric: tabular-nums;
+    }
+    body.presentation-mode .pres-counter { display: block; }
+    body.presentation-mode.cursor-visible .pres-counter { color: rgba(255,255,255,0.7); }
+
+    /* Overview mode */
+    body.overview-mode {
+      background: #1a1a2e;
+      overflow: auto;
+    }
+    body.overview-mode .slide {
+      display: flex !important;
+      opacity: 1 !important;
+      width: 280px;
+      height: 157px;
+      margin: 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-size: 0.29rem;
+      transform-origin: top left;
+    }
+    body.overview-mode .slide:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    }
+    body.overview-mode .slide.active {
+      box-shadow: 0 0 0 3px var(--clr-primary), 0 4px 20px rgba(0,0,0,0.6);
+    }
+    body.overview-mode .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+      padding: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    body.overview-mode .nav-hint,
+    body.overview-mode .pres-progress,
+    body.overview-mode .pres-counter { display: none; }
+
+    /* Start screen overlay */
+    .pres-start-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 300;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: #fff;
+      gap: 1.5rem;
+      font-family: inherit;
+    }
+    .pres-start-overlay.show { display: flex; }
+    .pres-start-overlay h2 { font-size: 1.5rem; font-weight: 600; }
+    .pres-start-overlay .keys-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.5rem 1.25rem;
+      font-size: 0.95rem;
+    }
+    .pres-start-overlay kbd {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 5px;
+      padding: 0.2rem 0.6rem;
+      font-family: inherit;
+      font-size: 0.85rem;
+      text-align: center;
+      min-width: 2rem;
+    }
+    .pres-start-overlay .start-btn {
+      margin-top: 1rem;
+      background: var(--clr-primary);
+      color: #fff;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .pres-start-overlay .start-btn:hover { background: #1d4ed8; }
+  </style>
+</head>
+<body>
+
+<div class="nav-hint">F = start presentation | Arrow keys or spacebar = navigate | Ctrl+P = PDF export</div>
+
+<!-- Presentation UI -->
+<div class="pres-progress"><div class="pres-progress-fill" id="presProgress"></div></div>
+<div class="pres-counter" id="presCounter"></div>
+
+<!-- Start overlay -->
+<div class="pres-start-overlay" id="startOverlay">
+  <h2>Presentation controls</h2>
+  <div class="keys-grid">
+    <kbd>&rarr;</kbd> <span>Next slide</span>
+    <kbd>&larr;</kbd> <span>Previous slide</span>
+    <kbd>Space</kbd> <span>Next slide</span>
+    <kbd>Home</kbd> <span>First slide</span>
+    <kbd>End</kbd> <span>Last slide</span>
+    <kbd>O</kbd> <span>Overview all slides</span>
+    <kbd>Esc</kbd> <span>Exit presentation</span>
+  </div>
+  <button class="start-btn" id="startBtn">Start presentation</button>
+</div>
+
+<!-- SLIDE 1: Title -->
+<div class="slide slide--title">
+  <div style="display:flex;align-items:center;justify-content:center;gap:3rem;width:100%">
+    <div style="text-align:center;flex:1">
+      <h1>AI Workshop: Workflow Automation</h1>
+      <p class="subtitle">Recognize, map and automate processes</p>
+      <div class="meta">
+        <span>March 11, 2026</span>
+        <span>|</span>
+        <span>Faber Electronics, Velp</span>
+        <span>|</span>
+        <span>4 hours</span>
+      </div>
+    </div>
+    <div style="text-align:center;flex-shrink:0">
+      <img src="assets/qr-landing-page.png" alt="QR code" style="width:140px;height:140px;border-radius:8px;background:#fff;padding:6px">
+      <p style="font-size:0.75rem;opacity:0.7;margin-top:0.4rem">Scan for all materials</p>
+      <p style="font-size:0.7rem;opacity:0.5;margin-top:0.15rem">ai-workflow.rocketflow.nl</p>
+    </div>
+  </div>
+  <span class="slide-number">1</span>
+</div>
+
+<!-- SLIDE 2: Agenda overview -->
+<div class="slide slide--content" style="padding:1.75rem 3rem 1.5rem">
+  <div class="slide-header" style="margin-bottom:0.75rem;padding-bottom:0.5rem">
+    <h3>Agenda overview</h3>
+  </div>
+  <div class="slide-body">
+    <table class="slide-table" style="font-size:0.85rem">
+      <thead>
+        <tr><th style="padding:0.35rem 0.75rem">Time</th><th style="padding:0.35rem 0.75rem">Block</th><th style="padding:0.35rem 0.75rem">Style</th></tr>
+      </thead>
+      <tbody>
+        <tr><td style="padding:0.35rem 0.75rem">0:00 - 0:30</td><td style="padding:0.35rem 0.75rem">1. What are processes &amp; when to automate?</td><td style="padding:0.35rem 0.75rem">Discussion</td></tr>
+        <tr><td style="padding:0.35rem 0.75rem">0:30 - 1:00</td><td style="padding:0.35rem 0.75rem">2. Map a process in Excalidraw</td><td style="padding:0.35rem 0.75rem">Hands-on</td></tr>
+        <tr><td style="padding:0.35rem 0.75rem">1:00 - 1:15</td><td style="padding:0.35rem 0.75rem">Break</td><td style="padding:0.35rem 0.75rem"></td></tr>
+        <tr><td style="padding:0.35rem 0.75rem">1:15 - 1:45</td><td style="padding:0.35rem 0.75rem">3. Introduction to Make.com</td><td style="padding:0.35rem 0.75rem">Demo</td></tr>
+        <tr><td style="padding:0.35rem 0.75rem">1:45 - 2:45</td><td style="padding:0.35rem 0.75rem">4. Build the order intake automation</td><td style="padding:0.35rem 0.75rem">Hands-on</td></tr>
+        <tr><td style="padding:0.35rem 0.75rem">2:45 - 3:00</td><td style="padding:0.35rem 0.75rem">Break</td><td style="padding:0.35rem 0.75rem"></td></tr>
+        <tr><td style="padding:0.35rem 0.75rem">3:00 - 3:20</td><td style="padding:0.35rem 0.75rem">5. A look at n8n</td><td style="padding:0.35rem 0.75rem">Demo</td></tr>
+        <tr><td style="padding:0.35rem 0.75rem">3:20 - 3:45</td><td style="padding:0.35rem 0.75rem">6. Identify your own automation opportunity</td><td style="padding:0.35rem 0.75rem">Exercise</td></tr>
+        <tr><td style="padding:0.35rem 0.75rem">3:45 - 4:00</td><td style="padding:0.35rem 0.75rem">7. Wrap-up, resources &amp; Q&amp;A</td><td style="padding:0.35rem 0.75rem">Discussion</td></tr>
+      </tbody>
+    </table>
+    <div class="highlight-box" style="margin-top:0.75rem;padding:0.65rem 1rem;font-size:0.9rem">
+      <strong>Common thread:</strong> think &rarr; draw &rarr; see &rarr; build &rarr; next steps
+    </div>
+  </div>
+  <span class="slide-number">2</span>
+</div>
+
+<!-- ==================== BLOK 1 ==================== -->
+
+<!-- SLIDE 3: Block 1 section divider -->
+<div class="slide slide--section">
+  <div class="block-num">Block 1</div>
+  <h2>What are processes &amp;<br>when to automate?</h2>
+  <div class="time">0:00 - 0:30</div>
+  <div class="style-tag">Interactive discussion</div>
+  <span class="slide-number">3</span>
+</div>
+
+<!-- SLIDE 4: Opener prompt -->
+<div class="slide slide--content">
+  <div class="slide-header">
+    <span class="block-badge">Block 1</span>
+    <h3>Interactive opener</h3>
+  </div>
+  <div class="slide-body" style="justify-content:center;align-items:center;text-align:center">
+    <p style="font-size:1.6rem;font-weight:600;color:var(--clr-primary-dark);max-width:700px;line-height:1.4">
+      &ldquo;Name something you did today that goes the same way every day.&rdquo;
+    </p>
+    <p style="font-size:1rem;color:var(--clr-text-muted);margin-top:1.5rem">
+      Think of: checking email, entering orders, calling a supplier, verifying packing slips...
+    </p>
+  </div>
+  <span class="slide-number">4</span>
+</div>
+
+<!-- SLIDE 5: Automation checklist framework -->
+<div class="slide slide--content">
+  <div class="slide-header">
+    <span class="block-badge">Block 1</span>
+    <h3>The automation checklist</h3>
+  </div>
+  <div class="slide-body">
+    <p style="margin-bottom:0.75rem;color:var(--clr-text-muted)">Is this process automatable? Score on 4 criteria:</p>
+    <div class="criteria-row">
+      <div class="criteria-card">
+        <strong>1. Repetitive</strong>
+        <span>Does it happen regularly? Daily, weekly, or with every order?</span>
+      </div>
+      <div class="criteria-card">
+        <strong>2. Rule-based</strong>
+        <span>Can you describe the steps as clear rules or decisions?</span>
+      </div>
+      <div class="criteria-card">
+        <strong>3. Digital</strong>
+        <span>Does it involve digital tools, data, or systems?</span>
+      </div>
+      <div class="criteria-card">
+        <strong>4. Time-consuming</strong>
+        <span>Does it take noticeable time you could spend better?</span>
+      </div>
+    </div>
+    <div class="highlight-box green" style="margin-top:auto">
+      <strong>Score 3 or 4?</strong> Strong automation candidate!
+    </div>
+  </div>
+  <span class="slide-number">5</span>
+</div>
+
+<!-- SLIDE 6: Group scoring exercise -->
+<div class="slide slide--content">
+  <div class="slide-header">
+    <span class="block-badge">Block 1</span>
+    <h3>Group scoring exercise</h3>
+  </div>
+  <div class="slide-body">
+    <ul class="content-list">
+      <li>Take <strong>3-4 examples</strong> from the opener</li>
+      <li>Score each example together using the <strong>4 criteria</strong></li>
+      <li>Discuss as a group: do we agree?</li>
+      <li>Goal: learn to think in terms of <strong>&ldquo;is this automatable?&rdquo;</strong></li>
+    </ul>
+    <div class="highlight-box orange" style="margin-top:auto">
+      <strong>Tip:</strong> Disagreement is good! It&rsquo;s about the way of thinking, not the &ldquo;right&rdquo; answer.
+    </div>
+  </div>
+  <span class="slide-number">6</span>
+</div>
+
+<!-- ==================== BLOK 2 ==================== -->
+
+<!-- SLIDE 7: Block 2 section divider -->
+<div class="slide slide--section">
+  <div class="block-num">Block 2</div>
+  <h2>Map a process<br>in Excalidraw</h2>
+  <div class="time">0:30 - 1:00</div>
+  <div class="style-tag">Hands-on exercise</div>
+  <span class="slide-number">7</span>
+</div>
+
+<!-- SLIDE 8: Excalidraw intro -->
+<div class="slide slide--content">
+  <div class="slide-header">
+    <span class="block-badge">Block 2</span>
+    <h3>Excalidraw: quick intro</h3>
+  </div>
+  <div class="slide-body">
+    <ul class="content-list green">
+      <li>Open <strong>excalidraw.com</strong> via the landing page</li>
+      <li>You only need 3 things: <strong>rectangles, arrows, text</strong></li>
+      <li>It&rsquo;s a <strong>thinking tool</strong>, not a design tool</li>
+      <li>Ugly is fine! It&rsquo;s about the <strong>process</strong>, not the looks</li>
+    </ul>
+    <div class="highlight-box green" style="margin-top:auto">
+      <strong>Key message:</strong> &ldquo;If you can draw it, you can automate it.&rdquo;
+    </div>
+  </div>
+  <span class="slide-number">8</span>
+</div>
+
+<!-- SLIDE 9: Guided example - order intake process -->
+<div class="slide slide--content">
+  <div class="slide-header">
+    <span class="block-badge">Block 2</span>
+    <h3>Example: order intake process</h3>
+  </div>
+  <div class="slide-body" style="justify-content:center">
+    <div class="flow" style="flex-wrap:wrap;gap:0.25rem">
+      <div class="flow-step">Customer sends request</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Receipt check</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="border-color:var(--clr-orange);background:var(--clr-orange-light)">Specs complete?</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Enter into system</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Customer confirmation</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Planning notification</div>
+    </div>
+    <ul class="content-list" style="margin-top:1.5rem">
+      <li>Use <strong>decision diamonds</strong> for yes/no splits</li>
+      <li>Keep it to <strong>5-7 steps</strong> maximum</li>
+      <li>Not complete? No-path: &ldquo;Follow up with customer&rdquo;</li>
+    </ul>
+  </div>
+  <span class="slide-number">9</span>
+</div>
+
+<!-- SLIDE 10: Duo exercise -->
+<div class="slide slide--content">
+  <div class="slide-header">
+    <span class="block-badge">Block 2</span>
+    <h3>Pair exercise (15 min)</h3>
+  </div>
+  <div class="slide-body">
+    <ul class="content-list green">
+      <li>Form <strong>pairs of 2</strong></li>
+      <li>Choose a process from the earlier brainstorm</li>
+      <li>Draw it in Excalidraw &mdash; <strong>maximum 8 steps</strong></li>
+    </ul>
+    <div class="two-col" style="margin-top:1rem">
+      <div class="highlight-box orange">
+        <strong style="color:#b45309">Orange</strong> = manual step
+      </div>
+      <div class="highlight-box green">
+        <strong style="color:#059669">Green</strong> = can be automated
+      </div>
+    </div>
+    <div class="highlight-box" style="margin-top:auto">
+      <strong>Last 3 minutes:</strong> 2-3 pairs briefly share their screen
+    </div>
+  </div>
+  <span class="slide-number">10</span>
+</div>
+
+<!-- ==================== PAUZE 1 ==================== -->
+
+<!-- SLIDE 11: Pause -->
+<div class="slide slide--pause">
+  <h2>Break</h2>
+  <p>15 minutes &mdash; 1:00 - 1:15</p>
+  <span class="slide-number">11</span>
+</div>
+
+<!-- ==================== BLOCK 3 ==================== -->
+
+<!-- SLIDE 12: Block 3 section divider -->
+<div class="slide slide--section">
+  <div class="block-num">Block 3</div>
+  <h2>Introduction to Make.com</h2>
+  <div class="time">1:15 - 1:45</div>
+  <div class="style-tag">Live demo</div>
+  <span class="slide-number">12</span>
+</div>
+
+<!-- SLIDE 13: Core concepts table -->
+<div class="slide slide--content">
+  <div class="slide-header">
+    <span class="block-badge">Block 3</span>
+    <h3>Core concepts</h3>
+  </div>
+  <div class="slide-body">
+    <p style="margin-bottom:1rem;color:var(--clr-text-muted)">From Excalidraw drawing to Make.com scenario:</p>
+    <table class="slide-table">
+      <thead>
+        <tr><th>Make.com term</th><th>What it is</th><th>Excalidraw equivalent</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Scenario</strong></td><td>Your automation</td><td>The whole picture</td></tr>
+        <tr><td><strong>Module</strong></td><td>A step</td><td>A rectangle</td></tr>
+        <tr><td><strong>Connection</strong></td><td>Link to a tool</td><td>The outgoing arrow</td></tr>
+        <tr><td><strong>Trigger</strong></td><td>What kicks it off</td><td>The first block</td></tr>
+      </tbody>
+    </table>
+    <div class="highlight-box" style="margin-top:auto">
+      <strong>Recognize it?</strong> Your Excalidraw drawing IS already a Make.com scenario!
+    </div>
+  </div>
+  <span class="slide-number">13</span>
+</div>
+
+<!-- SLIDE 14: Interface tour -->
+<div class="slide slide--content">
+  <div class="slide-header">
+    <span class="block-badge">Block 3</span>
+    <h3>Live interface tour</h3>
+  </div>
+  <div class="slide-body">
+    <ul class="content-list">
+      <li>Create a <strong>free Make.com account</strong> (link on the landing page)</li>
+      <li>Walk through together: <strong>creating a scenario</strong></li>
+      <li>Search and connect <strong>modules</strong></li>
+      <li>The <strong>&ldquo;Run once&rdquo;</strong> button: instant feedback, no deploy needed</li>
+    </ul>
+    <div class="highlight-box green" style="margin-top:auto">
+      <strong>Advantage:</strong> Visual, drag-and-drop, see results immediately &mdash; no code required!
+    </div>
+  </div>
+  <span class="slide-number">14</span>
+</div>
+
+<!-- SLIDE 15: Pre-built demo overview -->
+<div class="slide slide--content">
+  <div class="slide-header">
+    <span class="block-badge">Block 3</span>
+    <h3>Demo: order intake automation</h3>
+  </div>
+  <div class="slide-body" style="justify-content:center">
+    <div class="flow" style="flex-wrap:wrap;gap:0.25rem;margin-bottom:1.5rem">
+      <div class="flow-step" style="background:#e0e7ff;border-color:#4f46e5">Receive webhook data</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="background:#fef3c7;border-color:#f59e0b">AI analyses order</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="background:#dbeafe;border-color:#2563eb">Confirmation email customer</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="background:#fef3c7;border-color:#d97706">Notification production</div>
+    </div>
+    <ul class="content-list">
+      <li>Watch live data flow through the modules</li>
+      <li>From request to AI-generated email in <strong>seconds</strong></li>
+    </ul>
+    <div class="highlight-box" style="margin-top:auto">
+      <strong>Next step:</strong> &ldquo;You&rsquo;re going to build this yourselves now.&rdquo;
+    </div>
+  </div>
+  <span class="slide-number">15</span>
+</div>
+
+<!-- SLIDE 16: Demo - form fields -->
+<div class="slide slide--content">
+  <div class="slide-header">
+    <span class="block-badge">Block 3</span>
+    <h3>Form fields</h3>
+  </div>
+  <div class="slide-body">
+    <p style="margin-bottom:1rem;color:var(--clr-text-muted)">The webhook/form contains these fields:</p>
+    <table class="slide-table">
+      <thead>
+        <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Company name</strong></td><td>Text</td><td>Name of the company</td></tr>
+        <tr><td><strong>Contact person</strong></td><td>Text</td><td>Name of the requester</td></tr>
+        <tr><td><strong>Email</strong></td><td>Email</td><td>For the confirmation</td></tr>
+        <tr><td><strong>Product description</strong></td><td>Text</td><td>What is being ordered</td></tr>
+        <tr><td><strong>Quantity</strong></td><td>Number</td><td>How many units</td></tr>
+        <tr><td><strong>Desired delivery date</strong></td><td>Date</td><td>When needed</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <span class="slide-number">16</span>
+</div>
+
+<!-- ==================== BLOK 4 ==================== -->
+
+<!-- SLIDE 17: Block 4 section divider -->
+<div class="slide slide--section">
+  <div class="block-num">Block 4</div>
+  <h2>Build the order intake<br>automation</h2>
+  <div class="time">1:45 - 2:45</div>
+  <div class="style-tag">Guided hands-on</div>
+  <span class="slide-number">17</span>
+</div>
+
+<!-- SLIDE 18: Setup checklist -->
+<div class="slide slide--content">
+  <div class="slide-header">
+    <span class="block-badge">Block 4</span>
+    <h3>Checklist: 5 steps</h3>
+  </div>
+  <div class="slide-body">
+    <p style="margin-bottom:0.75rem;color:var(--clr-text-muted)">Open the checklist on the landing page and check off each step:</p>
+    <ul class="check-list">
+      <li><strong>Step 1:</strong> Set up webhook trigger (5 min)</li>
+      <li><strong>Step 2:</strong> Add AI module (5 min)</li>
+      <li><strong>Step 3:</strong> Set up confirmation email (10 min)</li>
+      <li><strong>Step 4:</strong> Production notification (5 min)</li>
+      <li><strong>Step 5:</strong> Test! (10 min)</li>
+    </ul>
+    <div class="highlight-box green" style="margin-top:auto">
+      <strong>Check:</strong> Make.com open and logged in? Then let&rsquo;s get started!
+    </div>
+  </div>
+  <span class="slide-number">18</span>
+</div>
+
+<!-- SLIDE 19: Stretch goal & troubleshooting -->
+<div class="slide slide--content">
+  <div class="slide-header">
+    <span class="block-badge">Block 4</span>
+    <h3>Stretch goal &amp; troubleshooting</h3>
+  </div>
+  <div class="slide-body">
+    <div class="two-col">
+      <div>
+        <h4 style="margin-bottom:0.75rem;color:var(--clr-accent)">Done early? Stretch goal:</h4>
+        <ul class="content-list green">
+          <li>Add a <strong>filter</strong> to your scenario</li>
+          <li>For example: only notify when <strong>Quantity &gt; 100</strong></li>
+          <li>Discover the &ldquo;Filter&rdquo; option between two modules</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="margin-bottom:0.75rem;color:var(--clr-orange)">Troubleshooting tips:</h4>
+        <ul class="content-list orange">
+          <li><strong>Connection failed?</strong> Check your webhook URL</li>
+          <li><strong>No data?</strong> Make sure the form has been filled in at least once</li>
+          <li><strong>Stuck?</strong> Ask your neighbour or the trainer</li>
+        </ul>
+      </div>
+    </div>
+    <div class="highlight-box" style="margin-top:auto">
+      <strong>Peer help:</strong> Pair fast finishers with slower participants
+    </div>
+  </div>
+  <span class="slide-number">19</span>
+</div>
+
+<!-- ==================== PAUZE 2 ==================== -->
+
+<!-- SLIDE 20: Pause -->
+<div class="slide slide--pause">
+  <h2>Break</h2>
+  <p>15 minutes &mdash; 2:45 - 3:00</p>
+  <span class="slide-number">20</span>
+</div>
+
+<!-- ==================== BLOCK 5 ==================== -->
+
+<!-- SLIDE 21: Block 5 section divider -->
+<div class="slide slide--section">
+  <div class="block-num">Block 5</div>
+  <h2>A look at n8n</h2>
+  <div class="time">3:00 - 3:20</div>
+  <div class="style-tag">Demo</div>
+  <span class="slide-number">21</span>
+</div>
+
+<!-- SLIDE 22: What is n8n -->
+<div class="slide slide--content">
+  <div class="slide-header">
+    <span class="block-badge">Block 5</span>
+    <h3>What is n8n?</h3>
+  </div>
+  <div class="slide-body">
+    <ul class="content-list">
+      <li><strong>Open source</strong> and self-hostable &mdash; your data stays with you</li>
+      <li>Free on your own server, or hosted via <strong>n8n.cloud</strong></li>
+      <li>Same concept as Make.com: visual flows with modules and connections</li>
+      <li><strong>Code nodes:</strong> write JavaScript/Python when needed</li>
+      <li><strong>Self-hosted</strong> = no data leaves your building (relevant for IP)</li>
+      <li><strong>Community nodes</strong> for niche integrations</li>
+    </ul>
+  </div>
+  <span class="slide-number">22</span>
+</div>
+
+<!-- SLIDE 23: Side-by-side demo -->
+<div class="slide slide--content">
+  <div class="slide-header">
+    <span class="block-badge">Block 5</span>
+    <h3>The same scenario in n8n</h3>
+  </div>
+  <div class="slide-body" style="justify-content:center">
+    <p style="margin-bottom:1rem;color:var(--clr-text-muted)">The same order intake flow, different tool:</p>
+    <div class="flow" style="flex-wrap:wrap;gap:0.25rem;margin-bottom:1.5rem">
+      <div class="flow-step" style="background:#e0e7ff;border-color:#4f46e5">Form Trigger</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="background:#fef3c7;border-color:#f59e0b">OpenAI Chat</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="background:#dbeafe;border-color:#2563eb">Send Email confirmation</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="background:#fef3c7;border-color:#d97706">Send Email notification</div>
+    </div>
+    <ul class="content-list">
+      <li>More technical interface, but <strong>more flexibility</strong></li>
+      <li>Compare: drag-and-drop vs. node configuration</li>
+    </ul>
+  </div>
+  <span class="slide-number">23</span>
+</div>
+
+<!-- SLIDE 24: When to use what -->
+<div class="slide slide--content">
+  <div class="slide-header">
+    <span class="block-badge">Block 5</span>
+    <h3>When to use what?</h3>
+  </div>
+  <div class="slide-body">
+    <table class="slide-table">
+      <thead>
+        <tr><th></th><th>Make.com</th><th>n8n</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Ideal for</strong></td><td>Quick wins, simple flows</td><td>Complex logic, privacy requirements</td></tr>
+        <tr><td><strong>User</strong></td><td>Non-technical</td><td>Technical team available</td></tr>
+        <tr><td><strong>Data</strong></td><td>SaaS (cloud)</td><td>Self-hosted option</td></tr>
+        <tr><td><strong>Cost</strong></td><td>Subscription per operation</td><td>Free (self-hosted) or paid cloud</td></tr>
+      </tbody>
+    </table>
+    <div class="highlight-box" style="margin-top:auto">
+      No hands-on &mdash; awareness only. <strong>&ldquo;If you want more later, this is the next step.&rdquo;</strong>
+    </div>
+  </div>
+  <span class="slide-number">24</span>
+</div>
+
+<!-- ==================== BLOK 6 ==================== -->
+
+<!-- SLIDE 25: Block 6 section divider -->
+<div class="slide slide--section">
+  <div class="block-num">Block 6</div>
+  <h2>Identify your own<br>automation opportunity</h2>
+  <div class="time">3:20 - 3:45</div>
+  <div class="style-tag">Group exercise</div>
+  <span class="slide-number">25</span>
+</div>
+
+<!-- SLIDE 26: Individual brainstorm -->
+<div class="slide slide--content">
+  <div class="slide-header">
+    <span class="block-badge">Block 6</span>
+    <h3>Individual brainstorm (5 min)</h3>
+  </div>
+  <div class="slide-body">
+    <p style="margin-bottom:1rem;font-size:1.1rem">Go back to the processes from Block 1 and pick one that scored high.</p>
+    <ul class="content-list">
+      <li><strong>What triggers it?</strong> When does this process start?</li>
+      <li><strong>What are the steps?</strong> Describe it from start to finish</li>
+      <li><strong>Which tools are involved?</strong> Email, spreadsheet, system?</li>
+    </ul>
+    <div class="highlight-box green" style="margin-top:auto">
+      <strong>Draw it in Excalidraw</strong> (10 min) &mdash; maximum 8 steps, colour coding: orange = manual, green = automatable
+    </div>
+  </div>
+  <span class="slide-number">26</span>
+</div>
+
+<!-- SLIDE 27: Duo-sharing -->
+<div class="slide slide--content">
+  <div class="slide-header">
+    <span class="block-badge">Block 6</span>
+    <h3>Pair sharing &amp; feedback (10 min)</h3>
+  </div>
+  <div class="slide-body">
+    <p style="margin-bottom:1.25rem;font-size:1.05rem">Share your drawing with a partner. The partner asks two questions:</p>
+    <div style="display:flex;flex-direction:column;gap:1rem">
+      <div class="highlight-box">
+        <strong>Question 1:</strong> &ldquo;Is there a step you can <strong>remove</strong>?&rdquo;<br>
+        <span style="color:var(--clr-text-muted);font-size:0.9rem">&rarr; Simplify</span>
+      </div>
+      <div class="highlight-box green">
+        <strong>Question 2:</strong> &ldquo;Which <strong>module in Make.com</strong> would you use here?&rdquo;<br>
+        <span style="color:var(--clr-text-muted);font-size:0.9rem">&rarr; Connect to tooling</span>
+      </div>
+    </div>
+    <p style="margin-top:auto;color:var(--clr-text-muted);font-size:0.95rem">2-3 volunteers share their idea with the whole group</p>
+  </div>
+  <span class="slide-number">27</span>
+</div>
+
+<!-- ==================== BLOK 7 ==================== -->
+
+<!-- SLIDE 28: Block 7 section divider -->
+<div class="slide slide--section">
+  <div class="block-num">Block 7</div>
+  <h2>Wrap-up, resources &amp; Q&amp;A</h2>
+  <div class="time">3:45 - 4:00</div>
+  <div class="style-tag">Discussion</div>
+  <span class="slide-number">28</span>
+</div>
+
+<!-- SLIDE 29: Recap -->
+<div class="slide slide--content">
+  <div class="slide-header">
+    <span class="block-badge">Block 7</span>
+    <h3>Recap: what did we achieve?</h3>
+  </div>
+  <div class="slide-body" style="justify-content:center">
+    <div class="flow" style="margin-bottom:2rem">
+      <div class="flow-step">Think</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Draw</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">See</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Build</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="background:var(--clr-accent-light);border-color:var(--clr-accent)">Own idea</div>
+    </div>
+    <p style="font-size:1.2rem;text-align:center;max-width:600px;margin:0 auto">
+      Everyone built a <strong>working automation</strong> today!
+    </p>
+    <div class="highlight-box" style="margin-top:1.5rem;text-align:center">
+      <strong>&ldquo;Automation is not an IT project. It starts with a process and a drawing.&rdquo;</strong>
+    </div>
+  </div>
+  <span class="slide-number">29</span>
+</div>
+
+<!-- SLIDE 30: Resources overview -->
+<div class="slide slide--content">
+  <div class="slide-header">
+    <span class="block-badge">Block 7</span>
+    <h3>Resources &amp; next steps</h3>
+  </div>
+  <div class="slide-body">
+    <ul class="content-list">
+      <li><strong>Make.com Academy</strong> &mdash; Free courses and tutorials</li>
+      <li><strong>n8n Documentation &amp; Community</strong> &mdash; Docs, forum, templates</li>
+      <li><strong>Excalidraw</strong> &mdash; Bookmark for process diagrams</li>
+      <li><strong>Landing page</strong> &mdash; All links and reference material</li>
+    </ul>
+    <div class="highlight-box orange" style="margin-top:auto">
+      <strong>2-week challenge:</strong> Automate something at work within 2 weeks and share the result!
+    </div>
+  </div>
+  <span class="slide-number">30</span>
+</div>
+
+<!-- SLIDE 31: Q&A -->
+<div class="slide slide--content">
+  <div class="slide-header">
+    <span class="block-badge">Block 7</span>
+    <h3>Q&amp;A</h3>
+  </div>
+  <div class="slide-body" style="justify-content:center;align-items:center;text-align:center">
+    <p style="font-size:1.8rem;font-weight:600;color:var(--clr-primary-dark)">Questions?</p>
+    <p style="font-size:1.05rem;color:var(--clr-text-muted);margin-top:1rem;max-width:500px">
+      Which processes did you identify today that you&rsquo;d like help with?
+    </p>
+  </div>
+  <span class="slide-number">31</span>
+</div>
+
+<!-- SLIDE 32: Closing -->
+<div class="slide slide--end">
+  <div style="display:flex;align-items:center;justify-content:center;gap:3rem">
+    <div style="text-align:left">
+      <h2 style="margin-bottom:0.75rem">Thank you!</h2>
+      <p style="font-size:1.2rem;margin-bottom:1rem;opacity:0.9">AI Workshop: Workflow Automation</p>
+      <p style="font-size:0.95rem;opacity:0.75">Faber Electronics, Velp &mdash; March 11, 2026</p>
+      <p style="margin-top:1.25rem">
+        <strong>Follow-up questions?</strong><br>
+        <a href="https://rocketflow.nl" target="_blank">rocketflow.nl</a>
+      </p>
+    </div>
+    <div style="text-align:center">
+      <img src="assets/qr-landing-page.png" alt="QR code to landing page" style="width:160px;height:160px;border-radius:8px;background:#fff;padding:8px">
+      <p style="font-size:0.8rem;opacity:0.7;margin-top:0.5rem">Scan for all links<br>and materials</p>
+    </div>
+  </div>
+  <span class="slide-number">32</span>
+</div>
+
+<script>
+(function() {
+  var slides = document.querySelectorAll('.slide');
+  var currentSlide = 0;
+  var presentationMode = false;
+  var overviewMode = false;
+  var cursorTimer = null;
+  var overviewGrid = null;
+
+  var progressBar = document.getElementById('presProgress');
+  var counter = document.getElementById('presCounter');
+  var startOverlay = document.getElementById('startOverlay');
+  var startBtn = document.getElementById('startBtn');
+
+  function updateUI() {
+    var pct = slides.length > 1 ? (currentSlide / (slides.length - 1)) * 100 : 100;
+    progressBar.style.width = pct + '%';
+    counter.textContent = (currentSlide + 1) + ' / ' + slides.length;
+  }
+
+  function showSlide(index) {
+    if (index < 0 || index >= slides.length) return;
+    // Fade transition: hide current, show next
+    if (presentationMode && currentSlide !== index) {
+      slides[currentSlide].style.opacity = '0';
+      setTimeout(function() {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = index;
+        slides[currentSlide].classList.add('active');
+        // Force reflow then fade in
+        void slides[currentSlide].offsetWidth;
+        slides[currentSlide].style.opacity = '1';
+        updateUI();
+      }, 150);
+    } else {
+      for (var i = 0; i < slides.length; i++) slides[i].classList.remove('active');
+      currentSlide = index;
+      slides[currentSlide].classList.add('active');
+      slides[currentSlide].style.opacity = '1';
+      updateUI();
+    }
+    if (!presentationMode && !overviewMode) {
+      slides[currentSlide].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  function scaleSlides() {
+    if (!presentationMode) return;
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+    var scale = Math.min(vw / 960, vh / 540);
+    for (var i = 0; i < slides.length; i++) {
+      slides[i].style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
+    }
+  }
+
+  window.addEventListener('resize', scaleSlides);
+
+  function enterPresentation() {
+    overviewMode = false;
+    document.body.classList.remove('overview-mode');
+    unwrapOverviewGrid();
+    presentationMode = true;
+    document.body.classList.add('presentation-mode');
+    scaleSlides();
+    // Request true fullscreen
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch(function(){});
+    }
+    showSlide(currentSlide);
+    resetCursorTimer();
+  }
+
+  function exitPresentation() {
+    presentationMode = false;
+    document.body.classList.remove('presentation-mode');
+    document.body.classList.remove('cursor-visible');
+    // Reset transforms
+    for (var i = 0; i < slides.length; i++) {
+      slides[i].style.transform = '';
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function(){});
+    }
+    clearTimeout(cursorTimer);
+    // Scroll to current slide in overview
+    setTimeout(function() {
+      slides[currentSlide].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  }
+
+  function togglePresentation() {
+    if (overviewMode) {
+      exitOverview(currentSlide);
+      return;
+    }
+    if (presentationMode) exitPresentation();
+    else showStartOverlay();
+  }
+
+  function showStartOverlay() {
+    startOverlay.classList.add('show');
+  }
+
+  function hideStartOverlay() {
+    startOverlay.classList.remove('show');
+  }
+
+  startBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    hideStartOverlay();
+    enterPresentation();
+  });
+
+  startOverlay.addEventListener('click', function(e) {
+    if (e.target === startOverlay) hideStartOverlay();
+  });
+
+  // Cursor auto-hide in presentation
+  function resetCursorTimer() {
+    document.body.classList.add('cursor-visible');
+    clearTimeout(cursorTimer);
+    cursorTimer = setTimeout(function() {
+      if (presentationMode) document.body.classList.remove('cursor-visible');
+    }, 2500);
+  }
+
+  document.addEventListener('mousemove', function() {
+    if (presentationMode) resetCursorTimer();
+  });
+
+  // Overview mode
+  function enterOverview() {
+    if (!presentationMode) return;
+    presentationMode = false;
+    document.body.classList.remove('presentation-mode');
+    document.body.classList.remove('cursor-visible');
+    overviewMode = true;
+    document.body.classList.add('overview-mode');
+    wrapOverviewGrid();
+    // Scroll active slide into view
+    setTimeout(function() {
+      var active = document.querySelector('.overview-grid .slide.active');
+      if (active) active.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 50);
+  }
+
+  function exitOverview(index) {
+    overviewMode = false;
+    document.body.classList.remove('overview-mode');
+    unwrapOverviewGrid();
+    currentSlide = index;
+    enterPresentation();
+  }
+
+  function wrapOverviewGrid() {
+    if (overviewGrid) return;
+    overviewGrid = document.createElement('div');
+    overviewGrid.className = 'overview-grid';
+    var parent = slides[0].parentNode;
+    for (var i = 0; i < slides.length; i++) {
+      overviewGrid.appendChild(slides[i]);
+    }
+    parent.appendChild(overviewGrid);
+    // Add click handlers
+    for (var j = 0; j < slides.length; j++) {
+      (function(idx) {
+        slides[idx]._overviewClick = function(e) {
+          e.stopPropagation();
+          exitOverview(idx);
+        };
+        slides[idx].addEventListener('click', slides[idx]._overviewClick);
+      })(j);
+    }
+  }
+
+  function unwrapOverviewGrid() {
+    if (!overviewGrid) return;
+    var parent = overviewGrid.parentNode;
+    for (var i = 0; i < slides.length; i++) {
+      if (slides[i]._overviewClick) {
+        slides[i].removeEventListener('click', slides[i]._overviewClick);
+        delete slides[i]._overviewClick;
+      }
+      parent.insertBefore(slides[i], overviewGrid);
+    }
+    parent.removeChild(overviewGrid);
+    overviewGrid = null;
+  }
+
+  // Fullscreen change listener
+  document.addEventListener('fullscreenchange', function() {
+    if (!document.fullscreenElement && presentationMode) {
+      exitPresentation();
+    }
+  });
+
+  // Keyboard
+  document.addEventListener('keydown', function(e) {
+    // Close start overlay on Escape
+    if (startOverlay.classList.contains('show')) {
+      if (e.key === 'Escape') { hideStartOverlay(); return; }
+      if (e.key === 'Enter') { e.preventDefault(); hideStartOverlay(); enterPresentation(); return; }
+      return;
+    }
+
+    if (e.key === 'f' || e.key === 'F') {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      e.preventDefault();
+      togglePresentation();
+      return;
+    }
+
+    if ((e.key === 'o' || e.key === 'O') && presentationMode) {
+      e.preventDefault();
+      enterOverview();
+      return;
+    }
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      if (!overviewMode) { e.preventDefault(); showSlide(currentSlide + 1); }
+    }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      if (!overviewMode) { e.preventDefault(); showSlide(currentSlide - 1); }
+    }
+    if (e.key === 'Escape') {
+      if (overviewMode) { exitOverview(currentSlide); return; }
+      if (presentationMode) { exitPresentation(); }
+    }
+    if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
+    if (e.key === 'End') { e.preventDefault(); showSlide(slides.length - 1); }
+
+    // Number keys: jump to slide (1-9 for slides 1-9, 0 for 10)
+    if (presentationMode && !overviewMode && e.key >= '0' && e.key <= '9') {
+      var num = e.key === '0' ? 9 : parseInt(e.key) - 1;
+      if (num < slides.length) showSlide(num);
+    }
+  });
+
+  // Click navigation in presentation mode
+  document.addEventListener('click', function(e) {
+    if (!presentationMode || overviewMode) return;
+    if (e.target.closest('.pres-start-overlay')) return;
+    var x = e.clientX / window.innerWidth;
+    if (x > 0.5) showSlide(currentSlide + 1);
+    else showSlide(currentSlide - 1);
+  });
+
+  // Touch/swipe support
+  var touchStartX = 0;
+  var touchStartY = 0;
+  document.addEventListener('touchstart', function(e) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    if (!presentationMode || overviewMode) return;
+    var dx = e.changedTouches[0].clientX - touchStartX;
+    var dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) < 50 || Math.abs(dy) > Math.abs(dx)) return;
+    if (dx < 0) showSlide(currentSlide + 1);
+    else showSlide(currentSlide - 1);
+  }, { passive: true });
+
+  // Init
+  updateUI();
+})();
+</script>
+</body>
+</html>
