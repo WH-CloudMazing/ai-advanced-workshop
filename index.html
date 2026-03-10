@@ -416,6 +416,35 @@
       100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
     }
 
+    /* Language toggle */
+    .lang-toggle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      background: rgba(255,255,255,0.15);
+      border-radius: 6px;
+      overflow: hidden;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .lang-toggle button {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.6);
+      padding: 0.35rem 0.65rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lang-toggle button.active {
+      background: rgba(255,255,255,0.25);
+      color: #fff;
+    }
+    .lang-toggle button:hover:not(.active) {
+      color: rgba(255,255,255,0.85);
+    }
+    .header { position: relative; }
+
     @media (max-width: 640px) {
       .header h1 { font-size: 1.5rem; }
       .header { padding: 2rem 1rem 1.75rem; }
@@ -434,13 +463,17 @@
 
   <!-- Header -->
   <header class="header">
+    <div class="lang-toggle">
+      <button class="active" data-lang="nl">NL</button>
+      <button data-lang="en">EN</button>
+    </div>
     <div class="container">
       <h1>AI Workshop: Workflow Automation</h1>
-      <p class="subtitle">Processen herkennen, tekenen en automatiseren</p>
+      <p class="subtitle" data-i18n="subtitle">Processen herkennen, tekenen en automatiseren</p>
       <div class="header-meta">
-        <span>11 maart 2026</span>
+        <span data-i18n="date">11 maart 2026</span>
         <span>Faber Electronics, Velp</span>
-        <span>4 uur | 10 deelnemers</span>
+        <span data-i18n="meta">4 uur | 10 deelnemers</span>
       </div>
     </div>
   </header>
@@ -448,51 +481,51 @@
   <!-- Agenda -->
   <section id="agenda">
     <div class="container">
-      <h2 class="section-title">Agenda</h2>
-      <p class="section-subtitle">Programme overview</p>
+      <h2 class="section-title" data-i18n="agenda-title">Agenda</h2>
+      <p class="section-subtitle" data-i18n="agenda-subtitle">Programme overview</p>
       <div class="timeline-legend">
-        <div class="timeline-legend-item"><span class="timeline-legend-dot" style="background:var(--clr-primary)"></span> Discussie</div>
-        <div class="timeline-legend-item"><span class="timeline-legend-dot" style="background:var(--clr-accent)"></span> Hands-on / Oefening</div>
+        <div class="timeline-legend-item"><span class="timeline-legend-dot" style="background:var(--clr-primary)"></span> <span data-i18n="legend-discussion">Discussie</span></div>
+        <div class="timeline-legend-item"><span class="timeline-legend-dot" style="background:var(--clr-accent)"></span> <span data-i18n="legend-handson">Hands-on / Oefening</span></div>
         <div class="timeline-legend-item"><span class="timeline-legend-dot" style="background:var(--clr-orange)"></span> Demo</div>
-        <div class="timeline-legend-item"><span class="timeline-legend-dot" style="background:var(--clr-text-muted)"></span> Pauze</div>
+        <div class="timeline-legend-item"><span class="timeline-legend-dot" style="background:var(--clr-text-muted)"></span> <span data-i18n="legend-break">Pauze</span></div>
       </div>
-      <p class="timeline-active-hint">Klik op een blok om het als actief te markeren</p>
+      <p class="timeline-active-hint" data-i18n="timeline-hint">Klik op een blok om het als actief te markeren</p>
       <div class="timeline">
         <div class="timeline-item" data-type="discussie">
           <div class="timeline-time">0:00 - 0:30</div>
-          <div class="timeline-title">1. Wat zijn processen &amp; wanneer automatiseren? <span class="timeline-tag tag-discussie">Discussie</span></div>
+          <div class="timeline-title"><span data-i18n="agenda-1">1. Wat zijn processen &amp; wanneer automatiseren?</span> <span class="timeline-tag tag-discussie" data-i18n="tag-discussion">Discussie</span></div>
         </div>
         <div class="timeline-item" data-type="hands-on">
           <div class="timeline-time">0:30 - 1:00</div>
-          <div class="timeline-title">2. Proces uittekenen in Excalidraw <span class="timeline-tag tag-hands-on">Hands-on</span></div>
+          <div class="timeline-title"><span data-i18n="agenda-2">2. Proces uittekenen in Excalidraw</span> <span class="timeline-tag tag-hands-on">Hands-on</span></div>
         </div>
         <div class="timeline-item" data-type="pauze">
           <div class="timeline-time">1:00 - 1:15</div>
-          <div class="timeline-title">Pauze <span class="timeline-tag tag-pauze">Pauze</span></div>
+          <div class="timeline-title"><span data-i18n="agenda-break">Pauze</span> <span class="timeline-tag tag-pauze" data-i18n="tag-break">Pauze</span></div>
         </div>
         <div class="timeline-item" data-type="demo">
           <div class="timeline-time">1:15 - 1:45</div>
-          <div class="timeline-title">3. Introductie Make.com <span class="timeline-tag tag-demo">Demo</span></div>
+          <div class="timeline-title"><span data-i18n="agenda-3">3. Introductie Make.com</span> <span class="timeline-tag tag-demo">Demo</span></div>
         </div>
         <div class="timeline-item" data-type="hands-on">
           <div class="timeline-time">1:45 - 2:45</div>
-          <div class="timeline-title">4. Bouw de order intake automatisering <span class="timeline-tag tag-hands-on">Hands-on</span></div>
+          <div class="timeline-title"><span data-i18n="agenda-4">4. Bouw de order intake automatisering</span> <span class="timeline-tag tag-hands-on">Hands-on</span></div>
         </div>
         <div class="timeline-item" data-type="pauze">
           <div class="timeline-time">2:45 - 3:00</div>
-          <div class="timeline-title">Pauze <span class="timeline-tag tag-pauze">Pauze</span></div>
+          <div class="timeline-title"><span data-i18n="agenda-break2">Pauze</span> <span class="timeline-tag tag-pauze" data-i18n="tag-break2">Pauze</span></div>
         </div>
         <div class="timeline-item" data-type="demo">
           <div class="timeline-time">3:00 - 3:20</div>
-          <div class="timeline-title">5. Blik op n8n <span class="timeline-tag tag-demo">Demo</span></div>
+          <div class="timeline-title"><span data-i18n="agenda-5">5. Blik op n8n</span> <span class="timeline-tag tag-demo">Demo</span></div>
         </div>
         <div class="timeline-item" data-type="hands-on">
           <div class="timeline-time">3:20 - 3:45</div>
-          <div class="timeline-title">6. Eigen automatiseringskans identificeren <span class="timeline-tag tag-hands-on">Oefening</span></div>
+          <div class="timeline-title"><span data-i18n="agenda-6">6. Eigen automatiseringskans identificeren</span> <span class="timeline-tag tag-hands-on" data-i18n="tag-exercise">Oefening</span></div>
         </div>
         <div class="timeline-item" data-type="discussie">
           <div class="timeline-time">3:45 - 4:00</div>
-          <div class="timeline-title">7. Afsluiting, bronnen &amp; Q&amp;A <span class="timeline-tag tag-discussie">Discussie</span></div>
+          <div class="timeline-title"><span data-i18n="agenda-7">7. Afsluiting, bronnen &amp; Q&amp;A</span> <span class="timeline-tag tag-discussie" data-i18n="tag-discussion2">Discussie</span></div>
         </div>
       </div>
     </div>
@@ -502,19 +535,19 @@
   <section id="tools">
     <div class="container">
       <h2 class="section-title">Tools</h2>
-      <p class="section-subtitle">Quick access links</p>
+      <p class="section-subtitle" data-i18n="tools-subtitle">Quick access links</p>
       <div class="card-grid">
         <a href="https://www.make.com/en/register" target="_blank" rel="noopener" class="tool-card">
           <div class="tool-card-name">Make.com</div>
-          <div class="tool-card-desc">Maak een gratis account aan om automatiseringen te bouwen</div>
+          <div class="tool-card-desc" data-i18n="tool-make">Maak een gratis account aan om automatiseringen te bouwen</div>
         </a>
         <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener" class="tool-card">
           <div class="tool-card-name">OpenAI API</div>
-          <div class="tool-card-desc">API key voor de AI module (wordt verstrekt door trainer)</div>
+          <div class="tool-card-desc" data-i18n="tool-openai">API key voor de AI module (wordt verstrekt door trainer)</div>
         </a>
         <a href="https://excalidraw.com" target="_blank" rel="noopener" class="tool-card">
           <div class="tool-card-name">Excalidraw</div>
-          <div class="tool-card-desc">Teken processen visueel uit in je browser</div>
+          <div class="tool-card-desc" data-i18n="tool-excalidraw">Teken processen visueel uit in je browser</div>
         </a>
       </div>
     </div>
@@ -524,23 +557,23 @@
   <section id="templates">
     <div class="container">
       <h2 class="section-title">Templates</h2>
-      <p class="section-subtitle">Startbestanden om tijd te besparen</p>
+      <p class="section-subtitle" data-i18n="templates-subtitle">Startbestanden om tijd te besparen</p>
       <div class="card-grid">
         <a href="assets/orders-template.xlsx" download class="tool-card">
-          <div class="tool-card-name">Orders spreadsheet template</div>
-          <div class="tool-card-desc">Orders spreadsheet met kolommen voor de automatisering. Open in Excel Online of Google Sheets.</div>
+          <div class="tool-card-name" data-i18n="tpl-orders-name">Orders spreadsheet template</div>
+          <div class="tool-card-desc" data-i18n="tpl-orders-desc">Orders spreadsheet met kolommen voor de automatisering. Open in Excel Online of Google Sheets.</div>
         </a>
         <a href="assets/order-form.html" target="_blank" rel="noopener" class="tool-card">
-          <div class="tool-card-name">Order test formulier</div>
-          <div class="tool-card-desc">HTML formulier om testbestellingen te versturen naar je Make.com webhook.</div>
+          <div class="tool-card-name" data-i18n="tpl-form-name">Order test formulier</div>
+          <div class="tool-card-desc" data-i18n="tpl-form-desc">HTML formulier om testbestellingen te versturen naar je Make.com webhook.</div>
         </a>
         <a href="assets/order-intake-template.excalidraw" download class="tool-card">
           <div class="tool-card-name">Excalidraw template</div>
-          <div class="tool-card-desc">Order intake procesdiagram met kleurcodering. Open in Excalidraw via File &rarr; Open.</div>
+          <div class="tool-card-desc" data-i18n="tpl-excalidraw-desc">Order intake procesdiagram met kleurcodering. Open in Excalidraw via File &rarr; Open.</div>
         </a>
         <a href="slides.pdf" download class="tool-card">
           <div class="tool-card-name">Slides (PDF)</div>
-          <div class="tool-card-desc">Download de presentatieslides als PDF voor offline gebruik.</div>
+          <div class="tool-card-desc" data-i18n="tpl-slides-desc">Download de presentatieslides als PDF voor offline gebruik.</div>
         </a>
       </div>
     </div>
@@ -550,7 +583,7 @@
   <section id="checklist">
     <div class="container">
       <h2 class="section-title">Checklist</h2>
-      <p class="section-subtitle">Build progress tracker</p>
+      <p class="section-subtitle" data-i18n="checklist-subtitle">Build progress tracker</p>
       <div class="checklist-progress">
         <span class="progress-text" id="progressText">0/6 stappen voltooid</span>
         <div class="progress-bar-track"><div class="progress-bar-fill" id="progressBar" style="width:0%"></div></div>
@@ -558,8 +591,8 @@
       </div>
       <div id="checklistItems"></div>
       <div class="celebration" id="celebration">
-        <h3>Gefeliciteerd!</h3>
-        <p>Je hebt alle stappen voltooid. Je eerste automatisering werkt!</p>
+        <h3 data-i18n="celebrate-title">Gefeliciteerd!</h3>
+        <p data-i18n="celebrate-text">Je hebt alle stappen voltooid. Je eerste automatisering werkt!</p>
       </div>
     </div>
   </section>
@@ -567,30 +600,30 @@
   <!-- Reference Material -->
   <section id="reference">
     <div class="container">
-      <h2 class="section-title">Referentiemateriaal</h2>
-      <p class="section-subtitle">Reference material</p>
+      <h2 class="section-title" data-i18n="ref-title">Referentiemateriaal</h2>
+      <p class="section-subtitle" data-i18n="ref-subtitle">Reference material</p>
 
       <div class="ref-block">
-        <h3>Automatiserings-checklist</h3>
+        <h3 data-i18n="ref-checklist-title">Automatiserings-checklist</h3>
         <div class="criteria-grid">
           <div class="criteria-card">
-            <strong>1. Herhalend</strong>
-            <span>Gebeurt het regelmatig? Dagelijks, wekelijks of bij elke order?</span>
+            <strong data-i18n="ref-c1-title">1. Herhalend</strong>
+            <span data-i18n="ref-c1-desc">Gebeurt het regelmatig? Dagelijks, wekelijks of bij elke order?</span>
           </div>
           <div class="criteria-card">
-            <strong>2. Regelgebaseerd</strong>
-            <span>Kun je de stappen beschrijven als duidelijke regels of beslissingen?</span>
+            <strong data-i18n="ref-c2-title">2. Regelgebaseerd</strong>
+            <span data-i18n="ref-c2-desc">Kun je de stappen beschrijven als duidelijke regels of beslissingen?</span>
           </div>
           <div class="criteria-card">
-            <strong>3. Digitaal</strong>
-            <span>Gaat het om digitale tools, data of systemen?</span>
+            <strong data-i18n="ref-c3-title">3. Digitaal</strong>
+            <span data-i18n="ref-c3-desc">Gaat het om digitale tools, data of systemen?</span>
           </div>
           <div class="criteria-card">
-            <strong>4. Tijdrovend</strong>
-            <span>Kost het merkbare tijd die je beter kunt besteden?</span>
+            <strong data-i18n="ref-c4-title">4. Tijdrovend</strong>
+            <span data-i18n="ref-c4-desc">Kost het merkbare tijd die je beter kunt besteden?</span>
           </div>
         </div>
-        <p class="criteria-note">Score 3 of 4 = sterke automatiseringskandidaat</p>
+        <p class="criteria-note" data-i18n="ref-criteria-note">Score 3 of 4 = sterke automatiseringskandidaat</p>
       </div>
 
       <div class="ref-block">
@@ -601,27 +634,27 @@
               <tr><th></th><th>Make.com</th><th>n8n</th></tr>
             </thead>
             <tbody>
-              <tr><td><strong>Ideaal voor</strong></td><td>Quick wins, eenvoudige flows</td><td>Complexe logica, privacy-eisen</td></tr>
-              <tr><td><strong>Gebruiker</strong></td><td>Niet-technisch</td><td>Technisch team beschikbaar</td></tr>
-              <tr><td><strong>Data</strong></td><td>SaaS (cloud)</td><td>Self-hosted optie</td></tr>
-              <tr><td><strong>Kosten</strong></td><td>Abonnement per operatie</td><td>Gratis (self-hosted) of betaald cloud</td></tr>
+              <tr><td><strong data-i18n="ref-ideal">Ideaal voor</strong></td><td data-i18n="ref-make-ideal">Quick wins, eenvoudige flows</td><td data-i18n="ref-n8n-ideal">Complexe logica, privacy-eisen</td></tr>
+              <tr><td><strong data-i18n="ref-user">Gebruiker</strong></td><td data-i18n="ref-make-user">Niet-technisch</td><td data-i18n="ref-n8n-user">Technisch team beschikbaar</td></tr>
+              <tr><td><strong data-i18n="ref-data">Data</strong></td><td>SaaS (cloud)</td><td data-i18n="ref-n8n-data">Self-hosted optie</td></tr>
+              <tr><td><strong data-i18n="ref-cost">Kosten</strong></td><td data-i18n="ref-make-cost">Abonnement per operatie</td><td data-i18n="ref-n8n-cost">Gratis (self-hosted) of betaald cloud</td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
       <div class="ref-block">
-        <h3>Make.com terminologie</h3>
+        <h3 data-i18n="ref-terminology-title">Make.com terminologie</h3>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>Make.com term</th><th>Wat het is</th><th>Excalidraw equivalent</th></tr>
+              <tr><th>Make.com term</th><th data-i18n="ref-what">Wat het is</th><th>Excalidraw equivalent</th></tr>
             </thead>
             <tbody>
-              <tr><td><strong>Scenario</strong></td><td>Je automatisering</td><td>Het hele plaatje</td></tr>
-              <tr><td><strong>Module</strong></td><td>Een stap</td><td>Een rechthoek</td></tr>
-              <tr><td><strong>Connection</strong></td><td>Link naar een tool</td><td>De pijl naar buiten</td></tr>
-              <tr><td><strong>Trigger</strong></td><td>Wat het aftrapt</td><td>Het eerste blok</td></tr>
+              <tr><td><strong>Scenario</strong></td><td data-i18n="ref-scenario">Je automatisering</td><td data-i18n="ref-scenario-ex">Het hele plaatje</td></tr>
+              <tr><td><strong>Module</strong></td><td data-i18n="ref-module">Een stap</td><td data-i18n="ref-module-ex">Een rechthoek</td></tr>
+              <tr><td><strong>Connection</strong></td><td data-i18n="ref-connection">Link naar een tool</td><td data-i18n="ref-connection-ex">De pijl naar buiten</td></tr>
+              <tr><td><strong>Trigger</strong></td><td data-i18n="ref-trigger">Wat het aftrapt</td><td data-i18n="ref-trigger-ex">Het eerste blok</td></tr>
             </tbody>
           </table>
         </div>
@@ -632,36 +665,36 @@
   <!-- Resources & Contact -->
   <section class="resources-section" id="resources">
     <div class="container">
-      <h2 class="section-title">Bronnen &amp; Contact</h2>
-      <p class="section-subtitle">Resources &amp; contact</p>
+      <h2 class="section-title" data-i18n="resources-title">Bronnen &amp; Contact</h2>
+      <p class="section-subtitle" data-i18n="resources-subtitle">Resources &amp; contact</p>
 
       <div class="challenge-box">
-        <h3>2-weken challenge</h3>
-        <p>Automatiseer iets op je werk binnen 2 weken en deel het resultaat!</p>
+        <h3 data-i18n="challenge-title">2-weken challenge</h3>
+        <p data-i18n="challenge-text">Automatiseer iets op je werk binnen 2 weken en deel het resultaat!</p>
       </div>
 
       <div class="resource-links">
         <a href="https://academy.make.com" target="_blank" rel="noopener" class="resource-link">
           <strong>Make.com Academy</strong>
-          <span>Gratis cursussen en tutorials</span>
+          <span data-i18n="res-make">Gratis cursussen en tutorials</span>
         </a>
         <a href="https://docs.n8n.io" target="_blank" rel="noopener" class="resource-link">
-          <strong>n8n Documentatie</strong>
-          <span>Officiële docs en guides</span>
+          <strong data-i18n="res-n8n-docs-title">n8n Documentatie</strong>
+          <span data-i18n="res-n8n-docs">Officiële docs en guides</span>
         </a>
         <a href="https://community.n8n.io" target="_blank" rel="noopener" class="resource-link">
           <strong>n8n Community</strong>
-          <span>Forum, templates en hulp</span>
+          <span data-i18n="res-n8n-community">Forum, templates en hulp</span>
         </a>
         <a href="https://excalidraw.com" target="_blank" rel="noopener" class="resource-link">
           <strong>Excalidraw</strong>
-          <span>Bookmark voor procesdiagrammen</span>
+          <span data-i18n="res-excalidraw">Bookmark voor procesdiagrammen</span>
         </a>
       </div>
 
       <div class="contact-block">
-        <h3>Vragen na de workshop?</h3>
-        <p>Neem contact op met RocketFlow voor follow-up vragen en begeleiding.</p>
+        <h3 data-i18n="contact-title">Vragen na de workshop?</h3>
+        <p data-i18n="contact-text">Neem contact op met RocketFlow voor follow-up vragen en begeleiding.</p>
         <p style="margin-top:0.5rem"><a href="https://rocketflow.nl" target="_blank" rel="noopener">rocketflow.nl</a></p>
       </div>
     </div>
@@ -669,16 +702,20 @@
 
   <script>
     (function() {
-      var steps = [
-        { title: 'Stap 1: Make.com account aanmaken', desc: 'Maak een gratis account aan op make.com en log in.' },
-        { title: 'Stap 2: Webhook trigger instellen', desc: 'Nieuw scenario aanmaken, Custom Webhook module toevoegen en webhook URL kopieren.' },
-        { title: 'Stap 3: AI module toevoegen', desc: 'OpenAI module toevoegen, API key invoeren (van trainer) en prompt instellen voor orderanalyse.' },
-        { title: 'Stap 4: Bevestigingsmail module', desc: 'Email > Send an Email module: AI-gegenereerde bevestiging naar de klant.' },
-        { title: 'Stap 5: Productie notificatie module', desc: 'Email > Send an Email module: besteldetails met AI-analyse naar het productieteam.' },
-        { title: 'Stap 6: Testen', desc: 'Open het testformulier, plak je webhook URL, verstuur een testbestelling en controleer de AI-gegenereerde emails.' }
-      ];
-
       var STORAGE_KEY = 'workshop-checklist';
+
+      function getSteps() {
+        var lang = window._workshopLang || 'nl';
+        if (window._workshopSteps && window._workshopSteps[lang]) return window._workshopSteps[lang];
+        return [
+          { title: 'Stap 1: Make.com account aanmaken', desc: 'Maak een gratis account aan op make.com en log in.' },
+          { title: 'Stap 2: Webhook trigger instellen', desc: 'Nieuw scenario aanmaken, Custom Webhook module toevoegen en webhook URL kopieren.' },
+          { title: 'Stap 3: AI module toevoegen', desc: 'OpenAI module toevoegen, API key invoeren (van trainer) en prompt instellen voor orderanalyse.' },
+          { title: 'Stap 4: Bevestigingsmail module', desc: 'Email > Send an Email module: AI-gegenereerde bevestiging naar de klant.' },
+          { title: 'Stap 5: Productie notificatie module', desc: 'Email > Send an Email module: besteldetails met AI-analyse naar het productieteam.' },
+          { title: 'Stap 6: Testen', desc: 'Open het testformulier, plak je webhook URL, verstuur een testbestelling en controleer de AI-gegenereerde emails.' }
+        ];
+      }
 
       function getChecked() {
         try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
@@ -706,6 +743,7 @@
       }
 
       function renderChecklist() {
+        var steps = getSteps();
         var checked = getChecked();
         var container = document.getElementById('checklistItems');
         container.textContent = '';
@@ -742,6 +780,9 @@
         updateProgress(checked.length);
       }
 
+      // Expose for i18n toggle
+      window._renderChecklist = renderChecklist;
+
       function toggleStep(i) {
         var checked = getChecked();
         var idx = checked.indexOf(i);
@@ -749,11 +790,14 @@
         else { checked.push(i); }
         saveChecked(checked);
         renderChecklist();
-        if (checked.length === steps.length) { celebrate(); }
+        if (checked.length === getSteps().length) { celebrate(); }
       }
 
       function updateProgress(count) {
-        document.getElementById('progressText').textContent = count + '/6 stappen voltooid';
+        var steps = getSteps();
+        var lang = window._workshopLang || 'nl';
+        var fn = window._workshopProgressFn && window._workshopProgressFn[lang];
+        document.getElementById('progressText').textContent = fn ? fn(count) : count + '/6 stappen voltooid';
         document.getElementById('progressBar').style.width = (count / steps.length * 100) + '%';
         var cel = document.getElementById('celebration');
         if (count === steps.length) { cel.classList.add('show'); }
@@ -797,6 +841,163 @@
             this.classList.add('active');
           }
         });
+      }
+    })();
+
+    /* -- i18n toggle -- */
+    (function() {
+      var translations = {
+        en: {
+          'subtitle': 'Recognize, map and automate processes',
+          'date': 'March 11, 2026',
+          'meta': '4 hours | 10 participants',
+          'agenda-title': 'Agenda',
+          'agenda-subtitle': 'Programme overview',
+          'legend-discussion': 'Discussion',
+          'legend-handson': 'Hands-on / Exercise',
+          'legend-break': 'Break',
+          'timeline-hint': 'Click a block to mark it as active',
+          'agenda-1': '1. What are processes & when to automate?',
+          'agenda-2': '2. Map a process in Excalidraw',
+          'agenda-break': 'Break',
+          'agenda-3': '3. Introduction to Make.com',
+          'agenda-4': '4. Build the order intake automation',
+          'agenda-break2': 'Break',
+          'agenda-5': '5. A look at n8n',
+          'agenda-6': '6. Identify your own automation opportunity',
+          'agenda-7': '7. Wrap-up, resources & Q&A',
+          'tag-discussion': 'Discussion',
+          'tag-discussion2': 'Discussion',
+          'tag-break': 'Break',
+          'tag-break2': 'Break',
+          'tag-exercise': 'Exercise',
+          'tools-subtitle': 'Quick access links',
+          'tool-make': 'Create a free account to build automations',
+          'tool-openai': 'API key for the AI module (provided by trainer)',
+          'tool-excalidraw': 'Visually map processes in your browser',
+          'templates-subtitle': 'Starter files to save time',
+          'tpl-orders-name': 'Orders spreadsheet template',
+          'tpl-orders-desc': 'Orders spreadsheet with columns for the automation. Open in Excel Online or Google Sheets.',
+          'tpl-form-name': 'Order test form',
+          'tpl-form-desc': 'HTML form to send test orders to your Make.com webhook.',
+          'tpl-excalidraw-desc': 'Order intake process diagram with colour coding. Open in Excalidraw via File \u2192 Open.',
+          'tpl-slides-desc': 'Download the presentation slides as PDF for offline use.',
+          'checklist-subtitle': 'Build progress tracker',
+          'celebrate-title': 'Congratulations!',
+          'celebrate-text': 'You completed all steps. Your first automation works!',
+          'ref-title': 'Reference Material',
+          'ref-subtitle': 'Reference material',
+          'ref-checklist-title': 'Automation checklist',
+          'ref-c1-title': '1. Repetitive',
+          'ref-c1-desc': 'Does it happen regularly? Daily, weekly, or with every order?',
+          'ref-c2-title': '2. Rule-based',
+          'ref-c2-desc': 'Can you describe the steps as clear rules or decisions?',
+          'ref-c3-title': '3. Digital',
+          'ref-c3-desc': 'Does it involve digital tools, data, or systems?',
+          'ref-c4-title': '4. Time-consuming',
+          'ref-c4-desc': 'Does it take noticeable time you could spend better?',
+          'ref-criteria-note': 'Score 3 or 4 = strong automation candidate',
+          'ref-ideal': 'Ideal for',
+          'ref-make-ideal': 'Quick wins, simple flows',
+          'ref-n8n-ideal': 'Complex logic, privacy requirements',
+          'ref-user': 'User',
+          'ref-make-user': 'Non-technical',
+          'ref-n8n-user': 'Technical team available',
+          'ref-data': 'Data',
+          'ref-n8n-data': 'Self-hosted option',
+          'ref-cost': 'Cost',
+          'ref-make-cost': 'Subscription per operation',
+          'ref-n8n-cost': 'Free (self-hosted) or paid cloud',
+          'ref-terminology-title': 'Make.com terminology',
+          'ref-what': 'What it is',
+          'ref-scenario': 'Your automation',
+          'ref-scenario-ex': 'The whole picture',
+          'ref-module': 'A step',
+          'ref-module-ex': 'A rectangle',
+          'ref-connection': 'Link to a tool',
+          'ref-connection-ex': 'The outgoing arrow',
+          'ref-trigger': 'What kicks it off',
+          'ref-trigger-ex': 'The first block',
+          'resources-title': 'Resources & Contact',
+          'resources-subtitle': 'Resources & contact',
+          'challenge-title': '2-week challenge',
+          'challenge-text': 'Automate something at work within 2 weeks and share the result!',
+          'res-make': 'Free courses and tutorials',
+          'res-n8n-docs-title': 'n8n Documentation',
+          'res-n8n-docs': 'Official docs and guides',
+          'res-n8n-community': 'Forum, templates and help',
+          'res-excalidraw': 'Bookmark for process diagrams',
+          'contact-title': 'Questions after the workshop?',
+          'contact-text': 'Contact RocketFlow for follow-up questions and guidance.'
+        }
+      };
+
+      // Store original NL text
+      var nlTexts = {};
+      document.querySelectorAll('[data-i18n]').forEach(function(el) {
+        nlTexts[el.getAttribute('data-i18n')] = el.textContent;
+      });
+
+      var LANG_KEY = 'workshop-lang';
+      var currentLang = localStorage.getItem(LANG_KEY) || 'nl';
+
+      // Checklist steps per language
+      var stepsI18n = {
+        nl: [
+          { title: 'Stap 1: Make.com account aanmaken', desc: 'Maak een gratis account aan op make.com en log in.' },
+          { title: 'Stap 2: Webhook trigger instellen', desc: 'Nieuw scenario aanmaken, Custom Webhook module toevoegen en webhook URL kopieren.' },
+          { title: 'Stap 3: AI module toevoegen', desc: 'OpenAI module toevoegen, API key invoeren (van trainer) en prompt instellen voor orderanalyse.' },
+          { title: 'Stap 4: Bevestigingsmail module', desc: 'Email > Send an Email module: AI-gegenereerde bevestiging naar de klant.' },
+          { title: 'Stap 5: Productie notificatie module', desc: 'Email > Send an Email module: besteldetails met AI-analyse naar het productieteam.' },
+          { title: 'Stap 6: Testen', desc: 'Open het testformulier, plak je webhook URL, verstuur een testbestelling en controleer de AI-gegenereerde emails.' }
+        ],
+        en: [
+          { title: 'Step 1: Create Make.com account', desc: 'Create a free account at make.com and log in.' },
+          { title: 'Step 2: Set up webhook trigger', desc: 'Create new scenario, add Custom Webhook module and copy the webhook URL.' },
+          { title: 'Step 3: Add AI module', desc: 'Add OpenAI module, enter API key (from trainer) and set up prompt for order analysis.' },
+          { title: 'Step 4: Confirmation email module', desc: 'Email > Send an Email module: AI-generated confirmation to the customer.' },
+          { title: 'Step 5: Production notification module', desc: 'Email > Send an Email module: order details with AI analysis to the production team.' },
+          { title: 'Step 6: Test', desc: 'Open the test form, paste your webhook URL, send a test order and check the AI-generated emails.' }
+        ]
+      };
+      var progressI18n = {
+        nl: function(n) { return n + '/6 stappen voltooid'; },
+        en: function(n) { return n + '/6 steps completed'; }
+      };
+
+      window._workshopSteps = stepsI18n;
+      window._workshopProgressFn = progressI18n;
+      window._workshopLang = currentLang;
+
+      function applyLang(lang) {
+        currentLang = lang;
+        window._workshopLang = lang;
+        localStorage.setItem(LANG_KEY, lang);
+        document.documentElement.lang = lang === 'en' ? 'en' : 'nl';
+
+        document.querySelectorAll('.lang-toggle button').forEach(function(btn) {
+          btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+        });
+
+        document.querySelectorAll('[data-i18n]').forEach(function(el) {
+          var key = el.getAttribute('data-i18n');
+          var text = lang === 'en' ? translations.en[key] : nlTexts[key];
+          if (text) el.textContent = text;
+        });
+
+        if (typeof window._renderChecklist === 'function') {
+          window._renderChecklist();
+        }
+      }
+
+      document.querySelectorAll('.lang-toggle button').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          applyLang(this.getAttribute('data-lang'));
+        });
+      });
+
+      if (currentLang !== 'nl') {
+        applyLang(currentLang);
       }
     })();
   </script>
