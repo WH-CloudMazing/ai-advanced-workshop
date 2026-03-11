@@ -541,10 +541,12 @@
           <div class="tool-card-name">Make.com</div>
           <div class="tool-card-desc" data-i18n="tool-make">Maak een gratis account aan om automatiseringen te bouwen</div>
         </a>
-        <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener" class="tool-card">
-          <div class="tool-card-name">OpenAI API</div>
-          <div class="tool-card-desc" data-i18n="tool-openai">API key voor de AI module (wordt verstrekt door trainer)</div>
-        </a>
+        <div class="tool-card" style="cursor:default">
+          <div class="tool-card-name">OpenAI API Key</div>
+          <div class="tool-card-desc" data-i18n="tool-openai">Kopieer deze key voor de AI module in Make.com</div>
+          <code id="apiKey" style="display:block;margin-top:0.5rem;padding:0.4rem 0.6rem;background:var(--clr-bg);border-radius:6px;font-size:0.7rem;word-break:break-all;color:var(--clr-text);border:1px solid var(--clr-border)">__OPENAI_API_KEY__</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('apiKey').textContent).then(function(){var b=event.target;b.textContent='Gekopieerd!';setTimeout(function(){b.textContent='Kopieer key'},1500)})" style="margin-top:0.5rem;padding:0.35rem 0.75rem;background:var(--clr-primary);color:#fff;border:none;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer" data-i18n-btn="copy-key">Kopieer key</button>
+        </div>
         <a href="https://excalidraw.com" target="_blank" rel="noopener" class="tool-card">
           <div class="tool-card-name">Excalidraw</div>
           <div class="tool-card-desc" data-i18n="tool-excalidraw">Teken processen visueel uit in je browser</div>
@@ -877,7 +879,7 @@
           'tag-exercise': 'Exercise',
           'tools-subtitle': 'Quick access links',
           'tool-make': 'Create a free account to build automations',
-          'tool-openai': 'API key for the AI module (provided by trainer)',
+          'tool-openai': 'Copy this key for the AI module in Make.com',
           'tool-excalidraw': 'Visually map processes in your browser',
           'templates-subtitle': 'Starter files to save time',
           'tpl-orders-name': 'Orders spreadsheet template',
@@ -989,6 +991,10 @@
           var text = lang === 'en' ? translations.en[key] : nlTexts[key];
           if (text) el.textContent = text;
         });
+
+        // Swap copy button text
+        var copyBtn = document.querySelector('[data-i18n-btn="copy-key"]');
+        if (copyBtn) copyBtn.textContent = lang === 'en' ? 'Copy key' : 'Kopieer key';
 
         if (typeof window._renderChecklist === 'function') {
           window._renderChecklist();
