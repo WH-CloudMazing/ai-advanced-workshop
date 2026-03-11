@@ -308,6 +308,20 @@
     .tool-card-name { font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem; }
     .tool-card-desc { font-size: 0.85rem; color: var(--clr-text-muted); }
 
+    /* Template groups */
+    .template-group { margin-bottom: 1.5rem; }
+    .template-group:last-child { margin-bottom: 0; }
+    .template-group-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--clr-text-muted);
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--clr-border);
+    }
+
     /* Reference tables */
     .ref-block {
       background: var(--clr-surface);
@@ -560,43 +574,55 @@
     <div class="container">
       <h2 class="section-title">Templates</h2>
       <p class="section-subtitle" data-i18n="templates-subtitle">Startbestanden om tijd te besparen</p>
-      <div class="card-grid">
-        <a href="assets/orders-template.xlsx" download class="tool-card">
-          <div class="tool-card-name" data-i18n="tpl-orders-name">Orders spreadsheet template</div>
-          <div class="tool-card-desc" data-i18n="tpl-orders-desc">Orders spreadsheet met kolommen voor de automatisering. Open in Excel Online of Google Sheets.</div>
-        </a>
-        <a href="assets/order-form.html" target="_blank" rel="noopener" class="tool-card">
-          <div class="tool-card-name" data-i18n="tpl-form-name">Order test formulier</div>
-          <div class="tool-card-desc" data-i18n="tpl-form-desc">HTML formulier om testbestellingen te versturen naar je Make.com webhook.</div>
-        </a>
-        <a href="assets/order-intake-template.excalidraw" download class="tool-card">
-          <div class="tool-card-name">Excalidraw template</div>
-          <div class="tool-card-desc" data-i18n="tpl-excalidraw-desc">Order intake procesdiagram met kleurcodering. Open in Excalidraw via File &rarr; Open.</div>
-        </a>
-        <a href="assets/make-scenario-blueprint.json" download class="tool-card">
-          <div class="tool-card-name" data-i18n="tpl-make-name">Make.com scenario</div>
-          <div class="tool-card-desc" data-i18n="tpl-make-desc">Importeerbaar Make.com scenario met webhook, AI en email modules.</div>
-        </a>
-        <a href="assets/n8n-workflow.json" download class="tool-card">
-          <div class="tool-card-name" data-i18n="tpl-n8n-name">n8n workflow</div>
-          <div class="tool-card-desc" data-i18n="tpl-n8n-desc">Importeerbare n8n workflow met webhook, OpenAI en email nodes.</div>
-        </a>
-        <a href="slides.html" target="_blank" rel="noopener" class="tool-card">
-          <div class="tool-card-name" data-i18n="tpl-slides-nl-name">Slides (Nederlands)</div>
-          <div class="tool-card-desc" data-i18n="tpl-slides-nl-desc">Presentatieslides in de browser bekijken.</div>
-        </a>
-        <a href="slides-en.html" target="_blank" rel="noopener" class="tool-card">
-          <div class="tool-card-name" data-i18n="tpl-slides-en-name">Slides (English)</div>
-          <div class="tool-card-desc" data-i18n="tpl-slides-en-desc">Engelse versie van de presentatieslides in de browser.</div>
-        </a>
-        <a href="slides.pdf" download class="tool-card">
-          <div class="tool-card-name">Slides PDF (NL)</div>
-          <div class="tool-card-desc" data-i18n="tpl-slides-desc">Download de presentatieslides als PDF voor offline gebruik.</div>
-        </a>
-        <a href="slides-en.pdf" download class="tool-card">
-          <div class="tool-card-name">Slides PDF (EN)</div>
-          <div class="tool-card-desc" data-i18n="tpl-slides-en-pdf-desc">Download de Engelse slides als PDF voor offline gebruik.</div>
-        </a>
+
+      <div class="template-group">
+        <div class="template-group-title" data-i18n="tpl-group-workshop">Workshop bestanden</div>
+        <div class="card-grid">
+          <a href="assets/order-form.html" target="_blank" rel="noopener" class="tool-card">
+            <div class="tool-card-name" data-i18n="tpl-form-name">Order test formulier</div>
+            <div class="tool-card-desc" data-i18n="tpl-form-desc">HTML formulier om testbestellingen te versturen naar je webhook.</div>
+          </a>
+          <a href="assets/order-intake-template.excalidraw" download class="tool-card">
+            <div class="tool-card-name">Excalidraw template</div>
+            <div class="tool-card-desc" data-i18n="tpl-excalidraw-desc">Order intake procesdiagram met kleurcodering. Open in Excalidraw via File &rarr; Open.</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="template-group">
+        <div class="template-group-title" data-i18n="tpl-group-scenarios">Automation scenarios</div>
+        <div class="card-grid">
+          <a href="assets/make-scenario-blueprint.json" download class="tool-card">
+            <div class="tool-card-name" data-i18n="tpl-make-name">Make.com scenario</div>
+            <div class="tool-card-desc" data-i18n="tpl-make-desc">Importeerbaar Make.com scenario met webhook, AI en email modules.</div>
+          </a>
+          <a href="assets/n8n-workflow.json" download class="tool-card">
+            <div class="tool-card-name" data-i18n="tpl-n8n-name">n8n workflow</div>
+            <div class="tool-card-desc" data-i18n="tpl-n8n-desc">Importeerbare n8n workflow met webhook, OpenAI en email nodes.</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="template-group">
+        <div class="template-group-title" data-i18n="tpl-group-slides">Presentatie slides</div>
+        <div class="card-grid">
+          <a href="slides.html" target="_blank" rel="noopener" class="tool-card">
+            <div class="tool-card-name" data-i18n="tpl-slides-nl-name">Slides (Nederlands)</div>
+            <div class="tool-card-desc" data-i18n="tpl-slides-nl-desc">Presentatieslides in de browser bekijken.</div>
+          </a>
+          <a href="slides-en.html" target="_blank" rel="noopener" class="tool-card">
+            <div class="tool-card-name" data-i18n="tpl-slides-en-name">Slides (English)</div>
+            <div class="tool-card-desc" data-i18n="tpl-slides-en-desc">Engelse versie van de presentatieslides in de browser.</div>
+          </a>
+          <a href="slides.pdf" download class="tool-card">
+            <div class="tool-card-name">Slides PDF (NL)</div>
+            <div class="tool-card-desc" data-i18n="tpl-slides-desc">Download de presentatieslides als PDF voor offline gebruik.</div>
+          </a>
+          <a href="slides-en.pdf" download class="tool-card">
+            <div class="tool-card-name">Slides PDF (EN)</div>
+            <div class="tool-card-desc" data-i18n="tpl-slides-en-pdf-desc">Download de Engelse slides als PDF voor offline gebruik.</div>
+          </a>
+        </div>
       </div>
     </div>
   </section>
@@ -679,6 +705,26 @@
               <tr><td><strong>Trigger</strong></td><td data-i18n="ref-trigger">Wat het aftrapt</td><td data-i18n="ref-trigger-ex">Het eerste blok</td></tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <div class="ref-block">
+        <h3 data-i18n="ref-prompt-title">AI Prompt</h3>
+        <p style="font-size:0.85rem;color:var(--clr-text-muted);margin-bottom:0.75rem" data-i18n="ref-prompt-desc">Kopieer deze prompt in de System Message van je OpenAI module (Make.com of n8n).</p>
+        <div style="position:relative">
+          <pre id="aiPrompt" style="background:var(--clr-bg);border:1px solid var(--clr-border);border-radius:8px;padding:1rem;font-size:0.8rem;line-height:1.5;white-space:pre-wrap;word-break:break-word;font-family:monospace;color:var(--clr-text);max-height:300px;overflow-y:auto">Je bent een order-assistent voor Faber Electronics. Je analyseert binnenkomende bestellingen en genereert twee outputs:
+1. Een vriendelijke bevestigingsmail voor de klant (in het Nederlands)
+2. Een interne samenvatting voor het productieteam
+
+Antwoord altijd in JSON met deze structuur:
+{
+  "klant_email_onderwerp": "...",
+  "klant_email_body": "...",
+  "productie_samenvatting": "...",
+  "levertijd_haalbaar": true/false,
+  "opmerkingen": "..."
+}</pre>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('aiPrompt').textContent).then(function(){var b=event.target;b.textContent='Gekopieerd!';setTimeout(function(){b.textContent='Kopieer prompt'},1500)})" style="margin-top:0.5rem;padding:0.35rem 0.75rem;background:var(--clr-primary);color:#fff;border:none;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer" data-i18n-btn="copy-prompt">Kopieer prompt</button>
         </div>
       </div>
     </div>
@@ -902,10 +948,11 @@
           'tool-openai': 'Copy this key for the AI module in Make.com',
           'tool-excalidraw': 'Visually map processes in your browser',
           'templates-subtitle': 'Starter files to save time',
-          'tpl-orders-name': 'Orders spreadsheet template',
-          'tpl-orders-desc': 'Orders spreadsheet with columns for the automation. Open in Excel Online or Google Sheets.',
+          'tpl-group-workshop': 'Workshop files',
+          'tpl-group-scenarios': 'Automation scenarios',
+          'tpl-group-slides': 'Presentation slides',
           'tpl-form-name': 'Order test form',
-          'tpl-form-desc': 'HTML form to send test orders to your Make.com webhook.',
+          'tpl-form-desc': 'HTML form to send test orders to your webhook.',
           'tpl-excalidraw-desc': 'Order intake process diagram with colour coding. Open in Excalidraw via File \u2192 Open.',
           'tpl-make-name': 'Make.com scenario',
           'tpl-make-desc': 'Importable Make.com scenario with webhook, AI and email modules.',
@@ -953,6 +1000,8 @@
           'ref-connection-ex': 'The outgoing arrow',
           'ref-trigger': 'What kicks it off',
           'ref-trigger-ex': 'The first block',
+          'ref-prompt-title': 'AI Prompt',
+          'ref-prompt-desc': 'Copy this prompt into the System Message of your OpenAI module (Make.com or n8n).',
           'resources-title': 'Resources & Contact',
           'resources-subtitle': 'Resources & contact',
           'challenge-title': '2-week challenge',
@@ -1023,6 +1072,8 @@
         // Swap copy button text
         var copyBtn = document.querySelector('[data-i18n-btn="copy-key"]');
         if (copyBtn) copyBtn.textContent = lang === 'en' ? 'Copy key' : 'Kopieer key';
+        var copyPromptBtn = document.querySelector('[data-i18n-btn="copy-prompt"]');
+        if (copyPromptBtn) copyPromptBtn.textContent = lang === 'en' ? 'Copy prompt' : 'Kopieer prompt';
 
         if (typeof window._renderChecklist === 'function') {
           window._renderChecklist();
