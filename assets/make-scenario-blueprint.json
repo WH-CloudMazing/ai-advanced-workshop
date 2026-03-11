@@ -1,0 +1,79 @@
+{
+  "name": "Order Intake Automatisering - Workshop",
+  "flow": [
+    {
+      "id": 1,
+      "module": "gateway:CustomWebHook",
+      "version": 1,
+      "parameters": {
+        "hook": null
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": { "x": 0, "y": 0 },
+        "restore": {},
+        "expect": [
+          { "name": "bedrijfsnaam", "type": "text", "label": "Bedrijfsnaam" },
+          { "name": "contactpersoon", "type": "text", "label": "Contactpersoon" },
+          { "name": "email", "type": "text", "label": "Email" },
+          { "name": "product_omschrijving", "type": "text", "label": "Product omschrijving" },
+          { "name": "aantal", "type": "number", "label": "Aantal" },
+          { "name": "gewenste_leverdatum", "type": "text", "label": "Gewenste leverdatum" }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "module": "openai-gpt-4:CreateCompletion",
+      "version": 1,
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "max_tokens": 1024,
+        "temperature": 0.7
+      },
+      "mapper": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "Je bent een order-assistent voor Faber Electronics. Je analyseert binnenkomende bestellingen en genereert twee outputs:\n1. Een vriendelijke bevestigingsmail voor de klant (in het Nederlands)\n2. Een interne samenvatting voor het productieteam\n\nAntwoord altijd in JSON met deze structuur:\n{\n  \"klant_email_onderwerp\": \"...\",\n  \"klant_email_body\": \"...\",\n  \"productie_samenvatting\": \"...\",\n  \"levertijd_haalbaar\": true/false,\n  \"opmerkingen\": \"...\"\n}"
+          },
+          {
+            "role": "user",
+            "content": "Nieuwe bestelling ontvangen:\n\nBedrijf: {{1.bedrijfsnaam}}\nContactpersoon: {{1.contactpersoon}}\nEmail: {{1.email}}\nProduct: {{1.product_omschrijving}}\nAantal: {{1.aantal}}\nGewenste leverdatum: {{1.gewenste_leverdatum}}"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": { "x": 300, "y": 0 }
+      }
+    },
+    {
+      "id": 3,
+      "module": "email:ActionSendEmail",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "to": "{{1.email}}",
+        "subject": "Bevestiging bestelling - Faber Electronics",
+        "html": "<p>Beste {{1.contactpersoon}},</p><p>{{2.result}}</p><p>Met vriendelijke groet,<br>Faber Electronics</p>"
+      },
+      "metadata": {
+        "designer": { "x": 600, "y": 0 }
+      }
+    },
+    {
+      "id": 4,
+      "module": "email:ActionSendEmail",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "to": "production@faber-electronics.nl",
+        "subject": "Nieuwe bestelling: {{1.bedrijfsnaam}} - {{1.aantal}}x",
+        "html": "<h3>Nieuwe bestelling ontvangen</h3><p><strong>Bedrijf:</strong> {{1.bedrijfsnaam}}<br><strong>Contact:</strong> {{1.contactpersoon}} ({{1.email}})<br><strong>Product:</strong> {{1.product_omschrijving}}<br><strong>Aantal:</strong> {{1.aantal}}<br><strong>Leverdatum:</strong> {{1.gewenste_leverdatum}}</p><h4>AI Analyse:</h4><p>{{2.result}}</p>"
+      },
+      "metadata": {
+        "designer": { "x": 900, "y": 0 }
+      }
+    }
+  ]
+}

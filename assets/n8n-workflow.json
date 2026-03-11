@@ -1,0 +1,127 @@
+{
+  "name": "Order Intake Automatisering - Workshop",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "order-intake",
+        "options": {}
+      },
+      "id": "webhook-1",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "content": "= Je bent een order-assistent voor Faber Electronics. Je analyseert binnenkomende bestellingen en genereert twee outputs:\n1. Een vriendelijke bevestigingsmail voor de klant (in het Nederlands)\n2. Een interne samenvatting voor het productieteam\n\nAntwoord altijd in JSON met deze structuur:\n{\n  \"klant_email_onderwerp\": \"...\",\n  \"klant_email_body\": \"...\",\n  \"productie_samenvatting\": \"...\",\n  \"levertijd_haalbaar\": true/false,\n  \"opmerkingen\": \"...\"\n}"
+            }
+          ]
+        },
+        "prompt": {
+          "values": [
+            {
+              "content": "= Nieuwe bestelling ontvangen:\n\nBedrijf: {{ $json.body.bedrijfsnaam }}\nContactpersoon: {{ $json.body.contactpersoon }}\nEmail: {{ $json.body.email }}\nProduct: {{ $json.body.product_omschrijving }}\nAantal: {{ $json.body.aantal }}\nGewenste leverdatum: {{ $json.body.gewenste_leverdatum }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 1024
+        }
+      },
+      "id": "openai-1",
+      "name": "OpenAI - Analyse",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [500, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "workshop@faber-electronics.nl",
+        "toEmail": "={{ $('Webhook').item.json.body.email }}",
+        "subject": "Bevestiging bestelling - Faber Electronics",
+        "html": "= <p>Beste {{ $('Webhook').item.json.body.contactpersoon }},</p>\n<p>Bedankt voor uw bestelling. Hieronder vindt u de details:</p>\n<p><strong>Product:</strong> {{ $('Webhook').item.json.body.product_omschrijving }}<br>\n<strong>Aantal:</strong> {{ $('Webhook').item.json.body.aantal }}<br>\n<strong>Gewenste leverdatum:</strong> {{ $('Webhook').item.json.body.gewenste_leverdatum }}</p>\n<h4>AI Analyse:</h4>\n<p>{{ $json.message.content }}</p>\n<p>Met vriendelijke groet,<br>Faber Electronics</p>",
+        "options": {}
+      },
+      "id": "email-confirm",
+      "name": "Email - Bevestiging Klant",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [750, 200],
+      "credentials": {
+        "smtp": {
+          "id": "",
+          "name": "SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "workshop@faber-electronics.nl",
+        "toEmail": "production@faber-electronics.nl",
+        "subject": "= Nieuwe bestelling: {{ $('Webhook').item.json.body.bedrijfsnaam }} - {{ $('Webhook').item.json.body.aantal }}x",
+        "html": "= <h3>Nieuwe bestelling ontvangen</h3>\n<p><strong>Bedrijf:</strong> {{ $('Webhook').item.json.body.bedrijfsnaam }}<br>\n<strong>Contact:</strong> {{ $('Webhook').item.json.body.contactpersoon }} ({{ $('Webhook').item.json.body.email }})<br>\n<strong>Product:</strong> {{ $('Webhook').item.json.body.product_omschrijving }}<br>\n<strong>Aantal:</strong> {{ $('Webhook').item.json.body.aantal }}<br>\n<strong>Leverdatum:</strong> {{ $('Webhook').item.json.body.gewenste_leverdatum }}</p>\n<h4>AI Analyse:</h4>\n<p>{{ $json.message.content }}</p>",
+        "options": {}
+      },
+      "id": "email-production",
+      "name": "Email - Notificatie Productie",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [750, 400],
+      "credentials": {
+        "smtp": {
+          "id": "",
+          "name": "SMTP"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "OpenAI - Analyse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI - Analyse": {
+      "main": [
+        [
+          {
+            "node": "Email - Bevestiging Klant",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email - Notificatie Productie",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": [
+    { "name": "workshop" }
+  ]
+}
