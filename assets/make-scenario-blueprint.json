@@ -1,79 +1,1268 @@
 {
-  "name": "Order Intake Automatisering - Workshop",
-  "flow": [
-    {
-      "id": 1,
-      "module": "gateway:CustomWebHook",
-      "version": 1,
-      "parameters": {
-        "hook": null
-      },
-      "mapper": {},
-      "metadata": {
-        "designer": { "x": 0, "y": 0 },
-        "restore": {},
-        "expect": [
-          { "name": "bedrijfsnaam", "type": "text", "label": "Bedrijfsnaam" },
-          { "name": "contactpersoon", "type": "text", "label": "Contactpersoon" },
-          { "name": "email", "type": "text", "label": "Email" },
-          { "name": "product_omschrijving", "type": "text", "label": "Product omschrijving" },
-          { "name": "aantal", "type": "number", "label": "Aantal" },
-          { "name": "gewenste_leverdatum", "type": "text", "label": "Gewenste leverdatum" }
-        ]
-      }
-    },
-    {
-      "id": 2,
-      "module": "openai-gpt-4:CreateCompletion",
-      "version": 1,
-      "parameters": {
-        "model": "gpt-4o-mini",
-        "max_tokens": 1024,
-        "temperature": 0.7
-      },
-      "mapper": {
-        "messages": [
-          {
-            "role": "system",
-            "content": "Je bent een order-assistent voor Faber Electronics. Je analyseert binnenkomende bestellingen en genereert twee outputs:\n1. Een vriendelijke bevestigingsmail voor de klant (in het Nederlands)\n2. Een interne samenvatting voor het productieteam\n\nAntwoord altijd in JSON met deze structuur:\n{\n  \"klant_email_onderwerp\": \"...\",\n  \"klant_email_body\": \"...\",\n  \"productie_samenvatting\": \"...\",\n  \"levertijd_haalbaar\": true/false,\n  \"opmerkingen\": \"...\"\n}"
-          },
-          {
-            "role": "user",
-            "content": "Nieuwe bestelling ontvangen:\n\nBedrijf: {{1.bedrijfsnaam}}\nContactpersoon: {{1.contactpersoon}}\nEmail: {{1.email}}\nProduct: {{1.product_omschrijving}}\nAantal: {{1.aantal}}\nGewenste leverdatum: {{1.gewenste_leverdatum}}"
-          }
-        ]
-      },
-      "metadata": {
-        "designer": { "x": 300, "y": 0 }
-      }
-    },
-    {
-      "id": 3,
-      "module": "email:ActionSendEmail",
-      "version": 1,
-      "parameters": {},
-      "mapper": {
-        "to": "{{1.email}}",
-        "subject": "Bevestiging bestelling - Faber Electronics",
-        "html": "<p>Beste {{1.contactpersoon}},</p><p>{{2.result}}</p><p>Met vriendelijke groet,<br>Faber Electronics</p>"
-      },
-      "metadata": {
-        "designer": { "x": 600, "y": 0 }
-      }
-    },
-    {
-      "id": 4,
-      "module": "email:ActionSendEmail",
-      "version": 1,
-      "parameters": {},
-      "mapper": {
-        "to": "production@faber-electronics.nl",
-        "subject": "Nieuwe bestelling: {{1.bedrijfsnaam}} - {{1.aantal}}x",
-        "html": "<h3>Nieuwe bestelling ontvangen</h3><p><strong>Bedrijf:</strong> {{1.bedrijfsnaam}}<br><strong>Contact:</strong> {{1.contactpersoon}} ({{1.email}})<br><strong>Product:</strong> {{1.product_omschrijving}}<br><strong>Aantal:</strong> {{1.aantal}}<br><strong>Leverdatum:</strong> {{1.gewenste_leverdatum}}</p><h4>AI Analyse:</h4><p>{{2.result}}</p>"
-      },
-      "metadata": {
-        "designer": { "x": 900, "y": 0 }
-      }
+    "name": "AI Workshop Voorbeeld",
+    "flow": [
+        {
+            "id": 1,
+            "module": "gateway:CustomWebHook",
+            "version": 1,
+            "parameters": {
+                "hook": 3953020,
+                "maxResults": 1
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "hook": {
+                            "label": "Test webhook",
+                            "data": {
+                                "editable": "true"
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "hook",
+                        "type": "hook:gateway-webhook",
+                        "label": "Webhook",
+                        "required": true
+                    },
+                    {
+                        "name": "maxResults",
+                        "type": "number",
+                        "label": "Maximum number of results"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "bedrijfsnaam",
+                        "type": "text"
+                    },
+                    {
+                        "name": "contactpersoon",
+                        "type": "text"
+                    },
+                    {
+                        "name": "email",
+                        "type": "text"
+                    },
+                    {
+                        "name": "product_omschrijving",
+                        "type": "text"
+                    },
+                    {
+                        "name": "aantal",
+                        "type": "number"
+                    },
+                    {
+                        "name": "gewenste_leverdatum",
+                        "type": "text"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6,
+            "module": "openai-gpt-3:CreateCompletion",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 2075902
+            },
+            "mapper": {
+                "select": "chat",
+                "temperature": "1",
+                "top_p": "1",
+                "n_completions": "1",
+                "model": "gpt-5.3-chat-latest",
+                "max_tokens": "2048",
+                "messages": [
+                    {
+                        "role": "system",
+                        "content": "Je bent een order-assistent voor Faber Electronics. Je analyseert binnenkomende bestellingen en genereert twee outputs:\n  1. Een vriendelijke bevestigingsmail voor de klant (in het Nederlands)\n  2. Een interne samenvatting voor het productieteam\n\n  Antwoord altijd in JSON met deze structuur:\n  { \"klant_email_onderwerp\": \"...\", \"klant_email_body\": \"...\", \"productie_samenvatting\": \"...\", \"levertijd_haalbaar\": true/false, \"opmerkingen\": \"...\" }"
+                    },
+                    {
+                        "role": "user",
+                        "content": "Bedrijfsnaam: {{1.bedrijfsnaam}}\nContactpersoon: {{1.contactpersoon}}\nEmail: {{1.email}}\nProduct omschrijving: {{1.product_omschrijving}}\nAantal: {{1.aantal}}\nGewenste leverdatum:{{1.gewenste_leverdatum}}"
+                    }
+                ],
+                "response_format": "json_object",
+                "parseJSONResponse": true
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Make.com connection",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "openai-gpt-3"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "select": {
+                            "label": "Create a Chat Completion (GPT and o1 models)"
+                        },
+                        "logit_bias": {
+                            "mode": "chose"
+                        },
+                        "tool_choice": {
+                            "mode": "chose",
+                            "label": "Empty"
+                        },
+                        "stop": {
+                            "mode": "chose"
+                        },
+                        "additionalParameters": {
+                            "mode": "chose"
+                        },
+                        "model": {
+                            "mode": "chose",
+                            "label": "gpt-5.3-chat-latest (system)"
+                        },
+                        "messages": {
+                            "mode": "chose",
+                            "items": [
+                                {
+                                    "role": {
+                                        "mode": "chose",
+                                        "label": "Developer / System"
+                                    }
+                                },
+                                {
+                                    "role": {
+                                        "mode": "chose",
+                                        "label": "User"
+                                    }
+                                }
+                            ]
+                        },
+                        "response_format": {
+                            "mode": "chose",
+                            "label": "JSON Object"
+                        },
+                        "reasoning_effort": {
+                            "mode": "chose",
+                            "label": "Empty"
+                        },
+                        "parseJSONResponse": {
+                            "mode": "chose"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:openai-gpt-3",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Select Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "chat",
+                                "prompt"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "temperature",
+                        "type": "number",
+                        "label": "Temperature",
+                        "validate": {
+                            "max": 2,
+                            "min": 0
+                        }
+                    },
+                    {
+                        "name": "top_p",
+                        "type": "number",
+                        "label": "Top P",
+                        "validate": {
+                            "max": 1,
+                            "min": 0
+                        }
+                    },
+                    {
+                        "name": "n_completions",
+                        "type": "number",
+                        "label": "Number"
+                    },
+                    {
+                        "name": "frequency_penalty",
+                        "type": "number",
+                        "label": "Frequency Penalty",
+                        "validate": {
+                            "max": 2,
+                            "min": -2
+                        }
+                    },
+                    {
+                        "name": "presence_penalty",
+                        "type": "number",
+                        "label": "Presence Penalty",
+                        "validate": {
+                            "max": 2,
+                            "min": -2
+                        }
+                    },
+                    {
+                        "name": "logit_bias",
+                        "type": "array",
+                        "label": "Token Probability",
+                        "spec": {
+                            "spec": [
+                                {
+                                    "name": "token",
+                                    "type": "text",
+                                    "label": "Token ID",
+                                    "required": true
+                                },
+                                {
+                                    "name": "probability",
+                                    "type": "number",
+                                    "label": "Probability",
+                                    "required": true,
+                                    "validate": {
+                                        "max": 100,
+                                        "min": -100
+                                    }
+                                }
+                            ],
+                            "type": "collection",
+                            "label": "Token Probability",
+                            "name": "value"
+                        }
+                    },
+                    {
+                        "name": "seed",
+                        "type": "integer",
+                        "label": "Seed"
+                    },
+                    {
+                        "name": "tool_choice",
+                        "type": "select",
+                        "label": "Tool Choice",
+                        "validate": {
+                            "enum": [
+                                "none",
+                                "auto",
+                                "required"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "stop",
+                        "type": "array",
+                        "label": "Stop Sequences",
+                        "validate": {
+                            "maxItems": 4
+                        },
+                        "spec": {
+                            "type": "text",
+                            "label": "Stop Sequence",
+                            "name": "value"
+                        }
+                    },
+                    {
+                        "name": "additionalParameters",
+                        "type": "array",
+                        "label": "Other Input Parameters",
+                        "spec": {
+                            "spec": [
+                                {
+                                    "name": "key",
+                                    "type": "text",
+                                    "label": "Parameter Name",
+                                    "required": true
+                                },
+                                {
+                                    "name": "type",
+                                    "type": "select",
+                                    "label": "Input Type",
+                                    "options": [
+                                        {
+                                            "label": "Text",
+                                            "value": "text",
+                                            "nested": [
+                                                {
+                                                    "name": "value",
+                                                    "type": "text",
+                                                    "label": "Parameter Value"
+                                                }
+                                            ],
+                                            "default": true
+                                        },
+                                        {
+                                            "label": "Number",
+                                            "value": "number",
+                                            "nested": [
+                                                {
+                                                    "name": "value",
+                                                    "type": "number",
+                                                    "label": "Parameter Value"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "label": "Boolean",
+                                            "value": "boolean",
+                                            "nested": [
+                                                {
+                                                    "name": "value",
+                                                    "type": "boolean",
+                                                    "label": "Parameter Value"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "label": "Date",
+                                            "value": "date",
+                                            "nested": [
+                                                {
+                                                    "name": "value",
+                                                    "type": "date",
+                                                    "label": "Parameter Value"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "label": "Any",
+                                            "value": "any",
+                                            "nested": [
+                                                {
+                                                    "name": "value",
+                                                    "type": "any",
+                                                    "label": "Parameter Value"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ],
+                            "type": "collection",
+                            "label": "Input Parameter",
+                            "name": "value"
+                        }
+                    },
+                    {
+                        "name": "model",
+                        "type": "select",
+                        "label": "Model",
+                        "required": true
+                    },
+                    {
+                        "name": "max_tokens",
+                        "type": "uinteger",
+                        "label": "Max Output Tokens"
+                    },
+                    {
+                        "name": "messages",
+                        "type": "array",
+                        "label": "Messages",
+                        "required": true,
+                        "spec": {
+                            "label": "Message",
+                            "type": "collection",
+                            "spec": [
+                                {
+                                    "name": "role",
+                                    "type": "select",
+                                    "label": "Role",
+                                    "required": true,
+                                    "options": {
+                                        "store": [
+                                            {
+                                                "label": "User",
+                                                "value": "user",
+                                                "default": true,
+                                                "nested": [
+                                                    {
+                                                        "help": "Text content of the message on behalf of the selected __Role__.",
+                                                        "name": "content",
+                                                        "type": "text",
+                                                        "label": "Text Content"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "label": "Assistant",
+                                                "value": "assistant",
+                                                "nested": [
+                                                    {
+                                                        "help": "Text content of the message on behalf of the selected __Role__.",
+                                                        "name": "content",
+                                                        "type": "text",
+                                                        "label": "Text Content"
+                                                    },
+                                                    {
+                                                        "name": "tool_calls",
+                                                        "label": "Tool Calls",
+                                                        "type": "array",
+                                                        "labels": {
+                                                            "add": "Add tool call"
+                                                        },
+                                                        "mode": "edit",
+                                                        "mappable": {
+                                                            "help": "You can map the entire `Choices[]: Message.Tool Calls` array from a previous Create a Completion module here."
+                                                        },
+                                                        "spec": {
+                                                            "label": "Tool Call",
+                                                            "type": "collection",
+                                                            "spec": [
+                                                                {
+                                                                    "name": "type",
+                                                                    "type": "hidden",
+                                                                    "default": "function"
+                                                                },
+                                                                {
+                                                                    "name": "id",
+                                                                    "type": "text",
+                                                                    "label": "Tool call ID",
+                                                                    "help": "Map this directly from the output of a previous **Create a Completion** module. Look for `Choices[]: Message.Tool Calls[]: ID`."
+                                                                },
+                                                                {
+                                                                    "name": "function",
+                                                                    "type": "collection",
+                                                                    "label": "Function",
+                                                                    "spec": [
+                                                                        {
+                                                                            "name": "name",
+                                                                            "label": "Name",
+                                                                            "type": "text",
+                                                                            "required": true,
+                                                                            "help": "The name of the function previously called."
+                                                                        },
+                                                                        {
+                                                                            "name": "arguments",
+                                                                            "label": "Arguments",
+                                                                            "type": "text",
+                                                                            "required": true,
+                                                                            "help": "The arguments previously output by the AI."
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "label": "Developer / System",
+                                                "nested": [
+                                                    {
+                                                        "help": "Text content of the message on behalf of the selected __Role__.",
+                                                        "name": "content",
+                                                        "type": "text",
+                                                        "label": "Text Content"
+                                                    }
+                                                ],
+                                                "value": "system"
+                                            },
+                                            {
+                                                "label": "Tool",
+                                                "value": "tool",
+                                                "nested": [
+                                                    {
+                                                        "help": "The return of the function. This role should only be used when you have processed a previous function call and want to send the output of the function execution back to the AI.",
+                                                        "name": "content",
+                                                        "type": "text",
+                                                        "label": "Text Content",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "label": "Tool Call ID.",
+                                                        "name": "tool_call_id",
+                                                        "type": "text",
+                                                        "required": true,
+                                                        "help": "Map this directly from the output of a previous **Create a Completion** module. Look for `Choices[]: Message.Tool Calls[]: ID`."
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "name": "value"
+                        }
+                    },
+                    {
+                        "name": "response_format",
+                        "type": "select",
+                        "label": "Response Format",
+                        "validate": {
+                            "enum": [
+                                "text",
+                                "json_object"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "reasoning_effort",
+                        "type": "select",
+                        "label": "Reasoning Effort",
+                        "validate": {
+                            "enum": [
+                                "minimal",
+                                "low",
+                                "medium",
+                                "high"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "parseJSONResponse",
+                        "type": "boolean",
+                        "label": "Parse JSON Response",
+                        "required": true
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "result",
+                        "type": "any",
+                        "label": "Result"
+                    },
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "ID"
+                    },
+                    {
+                        "name": "object",
+                        "type": "text",
+                        "label": "Object"
+                    },
+                    {
+                        "name": "created",
+                        "type": "date",
+                        "label": "Created"
+                    },
+                    {
+                        "name": "model",
+                        "type": "text",
+                        "label": "Model"
+                    },
+                    {
+                        "name": "choices",
+                        "spec": [
+                            {
+                                "name": "text",
+                                "type": "text",
+                                "label": "Text"
+                            },
+                            {
+                                "name": "index",
+                                "type": "number",
+                                "label": "Index"
+                            },
+                            {
+                                "name": "logprobs",
+                                "type": "text",
+                                "label": "Log Probs"
+                            },
+                            {
+                                "name": "finish_reason",
+                                "type": "text",
+                                "label": "Finish Reason"
+                            },
+                            {
+                                "name": "message",
+                                "spec": [
+                                    {
+                                        "name": "role",
+                                        "type": "text",
+                                        "label": "Role"
+                                    },
+                                    {
+                                        "name": "content",
+                                        "type": "text",
+                                        "label": "Content"
+                                    },
+                                    {
+                                        "name": "tool_calls",
+                                        "spec": [
+                                            {
+                                                "name": "id",
+                                                "type": "text",
+                                                "label": "ID"
+                                            },
+                                            {
+                                                "name": "type",
+                                                "type": "text",
+                                                "label": "Type"
+                                            },
+                                            {
+                                                "name": "function",
+                                                "spec": [
+                                                    {
+                                                        "name": "name",
+                                                        "type": "text",
+                                                        "label": "Name"
+                                                    },
+                                                    {
+                                                        "name": "arguments",
+                                                        "type": "text",
+                                                        "label": "Arguments"
+                                                    }
+                                                ],
+                                                "type": "collection",
+                                                "label": "Function"
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Tool Calls"
+                                    },
+                                    {
+                                        "name": "refusal",
+                                        "type": "text",
+                                        "label": "Refusal"
+                                    },
+                                    {
+                                        "name": "annotations",
+                                        "spec": [
+                                            {
+                                                "name": "type",
+                                                "type": "text",
+                                                "label": "Type"
+                                            },
+                                            {
+                                                "name": "url_citation",
+                                                "spec": [
+                                                    {
+                                                        "name": "end_index",
+                                                        "type": "number",
+                                                        "label": "End Index"
+                                                    },
+                                                    {
+                                                        "name": "start_index",
+                                                        "type": "number",
+                                                        "label": "Start Index"
+                                                    },
+                                                    {
+                                                        "name": "title",
+                                                        "type": "text",
+                                                        "label": "Title"
+                                                    },
+                                                    {
+                                                        "name": "url",
+                                                        "type": "text",
+                                                        "label": "URL"
+                                                    }
+                                                ],
+                                                "type": "collection",
+                                                "label": "URL Citation"
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Annotations"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "Message"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Choices"
+                    },
+                    {
+                        "name": "usage",
+                        "spec": [
+                            {
+                                "name": "prompt_tokens",
+                                "type": "number",
+                                "label": "Prompt Tokens"
+                            },
+                            {
+                                "name": "completion_tokens",
+                                "type": "text",
+                                "label": "Completion Tokens"
+                            },
+                            {
+                                "name": "total_tokens",
+                                "type": "number",
+                                "label": "Total Tokens"
+                            },
+                            {
+                                "name": "prompt_tokens_details",
+                                "spec": [
+                                    {
+                                        "name": "cached_tokens",
+                                        "type": "uinteger",
+                                        "label": "Cached Tokens"
+                                    },
+                                    {
+                                        "name": "text_tokens",
+                                        "type": "uinteger",
+                                        "label": "Text Tokens"
+                                    },
+                                    {
+                                        "name": "image_tokens",
+                                        "type": "uinteger",
+                                        "label": "Image Tokens"
+                                    },
+                                    {
+                                        "name": "audio_tokens",
+                                        "type": "uinteger",
+                                        "label": "Audio Tokens"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "Prompt Tokens Details"
+                            },
+                            {
+                                "name": "completion_tokens_details",
+                                "spec": [
+                                    {
+                                        "name": "reasoning_tokens",
+                                        "type": "uinteger",
+                                        "label": "Reasoning Tokens"
+                                    },
+                                    {
+                                        "name": "text_tokens",
+                                        "type": "uinteger",
+                                        "label": "Text Tokens"
+                                    },
+                                    {
+                                        "name": "audio_tokens",
+                                        "type": "uinteger",
+                                        "label": "Audio Tokens"
+                                    },
+                                    {
+                                        "name": "accepted_prediction_tokens",
+                                        "type": "uinteger",
+                                        "label": "Accepted Prediction Tokens"
+                                    },
+                                    {
+                                        "name": "rejected_prediction_tokens",
+                                        "type": "uinteger",
+                                        "label": "Rejected Prediction Tokens"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "Completion Tokens Details"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Usage"
+                    },
+                    {
+                        "name": "service_tier",
+                        "type": "text",
+                        "label": "Service Tier"
+                    },
+                    {
+                        "name": "system_fingerprint",
+                        "type": "text",
+                        "label": "System Fingerprint"
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 10,
+            "module": "email:ActionCreateDraft",
+            "version": 7,
+            "parameters": {
+                "account": 3036011
+            },
+            "mapper": {
+                "folder": "INBOX",
+                "to": [
+                    "{{1.email}}"
+                ],
+                "subject": "{{6.result.klant_email_onderwerp}}",
+                "contentType": "text",
+                "attachments": [],
+                "cc": [],
+                "bcc": [],
+                "from": "",
+                "sender": "",
+                "replyTo": "",
+                "inReplyTo": "",
+                "references": [],
+                "priority": "normal",
+                "headers": [],
+                "text": "{{6.result.klant_email_body}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "account": {
+                            "label": "My Google Account (Job) (job@cloudmazing.nl)",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google-restricted"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "folder": {
+                            "mode": "chose",
+                            "path": [
+                                "INBOX"
+                            ]
+                        },
+                        "to": {
+                            "mode": "chose",
+                            "items": [
+                                null
+                            ]
+                        },
+                        "contentType": {
+                            "label": "Plaintext"
+                        },
+                        "attachments": {
+                            "mode": "chose"
+                        },
+                        "cc": {
+                            "mode": "chose"
+                        },
+                        "bcc": {
+                            "mode": "chose"
+                        },
+                        "references": {
+                            "mode": "chose"
+                        },
+                        "priority": {
+                            "label": "Normal"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "account",
+                        "type": "account:imap,google-restricted,microsoft-smtp-imap",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "folder",
+                        "type": "folder",
+                        "label": "Folder",
+                        "required": true
+                    },
+                    {
+                        "name": "to",
+                        "type": "array",
+                        "label": "To",
+                        "required": true,
+                        "spec": {
+                            "name": "value",
+                            "type": "email",
+                            "label": "Email address",
+                            "required": true
+                        }
+                    },
+                    {
+                        "name": "subject",
+                        "type": "text",
+                        "label": "Subject"
+                    },
+                    {
+                        "name": "contentType",
+                        "type": "select",
+                        "label": "Content Type",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "html",
+                                "text"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "attachments",
+                        "type": "array",
+                        "label": "Attachments",
+                        "spec": [
+                            {
+                                "name": "fileName",
+                                "label": "File name",
+                                "type": "filename",
+                                "required": true,
+                                "semantic": "file:name"
+                            },
+                            {
+                                "name": "data",
+                                "label": "Data",
+                                "type": "buffer",
+                                "required": true,
+                                "semantic": "file:data"
+                            },
+                            {
+                                "name": "cid",
+                                "label": "Content-ID",
+                                "type": "text"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "cc",
+                        "type": "array",
+                        "label": "Copy recipient",
+                        "spec": {
+                            "name": "value",
+                            "type": "email",
+                            "label": "Email address"
+                        }
+                    },
+                    {
+                        "name": "bcc",
+                        "type": "array",
+                        "label": "Blind copy recipient",
+                        "spec": {
+                            "name": "value",
+                            "type": "email",
+                            "label": "Email address"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "type": "text",
+                        "label": "From"
+                    },
+                    {
+                        "name": "sender",
+                        "type": "text",
+                        "label": "Sender"
+                    },
+                    {
+                        "name": "replyTo",
+                        "type": "text",
+                        "label": "Reply-To"
+                    },
+                    {
+                        "name": "inReplyTo",
+                        "type": "text",
+                        "label": "In-Reply-To"
+                    },
+                    {
+                        "name": "references",
+                        "type": "array",
+                        "label": "References",
+                        "spec": {
+                            "type": "text",
+                            "label": "Reference",
+                            "required": true,
+                            "name": "value"
+                        }
+                    },
+                    {
+                        "name": "priority",
+                        "type": "select",
+                        "label": "Priority",
+                        "validate": {
+                            "enum": [
+                                "high",
+                                "normal",
+                                "low"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "headers",
+                        "type": "array",
+                        "label": "Headers",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "label": "Key",
+                                "type": "text",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "label": "Value",
+                                "type": "text",
+                                "required": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Content"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 11,
+            "module": "email:ActionCreateDraft",
+            "version": 7,
+            "parameters": {
+                "account": 3036011
+            },
+            "mapper": {
+                "folder": "INBOX",
+                "to": [
+                    "production@faber-electronics.nl"
+                ],
+                "subject": "Nieuwe bestelling: {{1.bedrijfsnaam}} - {{1.product_omschrijving}}",
+                "contentType": "text",
+                "attachments": [],
+                "cc": [],
+                "bcc": [],
+                "from": "",
+                "sender": "",
+                "replyTo": "",
+                "inReplyTo": "",
+                "references": [],
+                "priority": "normal",
+                "headers": [],
+                "text": "Bedrijfsnaam: {{1.bedrijfsnaam}}\nContactpersoon: {{1.contactpersoon}}\nEmail: {{1.email}}\nProduct omschrijving: {{1.product_omschrijving}}\nAantal: {{1.aantal}}\nGewenste leverdatum:{{1.gewenste_leverdatum}}\n\nAI Samenvatting\n{{6.result.productie_samenvatting}}\n\nHaalbaar? {{6.result.levertijd_haalbaar}}\n\nOpmerkingen\n{{6.result.opmerkingen}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "account": {
+                            "label": "My Google Account (Job) (job@cloudmazing.nl)",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google-restricted"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "folder": {
+                            "mode": "chose",
+                            "path": [
+                                "INBOX"
+                            ]
+                        },
+                        "to": {
+                            "mode": "chose",
+                            "items": [
+                                null
+                            ]
+                        },
+                        "contentType": {
+                            "label": "Plaintext"
+                        },
+                        "attachments": {
+                            "mode": "chose"
+                        },
+                        "cc": {
+                            "mode": "chose"
+                        },
+                        "bcc": {
+                            "mode": "chose"
+                        },
+                        "references": {
+                            "mode": "chose"
+                        },
+                        "priority": {
+                            "label": "Normal"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "account",
+                        "type": "account:imap,google-restricted,microsoft-smtp-imap",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "folder",
+                        "type": "folder",
+                        "label": "Folder",
+                        "required": true
+                    },
+                    {
+                        "name": "to",
+                        "type": "array",
+                        "label": "To",
+                        "required": true,
+                        "spec": {
+                            "name": "value",
+                            "type": "email",
+                            "label": "Email address",
+                            "required": true
+                        }
+                    },
+                    {
+                        "name": "subject",
+                        "type": "text",
+                        "label": "Subject"
+                    },
+                    {
+                        "name": "contentType",
+                        "type": "select",
+                        "label": "Content Type",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "html",
+                                "text"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "attachments",
+                        "type": "array",
+                        "label": "Attachments",
+                        "spec": [
+                            {
+                                "name": "fileName",
+                                "label": "File name",
+                                "type": "filename",
+                                "required": true,
+                                "semantic": "file:name"
+                            },
+                            {
+                                "name": "data",
+                                "label": "Data",
+                                "type": "buffer",
+                                "required": true,
+                                "semantic": "file:data"
+                            },
+                            {
+                                "name": "cid",
+                                "label": "Content-ID",
+                                "type": "text"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "cc",
+                        "type": "array",
+                        "label": "Copy recipient",
+                        "spec": {
+                            "name": "value",
+                            "type": "email",
+                            "label": "Email address"
+                        }
+                    },
+                    {
+                        "name": "bcc",
+                        "type": "array",
+                        "label": "Blind copy recipient",
+                        "spec": {
+                            "name": "value",
+                            "type": "email",
+                            "label": "Email address"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "type": "text",
+                        "label": "From"
+                    },
+                    {
+                        "name": "sender",
+                        "type": "text",
+                        "label": "Sender"
+                    },
+                    {
+                        "name": "replyTo",
+                        "type": "text",
+                        "label": "Reply-To"
+                    },
+                    {
+                        "name": "inReplyTo",
+                        "type": "text",
+                        "label": "In-Reply-To"
+                    },
+                    {
+                        "name": "references",
+                        "type": "array",
+                        "label": "References",
+                        "spec": {
+                            "type": "text",
+                            "label": "Reference",
+                            "required": true,
+                            "name": "value"
+                        }
+                    },
+                    {
+                        "name": "priority",
+                        "type": "select",
+                        "label": "Priority",
+                        "validate": {
+                            "enum": [
+                                "high",
+                                "normal",
+                                "low"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "headers",
+                        "type": "array",
+                        "label": "Headers",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "label": "Key",
+                                "type": "text",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "label": "Value",
+                                "type": "text",
+                                "required": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Content"
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu2.make.com",
+        "notes": []
     }
-  ]
 }
