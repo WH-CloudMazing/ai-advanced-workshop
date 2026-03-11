@@ -541,16 +541,16 @@
           <div class="tool-card-name">Make.com</div>
           <div class="tool-card-desc" data-i18n="tool-make">Maak een gratis account aan om automatiseringen te bouwen</div>
         </a>
-        <div class="tool-card" style="cursor:default">
-          <div class="tool-card-name">OpenAI API Key</div>
-          <div class="tool-card-desc" data-i18n="tool-openai">Kopieer deze key voor de AI module in Make.com</div>
-          <code id="apiKey" style="display:block;margin-top:0.5rem;padding:0.4rem 0.6rem;background:var(--clr-bg);border-radius:6px;font-size:0.7rem;word-break:break-all;color:var(--clr-text);border:1px solid var(--clr-border)">__OPENAI_API_KEY__</code>
-          <button onclick="navigator.clipboard.writeText(document.getElementById('apiKey').textContent).then(function(){var b=event.target;b.textContent='Gekopieerd!';setTimeout(function(){b.textContent='Kopieer key'},1500)})" style="margin-top:0.5rem;padding:0.35rem 0.75rem;background:var(--clr-primary);color:#fff;border:none;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer" data-i18n-btn="copy-key">Kopieer key</button>
-        </div>
         <a href="https://excalidraw.com" target="_blank" rel="noopener" class="tool-card">
           <div class="tool-card-name">Excalidraw</div>
           <div class="tool-card-desc" data-i18n="tool-excalidraw">Teken processen visueel uit in je browser</div>
         </a>
+      </div>
+      <div class="tool-card" style="cursor:default;margin-top:1rem">
+        <div class="tool-card-name">OpenAI API Key</div>
+        <div class="tool-card-desc" data-i18n="tool-openai">Kopieer deze key voor de AI module in Make.com</div>
+        <code id="apiKey" style="display:block;margin-top:0.5rem;padding:0.5rem 0.75rem;background:var(--clr-bg);border-radius:6px;font-size:0.75rem;word-break:break-all;color:var(--clr-text);border:1px solid var(--clr-border);font-family:monospace">__OPENAI_API_KEY__</code>
+        <button onclick="navigator.clipboard.writeText(document.getElementById('apiKey').textContent).then(function(){var b=event.target;b.textContent='Gekopieerd!';setTimeout(function(){b.textContent='Kopieer key'},1500)})" style="margin-top:0.5rem;padding:0.35rem 0.75rem;background:var(--clr-primary);color:#fff;border:none;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer" data-i18n-btn="copy-key">Kopieer key</button>
       </div>
     </div>
   </section>
@@ -582,8 +582,12 @@
           <div class="tool-card-desc" data-i18n="tpl-slides-en-desc">Engelse versie van de presentatieslides in de browser.</div>
         </a>
         <a href="slides.pdf" download class="tool-card">
-          <div class="tool-card-name">Slides (PDF)</div>
+          <div class="tool-card-name">Slides PDF (NL)</div>
           <div class="tool-card-desc" data-i18n="tpl-slides-desc">Download de presentatieslides als PDF voor offline gebruik.</div>
+        </a>
+        <a href="slides-en.pdf" download class="tool-card">
+          <div class="tool-card-name">Slides PDF (EN)</div>
+          <div class="tool-card-desc" data-i18n="tpl-slides-en-pdf-desc">Download de Engelse slides als PDF voor offline gebruik.</div>
         </a>
       </div>
     </div>
@@ -900,6 +904,7 @@
           'tpl-slides-en-name': 'Slides (English)',
           'tpl-slides-en-desc': 'English version of the presentation slides in the browser.',
           'tpl-slides-desc': 'Download the presentation slides as PDF for offline use.',
+          'tpl-slides-en-pdf-desc': 'Download the English slides as PDF for offline use.',
           'checklist-subtitle': 'Build progress tracker',
           'celebrate-title': 'Congratulations!',
           'celebrate-text': 'You completed all steps. Your first automation works!',
