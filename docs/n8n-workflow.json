@@ -1,144 +1,163 @@
 {
-  "name": "Order Intake Automatisering - Workshop Demo",
+  "name": "AI Workshop Example",
   "nodes": [
     {
       "parameters": {
-        "formTitle": "Order Intake",
-        "formDescription": "Vul het formulier in om een bestelling te plaatsen.",
-        "formFields": {
-          "values": [
-            {
-              "fieldLabel": "Bedrijfsnaam",
-              "fieldType": "string",
-              "requiredField": true
-            },
-            {
-              "fieldLabel": "Contactpersoon",
-              "fieldType": "string",
-              "requiredField": true
-            },
-            {
-              "fieldLabel": "Email",
-              "fieldType": "email",
-              "requiredField": true
-            },
-            {
-              "fieldLabel": "Product omschrijving",
-              "fieldType": "string",
-              "requiredField": true
-            },
-            {
-              "fieldLabel": "Aantal",
-              "fieldType": "number",
-              "requiredField": true
-            },
-            {
-              "fieldLabel": "Gewenste leverdatum",
-              "fieldType": "date",
-              "requiredField": true
-            }
-          ]
-        },
+        "httpMethod": "POST",
+        "path": "e55b7795-1043-42e9-8bd2-cdc38f2e30cd",
         "options": {}
       },
-      "id": "trigger-node",
-      "name": "Form Trigger",
-      "type": "n8n-nodes-base.formTrigger",
-      "typeVersion": 2,
-      "position": [250, 300],
-      "webhookId": "workshop-order-intake"
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -368,
+        -144
+      ],
+      "id": "d9ab8a6a-ab0b-4098-a1ed-b6113a7eaae8",
+      "name": "Webhook",
+      "webhookId": "e55b7795-1043-42e9-8bd2-cdc38f2e30cd"
     },
     {
       "parameters": {
-        "model": "gpt-4o-mini",
-        "messages": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5.3-chat-latest",
+          "mode": "list",
+          "cachedResultName": "GPT-5.3-CHAT-LATEST"
+        },
+        "responses": {
           "values": [
             {
               "role": "system",
-              "content": "Je bent een professionele klantenservice medewerker. Je ontvangt ordergegevens en genereert twee outputs in JSON formaat: 1) Een beleefde, persoonlijke bevestigingsmail in het Nederlands, 2) Een korte analyse van de bestelling voor het productieteam (urgentie, productcategorie, geschatte complexiteit). Antwoord ALLEEN met valid JSON."
+              "content": "Je bent een order-assistent voor Faber Electronics. Je analyseert binnenkomende bestellingen en genereert twee outputs:\n  1. Een vriendelijke bevestigingsmail voor de klant (in het Nederlands)\n  2. Een interne samenvatting voor het productieteam\n\n  Antwoord altijd in JSON met deze structuur:\n  { \"klant_email_onderwerp\": \"...\", \"klant_email_body\": \"...\", \"productie_samenvatting\": \"...\", \"levertijd_haalbaar\": true/false, \"opmerkingen\": \"...\" }"
             },
             {
-              "role": "user",
-              "content": "=Nieuwe bestelling ontvangen:\n\nBedrijfsnaam: {{ $json.Bedrijfsnaam }}\nContactpersoon: {{ $json.Contactpersoon }}\nEmail: {{ $json.Email }}\nProduct omschrijving: {{ $json['Product omschrijving'] }}\nAantal: {{ $json.Aantal }}\nGewenste leverdatum: {{ $json['Gewenste leverdatum'] }}"
+              "content": "=Bedrijfsnaam: {{ $json.body.bedrijfsnaam }}\nContactpersoon: {{ $json.body.contactpersoon }}\nEmail: {{ $json.body.email }}\nProduct omschrijving: {{ $json.body.product_omschrijving }}\nAantal: {{ $json.body.aantal }}\nGewenste leverdatum: {{ $json.body.gewenste_leverdatum }}"
             }
           ]
         },
-        "options": {
-          "responseFormat": "json_object",
-          "temperature": 0.3
-        }
+        "builtInTools": {},
+        "options": {}
       },
-      "id": "openai-node",
-      "name": "OpenAI - Bestelling analyseren",
       "type": "@n8n/n8n-nodes-langchain.openAi",
-      "typeVersion": 1,
-      "position": [500, 300],
+      "typeVersion": 2.1,
+      "position": [
+        -160,
+        -144
+      ],
+      "id": "e7a990bd-82d6-4161-bbea-15873b416e7a",
+      "name": "Message a model",
       "credentials": {
         "openAiApi": {
-          "id": "2",
-          "name": "OpenAI API Key"
+          "id": "tNlMR1R0UbOo96eU",
+          "name": "OpenAi account"
         }
       }
     },
     {
       "parameters": {
-        "sendTo": "={{ $json.Email }}",
-        "subject": "=Bevestiging ontvangst aanvraag - {{ JSON.parse($json.message.content).bevestigingsmail.onderwerp }}",
-        "message": "={{ JSON.parse($json.message.content).bevestigingsmail.bericht }}"
+        "resource": "draft",
+        "subject": "={{ $json.klant_email_onderwerp }}",
+        "message": "={{ $json.klant_email_body }}",
+        "options": {
+          "sendTo": "={{ $('Webhook').item.json.body.email }}"
+        }
       },
-      "id": "email-confirm-node",
-      "name": "Bevestigingsmail",
-      "type": "n8n-nodes-base.emailSend",
-      "typeVersion": 2,
-      "position": [800, 200],
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        288,
+        -144
+      ],
+      "id": "08c70a7d-2467-45ea-9743-48ac28fe15ee",
+      "name": "Create a draft",
+      "webhookId": "5fb156bc-86ca-46b9-a4d0-68f117e2d24d",
       "credentials": {
-        "smtp": {
-          "id": "1",
-          "name": "SMTP Account"
+        "gmailOAuth2": {
+          "id": "1wjCaNU0xtHzdPDW",
+          "name": "Gmail account"
         }
       }
     },
     {
       "parameters": {
-        "sendTo": "={{PRODUCTION_EMAIL}}",
-        "subject": "=Nieuwe bestelling - AI Analyse",
-        "message": "=Nieuwe bestelling ontvangen en geanalyseerd door AI:\n\n{{ JSON.parse($json.message.content).productie_analyse.samenvatting }}\n\nUrgentie: {{ JSON.parse($json.message.content).productie_analyse.urgentie }}\nProductcategorie: {{ JSON.parse($json.message.content).productie_analyse.productcategorie }}\nGeschatte complexiteit: {{ JSON.parse($json.message.content).productie_analyse.geschatte_complexiteit }}\n\nActie vereist: controleer beschikbaarheid en plan productie."
+        "jsCode": "const response = $input.first().json.output[0].content[0].text;\n  const parsed = JSON.parse(response);\n  return [{ json: parsed }];"
       },
-      "id": "email-notify-node",
-      "name": "Notificatiemail",
-      "type": "n8n-nodes-base.emailSend",
+      "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [800, 400],
+      "position": [
+        128,
+        -144
+      ],
+      "id": "eefda29e-5e79-4bb7-bc9a-2f8106a6fe7a",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "=Nieuwe bestelling: {{ $('Webhook').item.json.body.bedrijfsnaam }} - {{ $('Webhook').item.json.body.product_omschrijving }}",
+        "message": "=Bedrijfsnaam: {{ $('Webhook').item.json.body.bedrijfsnaam }}\nContactpersoon: {{ $('Webhook').item.json.body.contactpersoon }}\nEmail: {{ $('Webhook').item.json.body.email }}\nProduct omschrijving: {{ $('Webhook').item.json.body.product_omschrijving }}\nAantal: {{ $('Webhook').item.json.body.aantal }}\nGewenste leverdatum: {{ $('Webhook').item.json.body.gewenste_leverdatum }}\n\nAI Samenvatting \n{{ $('Code in JavaScript').item.json.productie_samenvatting }}\n\nHaalbaar? {{ $('Code in JavaScript').item.json.levertijd_haalbaar }}\n\nOpmerkingen \n{{ $('Code in JavaScript').item.json.opmerkingen }}",
+        "options": {
+          "sendTo": "production@faber-electronics.nl"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        496,
+        -144
+      ],
+      "id": "cc15682e-76b0-4289-9483-8cdfa37b347f",
+      "name": "Create a draft1",
+      "webhookId": "6ab1c7e5-3a52-4b78-95d6-cacca5142d1a",
       "credentials": {
-        "smtp": {
-          "id": "1",
-          "name": "SMTP Account"
+        "gmailOAuth2": {
+          "id": "1wjCaNU0xtHzdPDW",
+          "name": "Gmail account"
         }
       }
     }
   ],
+  "pinData": {},
   "connections": {
-    "Form Trigger": {
+    "Webhook": {
       "main": [
         [
           {
-            "node": "OpenAI - Bestelling analyseren",
+            "node": "Message a model",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "OpenAI - Bestelling analyseren": {
+    "Message a model": {
       "main": [
         [
           {
-            "node": "Bevestigingsmail",
+            "node": "Code in JavaScript",
             "type": "main",
             "index": 0
-          },
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
           {
-            "node": "Notificatiemail",
+            "node": "Create a draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a draft": {
+      "main": [
+        [
+          {
+            "node": "Create a draft1",
             "type": "main",
             "index": 0
           }
@@ -146,14 +165,15 @@
       ]
     }
   },
+  "active": false,
   "settings": {
     "executionOrder": "v1"
   },
+  "versionId": "717d2f23-6717-40ad-a87b-52d9c50c85bb",
   "meta": {
-    "instanceId": "workshop-demo"
+    "templateCredsSetupCompleted": true,
+    "instanceId": "025a9050422c63665a9979a17f8c77d3d7b5a135986aa87d4c1b12842437fa27"
   },
-  "tags": [
-    { "name": "workshop" },
-    { "name": "demo" }
-  ]
+  "id": "j8K3OMgBLZd9YRhR",
+  "tags": []
 }

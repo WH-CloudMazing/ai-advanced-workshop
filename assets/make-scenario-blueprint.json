@@ -1,5 +1,5 @@
 {
-    "name": "AI Workshop Voorbeeld",
+    "name": "AI Workshop Example",
     "flow": [
         {
             "id": 1,
@@ -18,10 +18,10 @@
                 "restore": {
                     "parameters": {
                         "hook": {
-                            "label": "Test webhook",
                             "data": {
                                 "editable": "true"
-                            }
+                            },
+                            "label": "Test webhook"
                         }
                     }
                 },
@@ -74,12 +74,9 @@
                 "__IMTCONN__": 2075902
             },
             "mapper": {
-                "select": "chat",
-                "temperature": "1",
-                "top_p": "1",
-                "n_completions": "1",
                 "model": "gpt-5.3-chat-latest",
-                "max_tokens": "2048",
+                "top_p": "1",
+                "select": "chat",
                 "messages": [
                     {
                         "role": "system",
@@ -90,6 +87,9 @@
                         "content": "Bedrijfsnaam: {{1.bedrijfsnaam}}\nContactpersoon: {{1.contactpersoon}}\nEmail: {{1.email}}\nProduct omschrijving: {{1.product_omschrijving}}\nAantal: {{1.aantal}}\nGewenste leverdatum:{{1.gewenste_leverdatum}}"
                     }
                 ],
+                "max_tokens": "2048",
+                "temperature": "1",
+                "n_completions": "1",
                 "response_format": "json_object",
                 "parseJSONResponse": true
             },
@@ -99,35 +99,16 @@
                     "y": 0
                 },
                 "restore": {
-                    "parameters": {
-                        "__IMTCONN__": {
-                            "label": "Make.com connection",
-                            "data": {
-                                "scoped": "true",
-                                "connection": "openai-gpt-3"
-                            }
-                        }
-                    },
                     "expect": {
-                        "select": {
-                            "label": "Create a Chat Completion (GPT and o1 models)"
-                        },
-                        "logit_bias": {
-                            "mode": "chose"
-                        },
-                        "tool_choice": {
-                            "mode": "chose",
-                            "label": "Empty"
-                        },
                         "stop": {
-                            "mode": "chose"
-                        },
-                        "additionalParameters": {
                             "mode": "chose"
                         },
                         "model": {
                             "mode": "chose",
                             "label": "gpt-5.3-chat-latest (system)"
+                        },
+                        "select": {
+                            "label": "Create a Chat Completion (GPT and o1 models)"
                         },
                         "messages": {
                             "mode": "chose",
@@ -146,6 +127,13 @@
                                 }
                             ]
                         },
+                        "logit_bias": {
+                            "mode": "chose"
+                        },
+                        "tool_choice": {
+                            "mode": "chose",
+                            "label": "Empty"
+                        },
                         "response_format": {
                             "mode": "chose",
                             "label": "JSON Object"
@@ -156,6 +144,18 @@
                         },
                         "parseJSONResponse": {
                             "mode": "chose"
+                        },
+                        "additionalParameters": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "openai-gpt-3"
+                            },
+                            "label": "Make.com connection"
                         }
                     }
                 },
@@ -223,9 +223,8 @@
                     },
                     {
                         "name": "logit_bias",
-                        "type": "array",
-                        "label": "Token Probability",
                         "spec": {
+                            "name": "value",
                             "spec": [
                                 {
                                     "name": "token",
@@ -245,9 +244,10 @@
                                 }
                             ],
                             "type": "collection",
-                            "label": "Token Probability",
-                            "name": "value"
-                        }
+                            "label": "Token Probability"
+                        },
+                        "type": "array",
+                        "label": "Token Probability"
                     },
                     {
                         "name": "seed",
@@ -268,22 +268,21 @@
                     },
                     {
                         "name": "stop",
+                        "spec": {
+                            "name": "value",
+                            "type": "text",
+                            "label": "Stop Sequence"
+                        },
                         "type": "array",
                         "label": "Stop Sequences",
                         "validate": {
                             "maxItems": 4
-                        },
-                        "spec": {
-                            "type": "text",
-                            "label": "Stop Sequence",
-                            "name": "value"
                         }
                     },
                     {
                         "name": "additionalParameters",
-                        "type": "array",
-                        "label": "Other Input Parameters",
                         "spec": {
+                            "name": "value",
                             "spec": [
                                 {
                                     "name": "key",
@@ -356,9 +355,10 @@
                                 }
                             ],
                             "type": "collection",
-                            "label": "Input Parameter",
-                            "name": "value"
-                        }
+                            "label": "Input Parameter"
+                        },
+                        "type": "array",
+                        "label": "Other Input Parameters"
                     },
                     {
                         "name": "model",
@@ -373,24 +373,18 @@
                     },
                     {
                         "name": "messages",
-                        "type": "array",
-                        "label": "Messages",
-                        "required": true,
                         "spec": {
-                            "label": "Message",
-                            "type": "collection",
+                            "name": "value",
                             "spec": [
                                 {
                                     "name": "role",
                                     "type": "select",
                                     "label": "Role",
-                                    "required": true,
                                     "options": {
                                         "store": [
                                             {
                                                 "label": "User",
                                                 "value": "user",
-                                                "default": true,
                                                 "nested": [
                                                     {
                                                         "help": "Text content of the message on behalf of the selected __Role__.",
@@ -398,7 +392,8 @@
                                                         "type": "text",
                                                         "label": "Text Content"
                                                     }
-                                                ]
+                                                ],
+                                                "default": true
                                             },
                                             {
                                                 "label": "Assistant",
@@ -411,19 +406,9 @@
                                                         "label": "Text Content"
                                                     },
                                                     {
-                                                        "name": "tool_calls",
-                                                        "label": "Tool Calls",
-                                                        "type": "array",
-                                                        "labels": {
-                                                            "add": "Add tool call"
-                                                        },
                                                         "mode": "edit",
-                                                        "mappable": {
-                                                            "help": "You can map the entire `Choices[]: Message.Tool Calls` array from a previous Create a Completion module here."
-                                                        },
+                                                        "name": "tool_calls",
                                                         "spec": {
-                                                            "label": "Tool Call",
-                                                            "type": "collection",
                                                             "spec": [
                                                                 {
                                                                     "name": "type",
@@ -431,39 +416,50 @@
                                                                     "default": "function"
                                                                 },
                                                                 {
+                                                                    "help": "Map this directly from the output of a previous **Create a Completion** module. Look for `Choices[]: Message.Tool Calls[]: ID`.",
                                                                     "name": "id",
                                                                     "type": "text",
-                                                                    "label": "Tool call ID",
-                                                                    "help": "Map this directly from the output of a previous **Create a Completion** module. Look for `Choices[]: Message.Tool Calls[]: ID`."
+                                                                    "label": "Tool call ID"
                                                                 },
                                                                 {
                                                                     "name": "function",
-                                                                    "type": "collection",
-                                                                    "label": "Function",
                                                                     "spec": [
                                                                         {
+                                                                            "help": "The name of the function previously called.",
                                                                             "name": "name",
-                                                                            "label": "Name",
                                                                             "type": "text",
-                                                                            "required": true,
-                                                                            "help": "The name of the function previously called."
+                                                                            "label": "Name",
+                                                                            "required": true
                                                                         },
                                                                         {
+                                                                            "help": "The arguments previously output by the AI.",
                                                                             "name": "arguments",
-                                                                            "label": "Arguments",
                                                                             "type": "text",
-                                                                            "required": true,
-                                                                            "help": "The arguments previously output by the AI."
+                                                                            "label": "Arguments",
+                                                                            "required": true
                                                                         }
-                                                                    ]
+                                                                    ],
+                                                                    "type": "collection",
+                                                                    "label": "Function"
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "type": "collection",
+                                                            "label": "Tool Call"
+                                                        },
+                                                        "type": "array",
+                                                        "label": "Tool Calls",
+                                                        "labels": {
+                                                            "add": "Add tool call"
+                                                        },
+                                                        "mappable": {
+                                                            "help": "You can map the entire `Choices[]: Message.Tool Calls` array from a previous Create a Completion module here."
                                                         }
                                                     }
                                                 ]
                                             },
                                             {
                                                 "label": "Developer / System",
+                                                "value": "system",
                                                 "nested": [
                                                     {
                                                         "help": "Text content of the message on behalf of the selected __Role__.",
@@ -471,8 +467,7 @@
                                                         "type": "text",
                                                         "label": "Text Content"
                                                     }
-                                                ],
-                                                "value": "system"
+                                                ]
                                             },
                                             {
                                                 "label": "Tool",
@@ -486,20 +481,25 @@
                                                         "required": true
                                                     },
                                                     {
-                                                        "label": "Tool Call ID.",
+                                                        "help": "Map this directly from the output of a previous **Create a Completion** module. Look for `Choices[]: Message.Tool Calls[]: ID`.",
                                                         "name": "tool_call_id",
                                                         "type": "text",
-                                                        "required": true,
-                                                        "help": "Map this directly from the output of a previous **Create a Completion** module. Look for `Choices[]: Message.Tool Calls[]: ID`."
+                                                        "label": "Tool Call ID.",
+                                                        "required": true
                                                     }
                                                 ]
                                             }
                                         ]
-                                    }
+                                    },
+                                    "required": true
                                 }
                             ],
-                            "name": "value"
-                        }
+                            "type": "collection",
+                            "label": "Message"
+                        },
+                        "type": "array",
+                        "label": "Messages",
+                        "required": true
                     },
                     {
                         "name": "response_format",
@@ -783,7 +783,7 @@
                 "account": 3036011
             },
             "mapper": {
-                "folder": "INBOX",
+                "folder": "[Gmail]/Concepten",
                 "to": [
                     "{{1.email}}"
                 ],
@@ -820,7 +820,7 @@
                         "folder": {
                             "mode": "chose",
                             "path": [
-                                "INBOX"
+                                "Concepten"
                             ]
                         },
                         "to": {
@@ -1017,7 +1017,7 @@
                 "account": 3036011
             },
             "mapper": {
-                "folder": "INBOX",
+                "folder": "[Gmail]/Concepten",
                 "to": [
                     "production@faber-electronics.nl"
                 ],
@@ -1054,7 +1054,7 @@
                         "folder": {
                             "mode": "chose",
                             "path": [
-                                "INBOX"
+                                "Concepten"
                             ]
                         },
                         "to": {

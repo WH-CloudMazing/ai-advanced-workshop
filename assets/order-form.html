@@ -170,13 +170,13 @@
 <body>
     <div class="container">
         <h1>Order Intake - Test Formulier</h1>
-        <p class="intro">Plak je Make.com Webhook URL hieronder en verstuur een testbestelling.</p>
+        <p class="intro">Plak je n8n webhook (POST) / Make.com Webhook URL hieronder en verstuur een testbestelling.</p>
 
         <form id="orderForm" onsubmit="return submitOrder(event)">
             <div class="card">
                 <div class="card-title">Webhook</div>
                 <div class="field">
-                    <label for="webhookUrl">Webhook URL (Make.com of n8n)</label>
+                    <label for="webhookUrl">n8n webhook (POST) / Make.com Webhook URL</label>
                     <input type="url" id="webhookUrl" placeholder="https://hook.eu2.make.com/... of https://n8n.example.com/webhook/..." required>
                 </div>
             </div>
